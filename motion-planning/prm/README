@@ -1,0 +1,30 @@
+Instructions
+==============
+1) Problem 1 : CLEAR and LINK for Motion Planning
+**************************************************
+prm_init.py - Main program , invoke it by typing 'python prm_init.py' in command line.
+              The program will give you 3 choices, you can either pre-load the 
+              workspace and obstacles or enter it by yourself.
+              Then the program asks for whether you want to try clear, link or quit the prgoram.
+              If clear is chosen, the program asks for a test point and the output is displayed accordingly.
+              If link is chosen, the program asks for a start and end point and the output is displayed accordingly.
+
+prm_functions.py - Implements the clear and link functions
+prm_classes.py - Defines the point and obstacle classes
+
+2) Problem 2 : Implement and Evaluate the PRM Algorithm
+*******************************************************
+prm_run.py -  Main program , invoke it by typing 'python prm_run.py' in command line.
+              The program will give you 3 choices, you can either pre-load the 
+              workspace and obstacles or enter it by yourself.
+              Then the program will ask you to enter the start and end(goal) points, number of milestones to sample
+              and the number of nearest neighbors 'm' to find.
+              If a sample point set is found which passes through link and each point in the set has 'm' nearest neighbors,
+              it computes the shortest distance between the start and end(goal) points and the output is displayed accordingly.
+              If no path is found, the distance is assumed to be infinity
+
+prm_functions.py - Implements the clear, link, validPoint, distance, gen_uniform_random_point, min_list_value and checkIfPointNotAdded functions
+prm_classes.py - Defines the point and obstacle classes
+djikstra.py - Computes the shortest path between start and end vertex given a graph (Author: David Eppstein, UC Irvine, 4 April 2002)
+priodict.py - Implements Priority Dictionary (required by djikstra.py)
+
