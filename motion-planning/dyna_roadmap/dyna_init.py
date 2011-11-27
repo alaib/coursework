@@ -248,7 +248,7 @@ count = 0
 #Update Obstacles
 updateObstacles(dynaOList)
 #start dyna while loop
-while(not(curr == pend) and totalTime < tmax and i < len(path)):    
+while(totalTime < tmax):    
     #Traverse from curr to dest vertex in timesteps
     d = distance(curr, dest)    
     vp = findOptimalVelocity(d, tstep, vmax)
@@ -288,9 +288,11 @@ while(not(curr == pend) and totalTime < tmax and i < len(path)):
         print('No solution exists, timed out on local edge traversal')
         start.show()
         dest.show()                    
-    #end failure case
+    #end failure case    
     start = dest
     curr = copy.deepcopy(start)
+    if(curr.x == pend.x and curr.y == pend.y):
+        break
     dest = point(samplePoints[path[i]].x,samplePoints[path[i]].y)
-    i += 1            
+    i += 1    
 #end of while loop
