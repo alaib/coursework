@@ -4,8 +4,11 @@ class point:
         self.x = int(xval);
         self.y = int(yval);
     
-    def show(self):
-        print "(%d,%d)" % (self.x, self.y)
+    def show(self, optional = ''):
+        print "%s(%.2f,%.2f)" % (optional, self.x, self.y)
+        
+    def __eq__(self, other):
+        return ((self.x == other.x) and (self.y == other.y))
 # End Class Definition        
 
 # Define Static Rectangle Obstacle
@@ -23,7 +26,7 @@ class staticObstacle:
 # Define Dynamic Circle Obstacle
 class dynaObstacle:
     def __init__(self, x1, y1, x2, y2, deltax, deltay, radius):
-        self.xin = x1
+        self.xmin = x1
         self.ymin = y2
         self.xmax = x2
         self.ymax = y2
@@ -39,8 +42,8 @@ class dynaObstacle:
             self.xstep *= -1
             self.ystep *= -1                    
         self.currx += self.xstep
-        self.yc += self.ystep
+        self.curry += self.ystep
         
     def show(self):
-        print "(Center = (%d,%d) R = %d V = %d))" % (self.xc, self.yc, self.r, self.v)
+        print "Center = (%.1f,%.1f) R = %.1f" % (self.currx, self.curry, self.r)
 # End Class Definition        

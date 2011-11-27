@@ -75,7 +75,7 @@ def link(point1, point2, obstacleList):
 
 #start distance function
 def distance(p1, p2):
-    return round(math.sqrt(float((p2.x-p1.x)**2+(p2.y-p1.y)**2)),4)
+    return round(math.sqrt(float((p2.x-p1.x)**2+(p2.y-p1.y)**2)),1)
 #end distance function
 
 #start generate uniformly distributed random number
@@ -128,6 +128,43 @@ def printGraph(G, sPoints):
     for i in G:
         print("(%d, %d) : {") % (sPoints[i].x, sPoints[i].y),
         for j in G[i]:
-            print('(%d, %d) : %.3f, ') % (sPoints[j].x, sPoints[j].y, G[i][j]),
+            print('(%d, %d) : %.1f, ') % (sPoints[j].x, sPoints[j].y, G[i][j]),
         print('}')                                
 #end printGraph
+
+#start findOptimalVelocity
+def findOptimalVelocity(dist, tstep, vmax):
+    v = vmax
+    while(v <= vmax):
+        val = dist / (v * tstep)
+        diff = val - math.ceil(val)
+        if( diff >= -1e-10 and diff <= 1e-10):
+            return v
+        else:
+            v -= 0.1
+    #no proper velocity found
+    return -1
+#end findOptimalVelocity
+
+#start updateObstacles
+def updateObstacles(oList):
+    for o in oList:
+        o.move()    
+#start updateObstacles
+
+#start collisionFree
+def collisionFree(alpha, curr, start, dest, v, tstep, oList, action):
+    temp = copy.deepcopy(curr)
+    d = distance(start, dest)
+    alphastep = action * (v*tstep)/d
+    alpha += alphastep
+    temp.x = alpha * (dest.x - start.x) + start.x
+    temp.y = alpha * (dest.y - start.y) + start.y
+    colFree = True
+    for o in oList:
+        dist = math.sqrt((o.currx-temp.x)**2 + (o.curry-temp.y)**2)
+        if(dist <= o.r):
+            colFree = False
+            break
+    return {'colFree': colFree, 'newPos' : temp, 'newAlpha' : alpha}
+#start collisionFree    

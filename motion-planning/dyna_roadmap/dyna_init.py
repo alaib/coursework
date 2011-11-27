@@ -16,7 +16,8 @@ from dyna_roadmap_functions import *
 import djikstra
 from djikstra import *
 
-choice = int(raw_input('1 : Test Case 1 (predefined data)\n2 : Test Case 2 (predefined data)\n3 : Custom Test Case\nChoose an option = '))
+#choice = int(raw_input('1 : Test Case 1 (predefined data)\n2 : Test Case 2 (predefined data)\n3 : Custom Test Case\nChoose an option = '))
+choice = 2
 if choice < 1 or choice > 3:
     print 'Choice out of range, default choice -> 1 : Test Case 1 (predefined data)'
     choice = 1
@@ -83,9 +84,9 @@ elif choice == 2:
     
     dynaOList = []
     #xmin, ymin, xmax, ymax, deltax, deltay, radius
-    dynaOList.append(dynaObstacle(2,4,6,4,1,0,1))
+    dynaOList.append(dynaObstacle(2,4,6,4,0.25,0,1))
     
-    pstart = point(2,2)
+    pstart = point(2,3)
     pend = point(7,8)
     
     tstep = 0.5            
@@ -109,7 +110,7 @@ elif choice == 1:
     
     dynaOList = []
     #xmin, ymin, xmax, ymax, deltax, deltay, radius, velocity
-    dynaOList.append(dynaObstacle(6,11,14,11,1,0,2,1))
+    dynaOList.append(dynaObstacle(6,11,14,11,1,0,2))
     
     pstart = point(2,2)
     pend = point(14,21)
@@ -234,3 +235,62 @@ for i in range(l):
 print '\nTotal Cost = %f' % (cost)                    
 printGraph(graph, samplePoints)
 
+start = point(samplePoints[path[0]].x, samplePoints[path[0]].y)
+curr = copy.deepcopy(start)
+dest = point(samplePoints[path[1]].x, samplePoints[path[1]].y)
+i = 2
+tmax = 100.0
+totalTime = 0.0
+tstep = 0.5
+vmax = 0.5
+actions = [1, 0, -1]
+count = 0
+#Update Obstacles
+updateObstacles(dynaOList)
+#start dyna while loop
+while(not(curr == pend) and totalTime < tmax and i < len(path)):    
+    #Traverse from curr to dest vertex in timesteps
+    d = distance(curr, dest)    
+    vp = findOptimalVelocity(d, tstep, vmax)
+    alpha = 0
+    tedgeMax = (d / vp) * 100
+    tedge = 0.0
+           
+    while(alpha < 1 and tedge < tedgeMax):
+        #start action check
+        for action in actions: 
+            col = collisionFree(alpha, curr, start, dest, vp, tstep, dynaOList, action)
+            if(col['colFree'] == True):
+                curr = col['newPos']
+                alpha = col['newAlpha']
+                #Print action taken
+                count += 1
+                print('\n=============================')                
+                print('Step = %d') % (count)
+                print('time = %.1f') % (totalTime)
+                print('action = %d, alpha = %.2f, vel = %.1f') % (action, alpha, vp)                
+                curr.show('Current Pos = ')
+                dest.show('Dest Pos = ')
+                dynaOList[0].show()
+                print('===============================\n')
+                break
+        #end actions
+        
+        tedge += tstep
+        updateObstacles(dynaOList)
+        totalTime += tstep
+        if(count > 40):
+            break
+    #end while loop
+    if(count > 40):
+        break
+    if(tedge >= tedgeMax):
+        print('No solution exists, timed out on local edge traversal')
+        start.show()
+        dest.show()                    
+    #end failure case
+    start = dest
+    curr = copy.deepcopy(start)
+    dest = point(samplePoints[path[i]].x,samplePoints[path[i]].y)
+    i += 1            
+#end of while loop
