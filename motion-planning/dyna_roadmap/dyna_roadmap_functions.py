@@ -160,11 +160,30 @@ def collisionFree(alpha, curr, start, dest, v, tstep, oList, action):
     alpha += alphastep
     temp.x = alpha * (dest.x - start.x) + start.x
     temp.y = alpha * (dest.y - start.y) + start.y
-    colFree = True
+    deltaMoved = distance(curr, temp)
+    minPF = 100 
+    colFree = True    
     for o in oList:
         dist = math.sqrt((o.currx-temp.x)**2 + (o.curry-temp.y)**2)
+        pf = distance(temp, point(o.currx, o.curry)) - o.r
+        if(pf < minPF):
+            minPF = pf
         if(dist <= o.r):
             colFree = False
-            break
-    return {'colFree': colFree, 'newPos' : temp, 'newAlpha' : alpha}
+            break            
+    return {'colFree': colFree, 'newPos' : temp, 'newAlpha' : alpha, 'pf' : pf, 'deltaMoved' : deltaMoved}
 #start collisionFree    
+
+#start debugDisplay
+def debugDisplay(col, count, totalTime, action, alpha, vp, curr, dest, dynaOList, prevPF):
+    print('\n=============================')                
+    print('Step = %d') % (count)
+    print('time = %.1f') % (totalTime)
+    print('action = %d, alpha = %.2f, vel = %.1f') % (action, alpha, vp)                        
+    curr.show('Current Pos = ')
+    dest.show('Dest Pos = ')
+    dynaOList[0].show()
+    print('Current Potential Field = %f , Previous Potential Field = %f') % (col['pf'], prevPF)
+    print('Delta Move = %f') % (col['deltaMoved'])
+    print('===============================\n')
+#end debugDisplay     

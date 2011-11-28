@@ -17,7 +17,7 @@ import djikstra
 from djikstra import *
 
 #choice = int(raw_input('1 : Test Case 1 (predefined data)\n2 : Test Case 2 (predefined data)\n3 : Custom Test Case\nChoose an option = '))
-choice = 2
+choice = 1
 if choice < 1 or choice > 3:
     print 'Choice out of range, default choice -> 1 : Test Case 1 (predefined data)'
     choice = 1
@@ -110,7 +110,7 @@ elif choice == 1:
     
     dynaOList = []
     #xmin, ymin, xmax, ymax, deltax, deltay, radius, velocity
-    dynaOList.append(dynaObstacle(6,11,14,11,1,0,2))
+    dynaOList.append(dynaObstacle(6,11,14,11,0.25,0,1))
     
     pstart = point(2,2)
     pend = point(14,21)
@@ -242,11 +242,15 @@ i = 2
 tmax = 100.0
 totalTime = 0.0
 tstep = 0.5
-vmax = 0.5
+vmax = 1.0
 actions = [1, 0, -1]
+prevPF = 100.0
+currPF = 100.0
+first = True
 count = 0
 #Update Obstacles
 updateObstacles(dynaOList)
+colFree = False
 #start dyna while loop
 while(totalTime < tmax):    
     #Traverse from curr to dest vertex in timesteps
@@ -258,36 +262,84 @@ while(totalTime < tmax):
            
     while(alpha < 1 and tedge < tedgeMax):
         #start action check
-        for action in actions: 
+        colFree = False
+        for action in actions:            
+            #Try to move ahead if possible                                    
             col = collisionFree(alpha, curr, start, dest, vp, tstep, dynaOList, action)
+            
+            if(col['pf'] <= 1.5 * col['deltaMoved']):
+                print('Dangerous Potential Field')
+                action1 = 0
+                action2 = -1
+                col1 = collisionFree(alpha, curr, start, dest, vp, tstep, dynaOList, action1)
+                col2 = collisionFree(alpha, curr, start, dest, vp, tstep, dynaOList, action2)
+                debugDisplay(col, count, totalTime, action, alpha, vp, curr, dest, dynaOList, prevPF)
+                print('0 PF = %f') % (col1['pf'])
+                print('-1 PF = %f') % (col2['pf'])
+                print('Alternate action is to be taken')
+                if(col2['pf'] >= col1['pf'] and col2['colFree'] == True):
+                    col = col2
+                    action = action2
+                    colFree = True
+                    print('Possible new action to take = %d') % (action)
+                elif(col1['pf'] > col2['pf'] and col1['colFree'] == True):
+                    col = col1
+                    action = action1
+                    colFree = True
+                    print('Possible new action to take = %d') % (action)
+                else:
+                    print('No possible action can be undertaken')                
+                if(colFree == True):
+                    curr = col['newPos']
+                    alpha = col['newAlpha']
+                    debugDisplay(col, count, totalTime, action, alpha, vp, curr, dest, dynaOList, prevPF)
+                    #Print action taken
+                    count += 1
+                    if(first):
+                        prevPF = col['pf']
+                        first = False
+                    else:
+                        prevPF = copy.deepcopy(currPF)
+                        currPF = col['pf']                                
+                break                                                                                                           
+                
             if(col['colFree'] == True):
+                colFree = True
                 curr = col['newPos']
                 alpha = col['newAlpha']
+                debugDisplay(col, count, totalTime, action, alpha, vp, curr, dest, dynaOList, prevPF)
                 #Print action taken
                 count += 1
-                print('\n=============================')                
-                print('Step = %d') % (count)
-                print('time = %.1f') % (totalTime)
-                print('action = %d, alpha = %.2f, vel = %.1f') % (action, alpha, vp)                
-                curr.show('Current Pos = ')
-                dest.show('Dest Pos = ')
-                dynaOList[0].show()
-                print('===============================\n')
+                if(first):
+                    prevPF = col['pf']
+                    first = False
+                else:
+                    prevPF = currPF
+                    currPF = col['pf']
                 break
         #end actions
+        
+        #end failure case
+        if(colFree == False):
+            print('Robot hit the obstacle, no viable action possible')
+            break
+        #end failure case
         
         tedge += tstep
         updateObstacles(dynaOList)
         totalTime += tstep
-        if(count > 40):
+        if(count > 1000):
             break
     #end while loop
-    if(count > 40):
+    if(count > 1000):
+        break
+    if(colFree == False):
         break
     if(tedge >= tedgeMax):
         print('No solution exists, timed out on local edge traversal')
-        start.show()
-        dest.show()                    
+        start.show('Current Pos = ')
+        dest.show(' Dest Pos = ')    
+        break                
     #end failure case    
     start = dest
     curr = copy.deepcopy(start)
