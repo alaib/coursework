@@ -5,12 +5,12 @@ import pprint
 
 
 # Import required classes
-import dyna_roadmap_classes 
-from dyna_roadmap_classes import *
+import dyna_roadmap_classes_3d 
+from dyna_roadmap_classes_3d import *
 
 # Import required functions
-import dyna_roadmap_functions
-from dyna_roadmap_functions import *
+import dyna_roadmap_functions_3d
+from dyna_roadmap_functions_3d import *
 
 #import djikstra algorithm
 import djikstra
@@ -29,11 +29,13 @@ if choice == 3:
     # Initalize workspace
     w_xmin = int(raw_input('Enter Workspace xmin = '))
     w_ymin = int(raw_input('Enter Workspace ymin = '))
+    w_zmin = int(raw_input('Enter Workspace zmin = '))
     w_xmax = int(raw_input('Enter Workspace xmax = '))
     w_ymax = int(raw_input('Enter Workspace ymax = '))
+    w_zmax = int(raw_input('Enter Workspace zmax = '))
     
-    w_min = point(w_xmin,w_ymin)
-    w_max = point(w_xmax,w_ymax)
+    w_min = point3D(w_xmin, w_ymin, w_zmin)
+    w_max = point3D(w_xmax, w_ymax, w_zmax)
     
     # No of Obstacles
     nObstacles = int(raw_input('Enter the number of Obstacles : '))
@@ -43,27 +45,32 @@ if choice == 3:
         print 'Enter Obstacle %d data' % (i)
         o_xmin = int(raw_input('xmin = '))
         o_ymin = int(raw_input('ymin = '))
+        o_zmin = int(raw_input('zmin = '))
         o_xmax = int(raw_input('xmax = '))
         o_ymax = int(raw_input('ymax = '))    
-        if not(validPoint(o_xmin,o_ymin,w_xmin,w_ymin,w_xmax,w_ymax) \
-                 and validPoint(o_xmax,o_ymax,w_xmin,w_ymin,w_xmax,w_ymax)):
-                print 'Obstacle is outside the workspace (%d,%d,%d,%d), please enter correct values' % (w_xmin,w_ymin,w_xmax,w_ymax)
+        o_zmax = int(raw_input('zmax = '))    
+
+        if not(validPoint(o_xmin, o_ymin, o_zmin, w_xmin, w_ymin, w_zmin, w_xmax, w_ymax, w_zmax) \
+                 and validPoint(o_xmax, o_ymax, o_zmax, w_xmin, w_ymin, w_zmin, w_xmax, w_ymax, w_zmax)):
+                print 'Obstacle is outside the workspace (%d,%d,%d,%d,%d,%d), please enter correct values' % (w_xmin, w_ymin, w_zmin, w_xmax, w_ymax, w_zmax)
                 continue        
-        staticOList.append(staticObstacle(o_xmin,o_ymin,o_xmax,o_ymax));
+        staticOList.append(staticObstacle3D(o_xmin, o_ymin, o_zmin, o_xmax, o_ymax, o_zmax ));
         i += 1
     #Read start point and end point
     flag = True;
     while flag:
         start_x = int(raw_input('Enter x-coordinate of start point = '))
         start_y = int(raw_input('Enter y-coordinate of start point = '))
+        start_z = int(raw_input('Enter z-coordinate of start point = '))
         end_x = int(raw_input('Enter x-coordinate of end point = '))
         end_y = int(raw_input('Enter y-coordinate of end point = '))
-        if not(validPoint(start_x,start_y,w_xmin,w_ymin,w_xmax,w_ymax) \
-               and validPoint(end_x,end_y,w_xmin,w_ymin,w_xmax,w_ymax)):
-            print 'Either start/end point is outside the workspace (%d,%d,%d,%d), please enter correct values' % (w_xmin,w_ymin,w_xmax,w_ymax)
+        end_z = int(raw_input('Enter z-coordinate of end point = '))
+        if not(validPoint(start_x, start_y, start_z, w_xmin, w_ymin, w_zmin, w_xmax, w_ymax, w_zmax) \
+               and validPoint(end_x, end_y, end_z, w_xmin, w_ymin, w_zmin, w_xmax, w_ymax, w_zmax)):
+            print 'Either start/end point is outside the workspace (%d,%d,%d,%d,%d,%d), please enter correct values' % (w_xmin, w_ymin, w_zmin, w_xmax, w_ymax, w_zmax)
             continue        
-        pstart = point(start_x,start_y)
-        pend = point(end_x,end_y)
+        pstart = point3D(start_x,start_y)
+        pend = point3D(end_x,end_y)
         if not(clear(pstart, staticOList) and clear(pend, staticOList)):
             print 'Either start/end point is in collision, please choose different set of start and end points'
             continue                    
@@ -72,61 +79,65 @@ elif choice == 2:
     # Initalize workspace
     w_xmin = 0
     w_ymin = 0
+    w_zmin = 0
     w_xmax = 10
     w_ymax = 10
+    w_zmax = 10
     
-    w_min = point(w_xmin,w_ymin)
-    w_max = point(w_xmax,w_ymax)
+    w_min = point3D(w_xmin, w_ymin, w_zmin)
+    w_max = point3D(w_xmax, w_ymax, w_zmax)
     
     # No of Obstacles
     nObstacles = 4
     staticOList = []    
-    staticOList.append(staticObstacle(0,6,3,10))
-    staticOList.append(staticObstacle(4,0,6,3))
-    staticOList.append(staticObstacle(4,7,6,9))
-    staticOList.append(staticObstacle(7,3,8,5))
+    staticOList.append(staticObstacle3D(0,6,1,3,10,2))
+    staticOList.append(staticObstacle3D(4,0,1,6,3,2))
+    staticOList.append(staticObstacle3D(4,7,2,6,9,4))
+    staticOList.append(staticObstacle3D(7,3,2,8,5,4))
     
     dynaOList = []
-    #xmin, ymin, xmax, ymax, deltax, deltay, radius
-    dynaOList.append(dynaObstacle(2,4,6,4,0.25,0,1))
+    #xmin, ymin, zmin, xmax, ymax, zmax, deltax, deltay, deltaz, radius
+    dynaOList.append(dynaObstacle(2,4,1,6,4,1,0.25,0,0,1))
     
-    pstart = point(2,3)
-    pend = point(7,8)
+    pstart = point3D(2,3,0)
+    pend = point3D(7,8,1)
     
     tstep = 0.5            
 elif choice == 1:                    
     # Initalize workspace
     w_xmin = 0
     w_ymin = 0
+    w_zmin = 0
     w_xmax = 22
     w_ymax = 22
+    w_zmax = 22
     
-    w_min = point(w_xmin,w_ymin)
-    w_max = point(w_xmax,w_ymax)
+    w_min = point3D(w_xmin, w_ymin, w_zmin)
+    w_max = point3D(w_xmax, w_ymax, w_zmax)
     
     # No of Obstacles
     nObstacles = 4
     staticOList = []    
-    staticOList.append(staticObstacle(7,0,12,8))
-    staticOList.append(staticObstacle(8,14,13,22))
-    staticOList.append(staticObstacle(0,14,5,19))
-    staticOList.append(staticObstacle(17,6,22,13))
+    staticOList.append(staticObstacle3D(7,0,1,12,8,2))
+    staticOList.append(staticObstacle3D(8,14,1,13,22,2))
+    staticOList.append(staticObstacle3D(0,14,2,5,19,4))
+    staticOList.append(staticObstacle3D(17,6,2,22,13,4))
     
     dynaOList = []
     #xmin, ymin, xmax, ymax, deltax, deltay, radius, velocity
-    dynaOList.append(dynaObstacle(6,11,14,11,0.25,0,1))
+    dynaOList.append(dynaObstacle3D(6,11,1,14,11,1,0.25,0,0,1))
     
-    pstart = point(2,2)
-    pend = point(14,21)
+    pstart = point3D(2,2,0)
+    pend = point3D(14,21,1)
     
     tstep = 0.5    
 # end choice
 
-
 #nSample = int(raw_input('Enter the no. of milestones = '))
 #noOfNeighbors = int(raw_input('Enter the number of nearest neighbors to find for each milestone = '))
 nSample = computeMilestones(w_min, w_max, staticOList)
-noOfNeighbors = computeNoOfNeighbors(w_min, w_max, staticOList)
+noOfNeighbors = computeNoOfNeighbors(nSample)
+
 print('Milestones = %d, No. of Neighbors = %d') % (nSample, noOfNeighbors)
 
 samplePoints = []
@@ -150,7 +161,7 @@ while notConnected and tries <= maxTries:
             break;             
         p = gen_uniform_random_point(w_min,w_max)
         # Check if point is not already generated and is collision free
-        if checkIfPointNotAdded(p, samplePoints) and clear(p,staticOList):
+        if checkIfPointNotAdded(p, samplePoints) and clear(p, staticOList):
             samplePoints.append(p)
             i +=1
             
@@ -168,7 +179,7 @@ while notConnected and tries <= maxTries:
         for j in range(len(samplePoints)):
             p2 = samplePoints[j];        
             # Set very high value for the same point, so that we avoid it        
-            if(p1.x == p2.x and p1.y == p2.y):
+            if(p1.x == p2.x and p1.y == p2.y and p1.z == p2.z):
                 d.insert(j,99999)
             else :
                 d.insert(j,distance(p1,p2))    
@@ -220,7 +231,7 @@ else:
     #print '%d milestones with %d neighbors found after %d sampling tries' % (nSample, noOfNeighbors, tries)
     cost,path = shortestPath(graph, 0, 1)
     if cost < 0:
-        print 'Path may or may not exist between (%d,%d) to (%d,%d)' % (pstart.x,pstart.y,pend.x, pend.y)
+        print 'Path may or may not exist between (%d,%d,%d) to (%d,%d,%d)' % (pstart.x, pstart.y, pstart.z, pend.x, pend.y, pend.z)
         print 'Total Cost = Infinity'
         sys.exit(1)
 #end failure case handling        
@@ -228,16 +239,17 @@ else:
 #Found a successful connected graph, continue with Dynamic PRM Algorithm
 # Find the shortest path
 # Start Vertex = 0, End Vertex = 1
-#print '%d milestones with %d neighbors found after %d sampling tries' % (nSample, noOfNeighbors, tries)
+print '%d milestones with %d neighbors found after %d sampling tries' % (nSample, noOfNeighbors, tries)
 
 cost,path = shortestPath(graph, 0, 1)
 l = len(path)
 for i in range(l):
     if i != l-1:
-        print '(%d,%d) -> ' % (samplePoints[path[i]].x,samplePoints[path[i]].y),
+        print '(%d,%d,%d) -> ' % (samplePoints[path[i]].x, samplePoints[path[i]].y, samplePoints[path[i]].z),
     else:
-        print '(%d,%d)' % (samplePoints[path[i]].x,samplePoints[path[i]].y),        
+        print '(%d,%d,%d)' % (samplePoints[path[i]].x, samplePoints[path[i]].y, samplePoints[path[i]].z),
 print '\nTotal Cost = %f' % (cost)                    
+sys.exit(0);
 #printGraph(graph, samplePoints)
 
 start = point(samplePoints[path[0]].x, samplePoints[path[0]].y)
@@ -366,4 +378,4 @@ while(totalTime < tmax):
         break
     dest = point(samplePoints[path[i]].x,samplePoints[path[i]].y)
     i += 1    
-#end of while loop
+#

@@ -27,7 +27,7 @@ class staticObstacle:
 class dynaObstacle:
     def __init__(self, x1, y1, x2, y2, deltax, deltay, radius):
         self.xmin = x1
-        self.ymin = y2
+        self.ymin = y1
         self.xmax = x2
         self.ymax = y2
         self.currx = x1
