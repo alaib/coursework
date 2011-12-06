@@ -249,12 +249,12 @@ for i in range(l):
     else:
         print '(%d,%d,%d)' % (samplePoints[path[i]].x, samplePoints[path[i]].y, samplePoints[path[i]].z),
 print '\nTotal Cost = %f' % (cost)                    
-sys.exit(0);
+#sys.exit(0);
 #printGraph(graph, samplePoints)
 
-start = point(samplePoints[path[0]].x, samplePoints[path[0]].y)
+start = point3D(samplePoints[path[0]].x, samplePoints[path[0]].y, samplePoints[path[0]].z)
 curr = copy.deepcopy(start)
-dest = point(samplePoints[path[1]].x, samplePoints[path[1]].y)
+dest = point3D(samplePoints[path[1]].x, samplePoints[path[1]].y, samplePoints[path[1]].z)
 i = 2
 tmax = 100.0
 totalTime = 0.0
@@ -267,7 +267,7 @@ currPF = 100.0
 first = True
 count = 0
 drawGraph = False
-pfThreshold = 0.3
+pfThreshold = 1.5
 #Update Obstacles
 updateObstacles(dynaOList)
 colFree = False
@@ -374,8 +374,8 @@ while(totalTime < tmax):
     #end failure case    
     start = dest
     curr = copy.deepcopy(start)
-    if(curr.x == pend.x and curr.y == pend.y):
+    if(curr.x == pend.x and curr.y == pend.y and curr.z == pend.z):
         break
-    dest = point(samplePoints[path[i]].x,samplePoints[path[i]].y)
+    dest = point3D(samplePoints[path[i]].x, samplePoints[path[i]].y, samplePoints[path[i]].z)
     i += 1    
 #
