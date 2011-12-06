@@ -187,3 +187,17 @@ def debugDisplay(col, count, totalTime, action, alpha, vp, curr, dest, dynaOList
     print('Delta Move = %f') % (col['deltaMoved'])
     print('===============================\n')
 #end debugDisplay     
+
+#start printCoords
+def printCoords(col, count, totalTime, action, alpha, vp, curr, dest, dynaOList, prevPF):
+    print('\n=============================')                
+    print('Step = %d') % (count)
+    print('time = %.1f') % (totalTime)
+    print('action = %d, alpha = %.2f, vel = %.1f') % (action, alpha, vp)                        
+    curr.show('Current Pos = ')
+    dest.show('Dest Pos = ')
+    dynaOList[0].show()
+    print('Current Potential Field = %f , Previous Potential Field = %f') % (col['pf'], prevPF)
+    print('Delta Move = %f') % (col['deltaMoved'])
+    print('===============================\n')
+#end printCoords     

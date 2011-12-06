@@ -16,6 +16,10 @@ from dyna_roadmap_functions import *
 import djikstra
 from djikstra import *
 
+#import draw graph
+import draw_graph
+from draw_graph import *
+
 #choice = int(raw_input('1 : Test Case 1 (predefined data)\n2 : Test Case 2 (predefined data)\n3 : Custom Test Case\nChoose an option = '))
 choice = 1
 if choice < 1 or choice > 3:
@@ -233,7 +237,7 @@ for i in range(l):
     else:
         print '(%d,%d)' % (samplePoints[path[i]].x,samplePoints[path[i]].y),        
 print '\nTotal Cost = %f' % (cost)                    
-printGraph(graph, samplePoints)
+#printGraph(graph, samplePoints)
 
 start = point(samplePoints[path[0]].x, samplePoints[path[0]].y)
 curr = copy.deepcopy(start)
@@ -252,10 +256,10 @@ count = 0
 updateObstacles(dynaOList)
 colFree = False
 #start dyna while loop
-while(totalTime < tmax):    
+while(totalTime < tmax):        
     #Traverse from curr to dest vertex in timesteps
-    d = distance(curr, dest)    
-    vp = findOptimalVelocity(d, tstep, vmax)
+    d = distance(curr, dest)            
+    vp = findOptimalVelocity(d, tstep, vmax) 
     alpha = 0
     tedgeMax = (d / vp) * 100
     tedge = 0.0
@@ -292,6 +296,7 @@ while(totalTime < tmax):
                 if(colFree == True):
                     curr = col['newPos']
                     alpha = col['newAlpha']
+                    updateDraw(w_min, w_max, pstart, pend, staticOList, curr, dynaOList, count)                     
                     debugDisplay(col, count, totalTime, action, alpha, vp, curr, dest, dynaOList, prevPF)
                     #Print action taken
                     count += 1
@@ -307,6 +312,7 @@ while(totalTime < tmax):
                 colFree = True
                 curr = col['newPos']
                 alpha = col['newAlpha']
+                updateDraw(w_min, w_max, pstart, pend, staticOList, curr, dynaOList, count)                
                 debugDisplay(col, count, totalTime, action, alpha, vp, curr, dest, dynaOList, prevPF)
                 #Print action taken
                 count += 1
