@@ -122,6 +122,7 @@ elif choice == 1:
     tstep = 0.5    
 # end choice
 
+
 #nSample = int(raw_input('Enter the no. of milestones = '))
 #noOfNeighbors = int(raw_input('Enter the number of nearest neighbors to find for each milestone = '))
 nSample = computeMilestones(w_min, w_max, staticOList)
@@ -246,22 +247,35 @@ i = 2
 tmax = 100.0
 totalTime = 0.0
 tstep = 0.5
-vmax = 1.0
+vrange = 2.5
+vmax = vrange
 actions = [1, 0, -1]
 prevPF = 100.0
 currPF = 100.0
 first = True
 count = 0
+drawGraph = True
+pfThreshold = 0.3
 #Update Obstacles
 updateObstacles(dynaOList)
 colFree = False
 #start dyna while loop
 while(totalTime < tmax):        
     #Traverse from curr to dest vertex in timesteps
-    d = distance(curr, dest)            
+    d = distance(curr, dest)
+    if(d < vrange):
+        vmax = d / tstep
+    else:
+        vmax = vrange
+                
     vp = findOptimalVelocity(d, tstep, vmax) 
+    if(vp == -1):
+        print('Negative vp velocity')
+        sys.exit(0)
+    #end failure case
+    
     alpha = 0
-    tedgeMax = (d / vp) * 100
+    tedgeMax = (d / vp) * 100 * tstep
     tedge = 0.0
            
     while(alpha < 1 and tedge < tedgeMax):
@@ -271,7 +285,7 @@ while(totalTime < tmax):
             #Try to move ahead if possible                                    
             col = collisionFree(alpha, curr, start, dest, vp, tstep, dynaOList, action)
             
-            if(col['pf'] <= 1.5 * col['deltaMoved']):
+            if(col['pf'] <= pfThreshold * col['deltaMoved']):
                 print('Dangerous Potential Field')
                 action1 = 0
                 action2 = -1
@@ -296,7 +310,8 @@ while(totalTime < tmax):
                 if(colFree == True):
                     curr = col['newPos']
                     alpha = col['newAlpha']
-                    updateDraw(w_min, w_max, pstart, pend, staticOList, curr, dynaOList, count)                     
+                    if(drawGraph):
+                        updateDraw(w_min, w_max, pstart, pend, staticOList, curr, dynaOList, count)                     
                     debugDisplay(col, count, totalTime, action, alpha, vp, curr, dest, dynaOList, prevPF)
                     #Print action taken
                     count += 1
@@ -312,7 +327,8 @@ while(totalTime < tmax):
                 colFree = True
                 curr = col['newPos']
                 alpha = col['newAlpha']
-                updateDraw(w_min, w_max, pstart, pend, staticOList, curr, dynaOList, count)                
+                if(drawGraph):
+                    updateDraw(w_min, w_max, pstart, pend, staticOList, curr, dynaOList, count)                
                 debugDisplay(col, count, totalTime, action, alpha, vp, curr, dest, dynaOList, prevPF)
                 #Print action taken
                 count += 1
@@ -333,12 +349,9 @@ while(totalTime < tmax):
         
         tedge += tstep
         updateObstacles(dynaOList)
-        totalTime += tstep
-        if(count > 1000):
-            break
-    #end while loop
-    if(count > 1000):
-        break
+        totalTime += tstep                    
+    #end while loop    
+    
     if(colFree == False):
         break
     if(tedge >= tedgeMax):

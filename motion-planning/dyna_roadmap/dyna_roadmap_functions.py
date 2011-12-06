@@ -137,8 +137,9 @@ def findOptimalVelocity(dist, tstep, vmax):
     v = vmax
     while(v <= vmax):
         val = dist / (v * tstep)
-        diff = val - math.ceil(val)
-        if( diff >= -1e-10 and diff <= 1e-10):
+        valstr = str(val)
+        valsplit = valstr.split('.')       
+        if(valsplit[1] == '0'):        
             return v
         else:
             v -= 0.1
