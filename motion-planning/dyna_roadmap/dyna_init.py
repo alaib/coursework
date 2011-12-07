@@ -247,14 +247,14 @@ i = 2
 tmax = 100.0
 totalTime = 0.0
 tstep = 0.5
-vrange = 1.0
+vrange = 2.0
 vmax = vrange
 actions = [1, 0, -1]
 prevPF = 100.0
 currPF = 100.0
 first = True
 count = 0
-drawGraph = False
+drawGraph = True
 pfThreshold = 0.3
 #Update Obstacles
 updateObstacles(dynaOList)

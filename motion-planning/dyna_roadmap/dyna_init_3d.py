@@ -125,10 +125,12 @@ elif choice == 1:
     
     dynaOList = []
     #xmin, ymin, xmax, ymax, deltax, deltay, radius, velocity
-    dynaOList.append(dynaObstacle3D(6,11,1,14,11,1,0.25,0,0,1))
+    dynaOList.append(dynaObstacle3D(6,11,1, 14,11,1, 0.25,0,0, 1))
+    dynaOList.append(dynaObstacle3D(4,6,1, 4,11,1,   0,0.25,0, 1))
     
     pstart = point3D(2,2,0)
-    pend = point3D(14,21,1)
+    #pend = point3D(14,21,1)
+    pend = point3D(14,22,2)
     
     tstep = 0.5    
 # end choice
@@ -260,7 +262,7 @@ i = 2
 tmax = 100.0
 totalTime = 0.0
 tstep = 0.5
-vrange = 1.0
+vrange = 2.5 
 vmax = vrange
 actions = [1, 0, -1]
 prevPF = 100.0
@@ -268,7 +270,7 @@ currPF = 100.0
 first = True
 count = 0
 drawGraph = True
-pfThreshold = 1.5
+pfThreshold = 0.3 
 #Update Obstacles
 updateObstacles(dynaOList)
 colFree = False
@@ -324,7 +326,7 @@ while(totalTime < tmax):
                     curr = col['newPos']
                     alpha = col['newAlpha']
                     if(drawGraph):
-                        updateDraw(curr, dynaOList, count)                                            
+                        updateDraw(dynaOList, curr, count)                                            
                     debugDisplay(col, count, totalTime, action, alpha, vp, curr, dest, dynaOList, prevPF)
                     #Print action taken
                     count += 1
@@ -342,7 +344,7 @@ while(totalTime < tmax):
                 curr = col['newPos']
                 alpha = col['newAlpha']
                 if(drawGraph):
-                    updateDraw(curr, dynaOList, count)                                
+                    updateDraw(dynaOList, curr, count)                                            
                 debugDisplay(col, count, totalTime, action, alpha, vp, curr, dest, dynaOList, prevPF)
                 #Print action taken
                 count += 1                
