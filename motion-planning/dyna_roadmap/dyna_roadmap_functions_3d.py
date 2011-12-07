@@ -71,7 +71,7 @@ def inBox( hit, omin, omax, axis):
 #returns True if line (p1, p2) intersects with the box (omin, omax)
 #returns intersection point in hit
 def checkLineBox( omin, omax, p1, p2):
-    
+    """Refer http://www.3dkingdoms.com/weekly/weekly.php?a=3"""    
     if (p2.x < omin.x and p1.x < omin.x):
         return False
     if (p2.x > omax.x and p1.x > omax.x):

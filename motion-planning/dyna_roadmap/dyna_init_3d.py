@@ -2,7 +2,7 @@
 import sys
 import random
 import pprint
-
+import copy
 
 # Import required classes
 import dyna_roadmap_classes_3d 
@@ -17,8 +17,8 @@ import djikstra
 from djikstra import *
 
 #import draw graph
-import draw_graph
-from draw_graph import *
+import draw_graph_3d
+from draw_graph_3d import *
 
 #choice = int(raw_input('1 : Test Case 1 (predefined data)\n2 : Test Case 2 (predefined data)\n3 : Custom Test Case\nChoose an option = '))
 choice = 1
@@ -97,7 +97,7 @@ elif choice == 2:
     
     dynaOList = []
     #xmin, ymin, zmin, xmax, ymax, zmax, deltax, deltay, deltaz, radius
-    dynaOList.append(dynaObstacle(2,4,1,6,4,1,0.25,0,0,1))
+    dynaOList.append(dynaObstacle3D(2,4,1,6,4,1,0.25,0,0,1))
     
     pstart = point3D(2,3,0)
     pend = point3D(7,8,1)
@@ -133,6 +133,7 @@ elif choice == 1:
     tstep = 0.5    
 # end choice
 
+#sys.exit(0)
 #nSample = int(raw_input('Enter the no. of milestones = '))
 #noOfNeighbors = int(raw_input('Enter the number of nearest neighbors to find for each milestone = '))
 nSample = computeMilestones(w_min, w_max, staticOList)
@@ -251,9 +252,9 @@ for i in range(l):
 print '\nTotal Cost = %f' % (cost)                    
 #sys.exit(0);
 #printGraph(graph, samplePoints)
-
+drawBaseGraph(w_min, w_max, pstart, pend, staticOList, dynaOList)
 start = point3D(samplePoints[path[0]].x, samplePoints[path[0]].y, samplePoints[path[0]].z)
-curr = copy.deepcopy(start)
+curr = point3D(samplePoints[path[0]].x, samplePoints[path[0]].y, samplePoints[path[0]].z)
 dest = point3D(samplePoints[path[1]].x, samplePoints[path[1]].y, samplePoints[path[1]].z)
 i = 2
 tmax = 100.0
@@ -266,7 +267,7 @@ prevPF = 100.0
 currPF = 100.0
 first = True
 count = 0
-drawGraph = False
+drawGraph = True
 pfThreshold = 1.5
 #Update Obstacles
 updateObstacles(dynaOList)
@@ -323,7 +324,7 @@ while(totalTime < tmax):
                     curr = col['newPos']
                     alpha = col['newAlpha']
                     if(drawGraph):
-                        updateDraw(w_min, w_max, pstart, pend, staticOList, curr, dynaOList, count)                     
+                        updateDraw(curr, dynaOList, count)                                            
                     debugDisplay(col, count, totalTime, action, alpha, vp, curr, dest, dynaOList, prevPF)
                     #Print action taken
                     count += 1
@@ -331,7 +332,8 @@ while(totalTime < tmax):
                         prevPF = col['pf']
                         first = False
                     else:
-                        prevPF = copy.deepcopy(currPF)
+                        #hack for assigning value to prevPF
+                        prevPF = currPF - 1.0 + 1.0
                         currPF = col['pf']                                
                 break                                                                                                           
                 
@@ -340,10 +342,10 @@ while(totalTime < tmax):
                 curr = col['newPos']
                 alpha = col['newAlpha']
                 if(drawGraph):
-                    updateDraw(w_min, w_max, pstart, pend, staticOList, curr, dynaOList, count)                
+                    updateDraw(curr, dynaOList, count)                                
                 debugDisplay(col, count, totalTime, action, alpha, vp, curr, dest, dynaOList, prevPF)
                 #Print action taken
-                count += 1
+                count += 1                
                 if(first):
                     prevPF = col['pf']
                     first = False
@@ -373,7 +375,7 @@ while(totalTime < tmax):
         break                
     #end failure case    
     start = dest
-    curr = copy.deepcopy(start)
+    curr = point3D(start.x, start.y, start.z)
     if(curr.x == pend.x and curr.y == pend.y and curr.z == pend.z):
         break
     dest = point3D(samplePoints[path[i]].x, samplePoints[path[i]].y, samplePoints[path[i]].z)

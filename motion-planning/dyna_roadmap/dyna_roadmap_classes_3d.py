@@ -45,7 +45,7 @@ class dynaObstacle3D:
     
     def move(self):
         if( ((self.currx + self.xstep > self.xmax) or (self.curry + self.ystep > self.ymax) or (self.currz + self.zstep > self.zmax)) \
-        or  ((self.currx + self.xstep < self.xmin) or (self.curry + self.ystep < self.ymin) or (self.currz + self.zstep < self.ymin)) ):
+        or  ((self.currx + self.xstep < self.xmin) or (self.curry + self.ystep < self.ymin) or (self.currz + self.zstep < self.zmin)) ):
             self.xstep *= -1
             self.ystep *= -1                    
             self.zstep *= -1                    
