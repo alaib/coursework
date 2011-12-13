@@ -20,8 +20,7 @@ from djikstra import *
 import draw_graph_3d
 from draw_graph_3d import *
 
-#choice = int(raw_input('1 : Test Case 1 (predefined data)\n2 : Test Case 2 (predefined data)\n3 : Custom Test Case\nChoose an option = '))
-choice = 1
+choice = int(raw_input('1 : Test Case 1 (predefined data)\n2 : Test Case 2 (predefined data)\n3 : Custom Test Case\nChoose an option = '))
 if choice < 1 or choice > 3:
     print 'Choice out of range, default choice -> 1 : Test Case 1 (predefined data)'
     choice = 1
@@ -37,8 +36,8 @@ if choice == 3:
     w_min = point3D(w_xmin, w_ymin, w_zmin)
     w_max = point3D(w_xmax, w_ymax, w_zmax)
     
-    # No of Obstacles
-    nObstacles = int(raw_input('Enter the number of Obstacles : '))
+    # No of Static Obstacles
+    nObstacles = int(raw_input('Enter the number of Static Obstacles : '))
     staticOList = []
     i = 1
     while i <= nObstacles:    
@@ -56,6 +55,30 @@ if choice == 3:
                 continue        
         staticOList.append(staticObstacle3D(o_xmin, o_ymin, o_zmin, o_xmax, o_ymax, o_zmax ));
         i += 1
+
+    # No of Obstacles
+    nObstacles = int(raw_input('Enter the number of Dynamic Obstacles : '))
+    dynaOList = []
+    i = 1
+    while i <= nObstacles:    
+        print 'Enter Obstacle %d data' % (i)
+        o_xmin = int(raw_input('Predefined path xmin = '))
+        o_ymin = int(raw_input('Predefined path ymin = '))
+        o_zmin = int(raw_input('Predefined path zmin = '))
+        o_xmax = int(raw_input('Predefined path xmax = '))
+        o_ymax = int(raw_input('Predefined path ymax = '))    
+        o_zmax = int(raw_input('Predefined path zmax = '))    
+
+        if not(validPoint(o_xmin, o_ymin, o_zmin, w_xmin, w_ymin, w_zmin, w_xmax, w_ymax, w_zmax) \
+                 and validPoint(o_xmax, o_ymax, o_zmax, w_xmin, w_ymin, w_zmin, w_xmax, w_ymax, w_zmax)):
+                print 'Predefined path of the obstacle is outside the workspace (%d,%d,%d,%d,%d,%d), please enter correct values' % (w_xmin, w_ymin, w_zmin, w_xmax, w_ymax, w_zmax)
+                continue        
+        vx = round(float(raw_input("Enter the obstacle's x-axis velocity = ")), 2)
+        vy = round(float(raw_input("Enter the obstacle's y-axis velocity = ")), 2)
+        vz = round(float(raw_input("Enter the obstacle's z-axis velocity = ")), 2)
+        r = int(raw_input("Enter the obstacle's radius = "))
+        dynaOList.append(dynaObstacle3D(o_xmin, o_ymin, o_zmin, o_xmax, o_ymax, o_zmax, vx, vy, vz, r ));
+        i += 1
     #Read start point and end point
     flag = True;
     while flag:
@@ -69,8 +92,8 @@ if choice == 3:
                and validPoint(end_x, end_y, end_z, w_xmin, w_ymin, w_zmin, w_xmax, w_ymax, w_zmax)):
             print 'Either start/end point is outside the workspace (%d,%d,%d,%d,%d,%d), please enter correct values' % (w_xmin, w_ymin, w_zmin, w_xmax, w_ymax, w_zmax)
             continue        
-        pstart = point3D(start_x,start_y)
-        pend = point3D(end_x,end_y)
+        pstart = point3D(start_x,start_y,start_z)
+        pend = point3D(end_x,end_y,end_z)
         if not(clear(pstart, staticOList) and clear(pend, staticOList)):
             print 'Either start/end point is in collision, please choose different set of start and end points'
             continue                    
@@ -97,12 +120,11 @@ elif choice == 2:
     
     dynaOList = []
     #xmin, ymin, zmin, xmax, ymax, zmax, deltax, deltay, deltaz, radius
-    dynaOList.append(dynaObstacle3D(2,4,1,6,4,1,0.25,0,0,1))
+    dynaOList.append(dynaObstacle3D(2,4,1,6,4,1,0.25,0,0,0.5))
     
     pstart = point3D(2,3,0)
     pend = point3D(7,8,1)
     
-    tstep = 0.5            
 elif choice == 1:                    
     # Initalize workspace
     w_xmin = 0
@@ -125,22 +147,19 @@ elif choice == 1:
     
     dynaOList = []
     #xmin, ymin, xmax, ymax, deltax, deltay, radius, velocity
-    dynaOList.append(dynaObstacle3D(6,11,1, 14,11,1, 0.25,0,0, 1))
-    dynaOList.append(dynaObstacle3D(4,6,1, 4,11,1,   0,0.25,0, 1))
-    
+    dynaOList.append(dynaObstacle3D(6,11,1, 14,11,1, 0.5,0,0, 1))
+    dynaOList.append(dynaObstacle3D(4,6,1, 4,11,1,   0,0.5,0, 1))
+
     pstart = point3D(2,2,0)
-    #pend = point3D(14,21,1)
     pend = point3D(14,22,2)
-    
-    tstep = 0.5    
 # end choice
 
-#sys.exit(0)
-#nSample = int(raw_input('Enter the no. of milestones = '))
-#noOfNeighbors = int(raw_input('Enter the number of nearest neighbors to find for each milestone = '))
+#Compute the no. of milestones and nearest neighbors to compute
 nSample = computeMilestones(w_min, w_max, staticOList)
 noOfNeighbors = computeNoOfNeighbors(nSample)
 
+#Fix time step as 0.5
+tstep = 0.5            
 print('Milestones = %d, No. of Neighbors = %d') % (nSample, noOfNeighbors)
 
 samplePoints = []
@@ -225,10 +244,12 @@ while notConnected and tries <= maxTries:
 if tries > maxTries:
     print 'Unable to find %d milestones with %d neighbors after %d tries, Quitting' % (nSample, noOfNeighbors, maxTries)
     print 'Total Cost = Infinity'    
+    print 'No suitable roadmap could be found to solve for static obstacles, please try again'
     sys.exit(1)
 elif noSampleFound:
     print 'No sample points set found where each point passes clear function , Max Sample Tries = %d' % (maxSampleTries)
     print 'Total Cost = Infinity'
+    print 'No suitable roadmap could be found to solve for static obstacles, please try again'
     sys.exit(1)
 else: 
     #print '%d milestones with %d neighbors found after %d sampling tries' % (nSample, noOfNeighbors, tries)
@@ -236,44 +257,49 @@ else:
     if cost < 0:
         print 'Path may or may not exist between (%d,%d,%d) to (%d,%d,%d)' % (pstart.x, pstart.y, pstart.z, pend.x, pend.y, pend.z)
         print 'Total Cost = Infinity'
+        print 'No suitable roadmap could be found to solve for static obstacles, please try again'
         sys.exit(1)
 #end failure case handling        
     
 #Found a successful connected graph, continue with Dynamic PRM Algorithm
-# Find the shortest path
-# Start Vertex = 0, End Vertex = 1
-print '%d milestones with %d neighbors found after %d sampling tries' % (nSample, noOfNeighbors, tries)
+print 'A successful roadmap has been constructed after %d sampling tries.\nThere are %d milestones each with %d neighbors' % (tries, nSample, noOfNeighbors)
 
+#Compute the shortest path
 cost,path = shortestPath(graph, 0, 1)
-l = len(path)
-for i in range(l):
-    if i != l-1:
-        print '(%d,%d,%d) -> ' % (samplePoints[path[i]].x, samplePoints[path[i]].y, samplePoints[path[i]].z),
-    else:
-        print '(%d,%d,%d)' % (samplePoints[path[i]].x, samplePoints[path[i]].y, samplePoints[path[i]].z),
-print '\nTotal Cost = %f' % (cost)                    
-#sys.exit(0);
-#printGraph(graph, samplePoints)
-drawBaseGraph(w_min, w_max, pstart, pend, staticOList, dynaOList)
+
+#Read the robot velocity range along with the potential field threshold
+choice = raw_input('\nDo you want to choose the robot velocity and potential field threshold or use default values? (y/n)')
+if(choice == 'y' or choice == 'Y'):
+    vrange = float(raw_input('Enter the max robot velocity = '))
+    pfThreshold = float(raw_input('Enter the potential field threshold = '))
+else:
+    vrange = 2.0 
+    pfThreshold = 0.5
+
+#Initialize start and goal
+
 start = point3D(samplePoints[path[0]].x, samplePoints[path[0]].y, samplePoints[path[0]].z)
 curr = point3D(samplePoints[path[0]].x, samplePoints[path[0]].y, samplePoints[path[0]].z)
 dest = point3D(samplePoints[path[1]].x, samplePoints[path[1]].y, samplePoints[path[1]].z)
 i = 2
-tmax = 100.0
+tmax = 500.0
 totalTime = 0.0
-tstep = 0.5
-vrange = 2.5 
 vmax = vrange
 actions = [1, 0, -1]
 prevPF = 100.0
 currPF = 100.0
 first = True
 count = 0
-drawGraph = True
-pfThreshold = 0.3 
+drawGraph = True 
+drawEveryTime = False 
+debug = False
 #Update Obstacles
 updateObstacles(dynaOList)
 colFree = False
+
+if(not(drawEveryTime)):
+    drawBaseGraph(w_min, w_max, pstart, pend, staticOList, dynaOList)
+
 #start dyna while loop
 while(totalTime < tmax):        
     #Traverse from curr to dest vertex in timesteps
@@ -301,33 +327,42 @@ while(totalTime < tmax):
             col = collisionFree(alpha, curr, start, dest, vp, tstep, dynaOList, action)
             
             if(col['pf'] <= pfThreshold * col['deltaMoved']):
-                print('Dangerous Potential Field')
+                if(debug):
+                    print('Dangerous Potential Field')
                 action1 = 0
                 action2 = -1
                 col1 = collisionFree(alpha, curr, start, dest, vp, tstep, dynaOList, action1)
                 col2 = collisionFree(alpha, curr, start, dest, vp, tstep, dynaOList, action2)
-                debugDisplay(col, count, totalTime, action, alpha, vp, curr, dest, dynaOList, prevPF)
-                print('0 PF = %f') % (col1['pf'])
-                print('-1 PF = %f') % (col2['pf'])
-                print('Alternate action is to be taken')
+                if(debug):
+                    debugDisplay(col, count, totalTime, action, alpha, vp, curr, dest, dynaOList, prevPF)
+                    print('0 PF = %f') % (col1['pf'])
+                    print('-1 PF = %f') % (col2['pf'])
+                    print('Alternate action is to be taken')
                 if(col2['pf'] >= col1['pf'] and col2['colFree'] == True):
                     col = col2
                     action = action2
                     colFree = True
-                    print('Possible new action to take = %d') % (action)
+                    if(debug):
+                        print('Possible new action to take = %d') % (action)
                 elif(col1['pf'] > col2['pf'] and col1['colFree'] == True):
                     col = col1
                     action = action1
                     colFree = True
-                    print('Possible new action to take = %d') % (action)
+                    if(debug):
+                        print('Possible new action to take = %d') % (action)
                 else:
-                    print('No possible action can be undertaken')                
+                    if(debug):
+                        print('No possible action can be undertaken')                
                 if(colFree == True):
                     curr = col['newPos']
                     alpha = col['newAlpha']
                     if(drawGraph):
-                        updateDraw(dynaOList, curr, count)                                            
-                    debugDisplay(col, count, totalTime, action, alpha, vp, curr, dest, dynaOList, prevPF)
+                        if(not(drawEveryTime)):
+                            updateDraw(dynaOList, curr, count) 
+                        else:
+                            updateDrawAndScene(w_min, w_max, pstart, pend, staticOList,dynaOList, curr, count)                                            
+                    if(debug):
+                        debugDisplay(col, count, totalTime, action, alpha, vp, curr, dest, dynaOList, prevPF)
                     #Print action taken
                     count += 1
                     if(first):
@@ -344,8 +379,12 @@ while(totalTime < tmax):
                 curr = col['newPos']
                 alpha = col['newAlpha']
                 if(drawGraph):
-                    updateDraw(dynaOList, curr, count)                                            
-                debugDisplay(col, count, totalTime, action, alpha, vp, curr, dest, dynaOList, prevPF)
+                    if(not(drawEveryTime)):
+                        updateDraw(dynaOList, curr, count)                                            
+                    else:
+                        updateDrawAndScene(w_min, w_max, pstart, pend, staticOList,dynaOList, curr, count)                                            
+                if(debug):
+                    debugDisplay(col, count, totalTime, action, alpha, vp, curr, dest, dynaOList, prevPF)
                 #Print action taken
                 count += 1                
                 if(first):
@@ -360,7 +399,9 @@ while(totalTime < tmax):
         #end failure case
         if(colFree == False):
             print('Robot hit the obstacle, no viable action possible')
-            break
+            start.show('Current Pos = ')
+            dest.show('Dest Pos = ')    
+            sys.exit(1)
         #end failure case
         
         tedge += tstep
@@ -374,12 +415,20 @@ while(totalTime < tmax):
         print('No solution exists, timed out on local edge traversal')
         start.show('Current Pos = ')
         dest.show(' Dest Pos = ')    
+        sys.exit(1)
         break                
     #end failure case    
     start = dest
     curr = point3D(start.x, start.y, start.z)
     if(curr.x == pend.x and curr.y == pend.y and curr.z == pend.z):
+        if(drawGraph):
+            if(not(drawEveryTime)):
+                updateDraw(dynaOList, curr, count)                                            
+            else:
+                updateDrawAndScene(w_min, w_max, pstart, pend, staticOList,dynaOList, curr, count)                                            
+        print('Robot velocity = %.1f, Pf Threshold = %.1f') % (vrange, pfThreshold)
+        print('Successfully reached the destination, time taken = %.1f units') % (totalTime)
         break
     dest = point3D(samplePoints[path[i]].x, samplePoints[path[i]].y, samplePoints[path[i]].z)
     i += 1    
-#
+#end of program

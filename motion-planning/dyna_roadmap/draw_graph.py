@@ -34,16 +34,17 @@ def drawBaseGraph(w_min, w_max, pstart, pend, oList):
 #end of drawBaseGraph
 
 #start updateDraw
-def updateDraw(w_min, w_max, pstart, pend, oList, curr, dynaOList, step):    
-    initDraw = drawBaseGraph(w_min, w_max, pstart, pend, oList)    
+def updateDraw(initDraw, curr, dynaOList, step):    
+    #initDraw = drawBaseGraph(w_min, w_max, pstart, pend, oList)    
     fig = initDraw['figure']
     plt = initDraw['plot']
     ax = initDraw['axes']
     for o in dynaOList:
-        c = mpatches.Circle((o.currx, o.curry), o.r, fc="c")                
+        c = mpatches.Circle((o.currx, o.curry), o.r, fc="w")                
         ax.add_patch(c)
     #end for loop
     plt.plot(curr.x, curr.y, 'g.', markersize = 5)
-    filename = 'results/'+str(step)+'.png'
-    fig.savefig(filename)    
+    return {'figure': fig, 'plot' : plt, 'axes' : ax}
+    #filename = 'results/'+str(step)+'.png'
+    #fig.savefig(filename)    
 #end updateDraw

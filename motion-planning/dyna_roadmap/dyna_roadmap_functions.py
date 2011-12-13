@@ -176,7 +176,7 @@ def collisionFree(alpha, curr, start, dest, v, tstep, oList, action):
 #start collisionFree    
 
 #start debugDisplay
-def debugDisplay(col, count, totalTime, action, alpha, vp, curr, dest, dynaOList, prevPF):
+def debugDisplay(col, count, totalTime, action, alpha, vp, curr, dest, dynaOList):
     print('\n=============================')                
     print('Step = %d') % (count)
     print('time = %.1f') % (totalTime)
@@ -184,13 +184,13 @@ def debugDisplay(col, count, totalTime, action, alpha, vp, curr, dest, dynaOList
     curr.show('Current Pos = ')
     dest.show('Dest Pos = ')
     dynaOList[0].show()
-    print('Current Potential Field = %f , Previous Potential Field = %f') % (col['pf'], prevPF)
+    print('Current Potential Field = %f') % (col['pf'])
     print('Delta Move = %f') % (col['deltaMoved'])
     print('===============================\n')
 #end debugDisplay     
 
 #start printCoords
-def printCoords(col, count, totalTime, action, alpha, vp, curr, dest, dynaOList, prevPF):
+def printCoords(col, count, totalTime, action, alpha, vp, curr, dest, dynaOList):
     print('\n=============================')                
     print('Step = %d') % (count)
     print('time = %.1f') % (totalTime)
@@ -198,7 +198,7 @@ def printCoords(col, count, totalTime, action, alpha, vp, curr, dest, dynaOList,
     curr.show('Current Pos = ')
     dest.show('Dest Pos = ')
     dynaOList[0].show()
-    print('Current Potential Field = %f , Previous Potential Field = %f') % (col['pf'], prevPF)
+    print('Current Potential Field = %f') % (col['pf'])
     print('Delta Move = %f') % (col['deltaMoved'])
     print('===============================\n')
 #end printCoords     
