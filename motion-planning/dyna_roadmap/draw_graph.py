@@ -40,8 +40,9 @@ def updateDraw(initDraw, curr, dynaOList, step):
     plt = initDraw['plot']
     ax = initDraw['axes']
     for o in dynaOList:
-        c = mpatches.Circle((o.currx, o.curry), o.r, fc="w")                
-        ax.add_patch(c)
+        if(step % 3 == 0):
+            c = mpatches.Circle((o.currx, o.curry), o.r, fc="w")                
+            ax.add_patch(c)
     #end for loop
     plt.plot(curr.x, curr.y, 'g.', markersize = 5)
     return {'figure': fig, 'plot' : plt, 'axes' : ax}

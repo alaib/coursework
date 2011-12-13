@@ -152,6 +152,7 @@ elif choice == 1:
 
     pstart = point3D(2,2,0)
     pend = point3D(14,22,2)
+    
 # end choice
 
 #Compute the no. of milestones and nearest neighbors to compute
@@ -292,7 +293,7 @@ first = True
 count = 0
 drawGraph = True 
 drawEveryTime = False 
-debug = False
+debug = False 
 #Update Obstacles
 updateObstacles(dynaOList)
 colFree = False
@@ -334,7 +335,7 @@ while(totalTime < tmax):
                 col1 = collisionFree(alpha, curr, start, dest, vp, tstep, dynaOList, action1)
                 col2 = collisionFree(alpha, curr, start, dest, vp, tstep, dynaOList, action2)
                 if(debug):
-                    debugDisplay(col, count, totalTime, action, alpha, vp, curr, dest, dynaOList, prevPF)
+                    debugDisplay(col, count, totalTime, action, alpha, vp, curr, dest, dynaOList)
                     print('0 PF = %f') % (col1['pf'])
                     print('-1 PF = %f') % (col2['pf'])
                     print('Alternate action is to be taken')
@@ -362,7 +363,7 @@ while(totalTime < tmax):
                         else:
                             updateDrawAndScene(w_min, w_max, pstart, pend, staticOList,dynaOList, curr, count)                                            
                     if(debug):
-                        debugDisplay(col, count, totalTime, action, alpha, vp, curr, dest, dynaOList, prevPF)
+                        debugDisplay(col, count, totalTime, action, alpha, vp, curr, dest, dynaOList)
                     #Print action taken
                     count += 1
                     if(first):
@@ -384,7 +385,7 @@ while(totalTime < tmax):
                     else:
                         updateDrawAndScene(w_min, w_max, pstart, pend, staticOList,dynaOList, curr, count)                                            
                 if(debug):
-                    debugDisplay(col, count, totalTime, action, alpha, vp, curr, dest, dynaOList, prevPF)
+                    debugDisplay(col, count, totalTime, action, alpha, vp, curr, dest, dynaOList)
                 #Print action taken
                 count += 1                
                 if(first):

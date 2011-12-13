@@ -276,7 +276,7 @@ currPF = 100.0
 first = True
 count = 0
 drawGraph = True
-debug = False
+debug = False 
 
 #Update Obstacles
 updateObstacles(dynaOList)
