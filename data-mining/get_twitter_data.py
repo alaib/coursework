@@ -16,8 +16,8 @@ def getData(keyword, pageNo = 1):
         jsonData = json.load(response)
         tweets = []
         for item in jsonData['results']:
-            tweet = process_tweet(item['text'])
-            tweets.append(tweet)                    
+            #tweet = process_tweet(item['text'])
+            tweets.append(item['text'])                    
         return tweets
     except urllib2.URLError, e:
         handleError(e)         
