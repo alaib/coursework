@@ -7,8 +7,9 @@ from classifier_helper import *
 
 #start getTwitterData
 def getData(keyword, pageNo = 1):
+    maxTweets = 50
     url = 'http://search.twitter.com/search.json'    
-    data = {'q': keyword, 'lang': 'en', 'page': pageNo, 'result_type': 'mixed', 'rpp': 50, 'include_entities': 0}
+    data = {'q': keyword, 'lang': 'en', 'page': pageNo, 'result_type': 'mixed', 'rpp': maxTweets, 'include_entities': 0}
     params = urllib.urlencode(data)
     try:            
         req = urllib2.Request(url, params)
