@@ -1,13 +1,18 @@
+import sys
+reload(sys)
+sys.setdefaultencoding('utf-8')
+
+
 import re
 import classifier_helper
 from classifier_helper import *
 
 #start class
-class classifier:
+class BaselineClassifier:
     """ Classifier using baseline method """
     #variables    
     #start __init__
-    def __init__(self, data):
+    def __init__(self, data, keyword):
         #Remove duplicates 
         uniq_data = []       
         for element in data:
@@ -16,12 +21,13 @@ class classifier:
         self.origTweets = uniq_data        
         self.tweets = []
         for t in self.origTweets:
-            self.tweets.append(process_tweet(t))
+            self.tweets.append(process_tweet_modified(t))
         #end loop
         self.results = {}
         self.neut_count = 0
         self.pos_count = 0
         self.neg_count = 0
+        self.keyword = keyword
     #end
     
     #start classify
@@ -72,6 +78,18 @@ class classifier:
         return False
     #end
     
+    #start writeOutput
+    def writeOutput(self, file, writeOption='w'):
+        fp = open(file, writeOption)
+        for i in self.results:
+            item = self.results[i]
+            text = item['text'].strip()
+            label = item['label']
+            writeStr = text+" | "+label+"\n"
+            fp.write(writeStr)
+        #end for loop            
+    #end writeOutput
+    
     #start printStats
     def getHTML(self):
         html = '''
@@ -85,17 +103,37 @@ class classifier:
     <div class="yui3-u" id="hd">
         <h2> Twitter Sentiment Analyzer </h2>
     </div>
-    <div class="yui3-u" id="bd">
-        <form id="key-form" method="get">
+    <div class="yui3-u" id="bd">        
+        <form name="keyform" id="key-form" method="get" onSubmit="return checkEmpty(this);">
         <p><input type="text" value="" name="keyword" id="keyword"/><input type="submit" value="Submit" id="sub"/></p>
+        <div id="choice">
+            <input type="radio" name="method" value="baseline" checked="true">Baseline Method</input>
+            <input type="radio" name="method" value="naivebayes">Naive Bayes method</input>
+        </div>
         </form>       
         <div id="results">            
 '''
-        html += '<div id="stats"><p>Positive = ' + str(self.pos_count) + ", Negative = " + str(self.neg_count)
+        html += '<div id="stats"><p>Keyword = "' + self.keyword + '", '
+        html += 'Positive = ' + str(self.pos_count) + ", Negative = " + str(self.neg_count)
         html += ", Neutral = "+ str(self.neut_count) + "</p></div>"
-        
+        html += '<div id="result-chart"></div>'
+        html += '<div id="content">'
+        left = '<div id="left"><h3>Positive</h3><ul>'
+        right = '<div id="right"><h3>Negative</h3><ul>'
+        middle = '<div id="middle"><h3>Neutral</h3><ul>'
+        for i in self.results:
+            item = self.results[i]
+            if(item['label'] == 'positive'):
+                left += '<li>' + item['tweet'] + '</li>'
+            elif(item['label'] == 'neutral'):
+                middle+= '<li>' + item['tweet'] + '</li>'
+            elif(item['label'] == 'negative'):
+                right += '<li>' + item['tweet'] + '</li>'
+        left += '</ul></div>'
+        right += '</ul></div>'
+        middle += '</ul></div>'
+        html += left + middle + right + '</div>'
         html += '''
-        <div id="result-chart"></div>
         </div>
     </div>
     <script src="http://yui.yahooapis.com/3.5.0/build/yui/yui-min.js"></script>
@@ -115,22 +153,19 @@ class classifier:
                                        type: "column"}
                                       );
         });
+        function checkEmpty(f) {
+            if (f.keyword.value === "") {
+                alert('Please enter a valid keyword');
+                return false;
+            }else{
+                f.submit();
+                return true;
+            }
+        }          
     </script>
 </body>
 </html>
-'''        
-        html += '<div id="content">'
-        left = '<div id="left"><h3>Positive</h3><ul>'
-        right = '<div id="right"><h3>Negative</h3><ul>'
-        for i in self.results:
-            item = self.results[i]
-            if(item['label'] == 'positive'):
-                left += '<li>' + item['tweet'] + '</li>'
-            elif(item['label'] == 'negative'):
-                right += '<li>' + item['tweet'] + '</li>'
-        left += '</ul></div>'
-        right += '</ul></div>'
-        html += left + right + '</div>'
+'''
         return html                            
     #end
 #end class    

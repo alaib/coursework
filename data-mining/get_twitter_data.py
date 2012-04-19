@@ -28,5 +28,6 @@ def getData(keyword, pageNo = 1):
 def handleError(e):
     print e.code
     print e.read()
+    return -1
 #end
 
