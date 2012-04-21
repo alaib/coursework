@@ -19,7 +19,12 @@ print('Done')
 
 keyword = 'reebok'
 tweets = getData(keyword)
-trainingDataFile = 'data/baseline_output.txt'
-nb = naive_bayes_classifier.NaiveBayesClassifier(tweets, trainingDataFile, keyword)
+trainingDataFile = 'data/full-corpus.csv'                
+classifierDumpFile = 'data/naivebayes_full-corpus.pickle'
+trainingRequired = 1
+nb = naive_bayes_classifier.NaiveBayesClassifier(tweets, keyword, \
+                              trainingDataFile, classifierDumpFile, trainingRequired)
 nb.classify()
 val = nb.getHTML()
+print 'Done'
+

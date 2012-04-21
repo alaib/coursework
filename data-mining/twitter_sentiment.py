@@ -75,11 +75,11 @@ class index:
                     bc.classify()
                     return bc.getHTML()
                 elif(method == 'naivebayes'):
-                    trainingDataFile = 'data/baseline_output.txt'                
-                    trainingDumpFile = 'data/baseline_output_trained.pickle'
+                    trainingDataFile = 'data/full-corpus.csv'
+                    classifierDumpFile = 'data/naivebayes_full-corpus.pickle'
                     trainingRequired = 0
                     nb = naive_bayes_classifier.NaiveBayesClassifier(tweets, keyword, \
-                                                  trainingDataFile, trainingDumpFile, trainingRequired)
+                                                  trainingDataFile, classifierDumpFile, trainingRequired)
                     nb.classify()
                     return nb.getHTML()
             else:

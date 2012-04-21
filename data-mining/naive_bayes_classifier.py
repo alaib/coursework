@@ -1,18 +1,16 @@
-import nltk
-from nltk.classify import *
-
-import pickle
-
+import nltk.classify
+import re, pickle, csv, os
 import classifier_helper
-from classifier_helper import *
-
 
 #start class
 class NaiveBayesClassifier:
     """ Naive Bayes Classifier """
     #variables    
     #start __init__
-    def __init__(self, data, keyword, trainingDataFile, trainingDumpFile, trainingRequired = 0):
+    def __init__(self, data, keyword, trainingDataFile, classifierDumpFile, trainingRequired = 0):
+        #Instantiate classifier helper
+        self.helper = classifier_helper.ClassifierHelper('data/positive_keywords.txt', 'data/negative_keywords.txt')
+        
         #Remove duplicates        
         uniq_data = []       
         for element in data:
@@ -21,72 +19,105 @@ class NaiveBayesClassifier:
         self.origTweets = uniq_data        
         self.tweets = []
         for t in self.origTweets:
-            self.tweets.append(process_tweet_modified(t))
+            self.tweets.append(self.helper.process_tweet(t))
         #end loop
+        
+        #Variables
         self.results = {}
         self.neut_count = 0
         self.pos_count = 0
         self.neg_count = 0
-        self.keyword = keyword        
+        self.keyword = keyword
+        
         #call training model
         if(trainingRequired):
-            self.classifier = self.getNBTrainedClassifer(trainingDataFile, trainingDumpFile)
+            self.classifier = self.getNBTrainedClassifer(trainingDataFile, classifierDumpFile)
         else:
-            f = open(trainingDumpFile)
-            if f:
-                self.classifier = pickle.load(f)
-                f.close()
+            f1 = open(classifierDumpFile)            
+            if(f1):
+                self.classifier = pickle.load(f1)                
+                f1.close()                
             else:
-                self.classifier = self.getNBTrainedClassifer(trainingDataFile, trainingDumpFile)
-            
+                self.classifier = self.getNBTrainedClassifer(trainingDataFile, classifierDumpFile)
     #end
     
     #start getNBTrainedClassifier
-    def getNBTrainedClassifer(self, trainingDataFile, trainingDumpFile):
-        inpfile = open(trainingDataFile, "r")
-        line = inpfile.readline()
-        count = 1
-        tweetItems = []                
-        while line:    
-            count += 1
-            l = range(len(line))
-            for i in l[::-1]:
-                if(line[i] == '|'):
-                    processed_tweet = process_tweet_modified(line[0:i-1])
-                    opinion = line[i+1:len(line)].strip()
-                    break
-            #end match loop                        
-            tweet_item = processed_tweet, opinion
-            if(opinion != 'neutral' and opinion != 'negative' and opinion != 'positive'):
-                print('Error with tweet = %s, Line = %s') % (processed_tweet, count)
-                line = inpfile.readline()
-                continue
-            tweetItems.append(tweet_item)    
-            line = inpfile.readline()
-        #end while loop
+    def getNBTrainedClassifer(self, trainingDataFile, classifierDumpFile):        
+        # read all tweets and labels
+        tweetItems = self.getFilteredTrainingData(trainingDataFile)
         
-        tweets = []    
+        tweets = []
         for (words, sentiment) in tweetItems:
-            words_filtered = [e.lower() for e in words.split() if len(e) >= 3]
+            words_filtered = [e.lower() for e in words.split() if(self.helper.is_ascii(e))]
             tweets.append((words_filtered, sentiment))
-        
-        word_features = get_word_features(get_words_in_tweets(tweets))
-        set_word_features(word_features)
-        training_set = nltk.classify.apply_features(extract_features, tweets)
-        # Write back classifier to a file
+                    
+        training_set = nltk.classify.apply_features(self.helper.extract_features, tweets)
+        # Write back classifier and word features to a file
         classifier = nltk.NaiveBayesClassifier.train(training_set)
-        f = open(trainingDumpFile, 'wb')
-        pickle.dump(classifier, f)
-        f.close()
+        outfile = open(classifierDumpFile, 'wb')        
+        pickle.dump(classifier, outfile)        
+        outfile.close()        
         return classifier
     #end
     
+    #start getFilteredTrainingData
+    def getFilteredTrainingData(self, trainingDataFile):
+        fp = open( trainingDataFile, 'rb' )
+        min_count = self.getMinCount(trainingDataFile)        
+        neg_count, pos_count, neut_count = 0, 0, 0
+        
+        reader = csv.reader( fp, delimiter=',', quotechar='"', escapechar='\\' )
+        tweetItems = []
+        count = 1       
+        for row in reader:
+            processed_tweet = self.helper.process_tweet(row[4])
+            sentiment = row[1]
+            
+            #Skip first line
+            if(sentiment == 'Sentiment'):                
+                continue;
+            
+            if(sentiment == 'irrelevant' or sentiment == 'neutral'):                
+                if(neut_count == min_count):
+                    continue
+                neut_count += 1
+            elif(sentiment == 'positive'):
+                if(pos_count == min_count):
+                    continue
+                pos_count += 1
+            elif(sentiment == 'negative'):
+                if(neg_count == min_count):
+                    continue
+                neg_count += 1
+            
+            tweet_item = processed_tweet, sentiment
+            tweetItems.append(tweet_item)
+            count +=1
+        #end loop
+        return tweetItems
+    #end 
     
+    #start getMinCount
+    def getMinCount(self, trainingDataFile):
+        fp = open( trainingDataFile, 'rb' )
+        reader = csv.reader( fp, delimiter=',', quotechar='"', escapechar='\\' )
+        neg_count, pos_count, neut_count = 0, 0, 0
+        for row in reader:
+            sentiment = row[1]
+            if(sentiment == 'irrelevant' or sentiment == 'neutral'):
+                neut_count += 1
+            elif(sentiment == 'positive'):
+                pos_count += 1
+            elif(sentiment == 'negative'):
+                neg_count += 1
+        #end loop
+        return min(neg_count, pos_count, neut_count)
+    #end
     #start classify
     def classify(self):
         count = 0
         for t in self.tweets:
-            label = self.classifier.classify(extract_features(t.split()))
+            label = self.classifier.classify(self.helper.extract_features(t.split()))
             if(label == 'positive'):
                 self.pos_count += 1
             elif(label == 'negative'):                

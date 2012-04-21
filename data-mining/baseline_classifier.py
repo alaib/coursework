@@ -1,11 +1,9 @@
 import sys
-reload(sys)
-sys.setdefaultencoding('utf-8')
-
-
 import re
 import classifier_helper
-from classifier_helper import *
+
+reload(sys)
+sys.setdefaultencoding = 'utf-8'
 
 #start class
 class BaselineClassifier:
@@ -13,6 +11,8 @@ class BaselineClassifier:
     #variables    
     #start __init__
     def __init__(self, data, keyword):
+        #Instantiate classifier helper
+        self.helper = classifier_helper.ClassifierHelper('data/positive_keywords.txt', 'data/negative_keywords.txt')
         #Remove duplicates 
         uniq_data = []       
         for element in data:
@@ -21,7 +21,7 @@ class BaselineClassifier:
         self.origTweets = uniq_data        
         self.tweets = []
         for t in self.origTweets:
-            self.tweets.append(process_tweet_modified(t))
+            self.tweets.append(self.helper.process_tweet(t))
         #end loop
         self.results = {}
         self.neut_count = 0
