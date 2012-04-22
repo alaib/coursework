@@ -33,6 +33,7 @@ class index:
                     return bc.getHTML()
                 elif(method == 'naivebayes'):
                     trainingDataFile = 'data/full-corpus.csv'
+                    #trainingDataFile = 'data/training.10000.processed.noemoticon.csv'
                     classifierDumpFile = 'data/naivebayes_full-corpus.pickle'
                     trainingRequired = 0
                     nb = naive_bayes_classifier.NaiveBayesClassifier(tweets, keyword, \
@@ -48,8 +49,8 @@ class index:
                     maxent.classify()
                     return maxent.getHTML()
                 elif(method == 'svm'):
-                    #trainingDataFile = 'data/full-corpus.csv'                
-                    trainingDataFile = 'data/training.4000.processed.noemoticon.csv'
+                    trainingDataFile = 'data/full-corpus.csv'                
+                    #trainingDataFile = 'data/training.10000.processed.noemoticon.csv'
                     classifierDumpFile = 'data/svm_full-corpus.pickle'
                     trainingRequired = 1
                     sc = libsvm_classifier.SVMClassifier(tweets, keyword, \

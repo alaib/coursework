@@ -4,19 +4,33 @@ import json
 
 #start getTwitterData
 def getData(keyword, pageNo = 1):
-    maxTweets = 100
+    maxTweets = 50
+    keyword1 = keyword + ' :)'
     url = 'http://search.twitter.com/search.json'    
     data = {'q': keyword, 'lang': 'en', 'page': pageNo, 'result_type': 'mixed', 'rpp': maxTweets, 'include_entities': 0}
     params = urllib.urlencode(data)
+    tweets = []
     try:            
         req = urllib2.Request(url, params)
         response = urllib2.urlopen(req)  
         jsonData = json.load(response)
-        tweets = []
         for item in jsonData['results']:
             #tweet = process_tweet(item['text'])
             tweets.append(item['text'])                    
+        #end first request
+        '''
+        keyword2 = keyword + ' :('
+        data = {'q': keyword2, 'lang': 'en', 'page': pageNo, 'result_type': 'mixed', 'rpp': maxTweets, 'include_entities': 0}
+        params = urllib.urlencode(data)
+
+        req = urllib2.Request(url, params)
+        response = urllib2.urlopen(req)  
+        jsonData = json.load(response)
+        for item in jsonData['results']:
+            tweets.append(item['text'])  
+        '''
         return tweets
+        #end second request
     except urllib2.URLError, e:
         handleError(e)         
 #end    

@@ -10,8 +10,9 @@ class SVMClassifier:
     #start __init__
     def __init__(self, data, keyword, trainingDataFile, classifierDumpFile, trainingRequired = 0):
         #Instantiate classifier helper
-        self.helper = classifier_helper.ClassifierHelper('data/twit_positive.txt', 'data/twit_negative.txt')
+        #self.helper = classifier_helper.ClassifierHelper('data/twit_positive.txt', 'data/twit_negative.txt')
         #self.helper = classifier_helper.ClassifierHelper('data/positive_keywords.txt', 'data/negative_keywords.txt')
+        self.helper = classifier_helper.ClassifierHelper('data/pos_mod.txt', 'data/neg_mod.txt')
         
         #Remove duplicates        
         uniq_data = []       
@@ -29,6 +30,7 @@ class SVMClassifier:
         self.neut_count = 0
         self.pos_count = 0
         self.neg_count = 0
+        self.trainingDataFile = trainingDataFile
         self.keyword = keyword
         self.html = html_helper.HTMLHelper()
         
@@ -46,7 +48,7 @@ class SVMClassifier:
     #start getNBTrainedClassifier
     def getSVMTrainedClassifer(self, trainingDataFile, classifierDumpFile):        
         # read all tweets and labels
-        tweetItems = self.getFilteredTrainingData1(trainingDataFile)
+        tweetItems = self.getFilteredTrainingData(trainingDataFile)
         
         tweets = []
         for (words, sentiment) in tweetItems:
@@ -60,9 +62,8 @@ class SVMClassifier:
         #SVM Trainer
         problem = svm_problem(self.labels, self.feature_vectors)
         param = svm_parameter('-q')
-        param.C = 10
         param.kernel_type = LINEAR
-        param.show()
+        #param.show()
         classifier = svm_train(problem, param)
         svm_save_model(classifierDumpFile, classifier)
         return classifier
@@ -82,10 +83,10 @@ class SVMClassifier:
             sentiment = row[1]
             
             #Skip first line
-            if(sentiment == 'Sentiment'):                
+            if(sentiment == 'Sentiment' or sentiment == 'irrelevant'):
                 continue;
             
-            if(sentiment == 'irrelevant' or sentiment == 'neutral'):                
+            if(sentiment == 'neutral'):                
                 if(neut_count == int(min_count)):
                     continue
                 neut_count += 1
@@ -94,7 +95,7 @@ class SVMClassifier:
                     continue
                 pos_count += 1
             elif(sentiment == 'negative'):
-                if(neg_count == min_count):
+                if(neg_count == int(min_count)):
                     continue
                 neg_count += 1
             
@@ -104,7 +105,8 @@ class SVMClassifier:
         #end loop
         return tweetItems
     #end 
-        #start getFilteredTrainingData
+
+    #start getFilteredTrainingData1
     def getFilteredTrainingData1(self, trainingDataFile):
         fp = open( trainingDataFile, 'rb' )
         neg_count, pos_count = 0, 0
@@ -165,7 +167,7 @@ class SVMClassifier:
                                             test_feature_vector, self.classifier)
         count = 0
         for t in self.tweets:
-            label = p_labels[0]
+            label = p_labels[count]
             if(label == 0):
                 label = 'positive'
                 self.pos_count += 1
@@ -194,6 +196,42 @@ class SVMClassifier:
                 fp.write(writeStr)
         #end for loop            
     #end writeOutput
+
+    #start accuracy
+    def accuracy(self):
+        tweets = self.getFilteredTrainingData(self.trainingDataFile)
+        test_tweets = []
+        for (t, l) in tweets:
+            words_filtered = [e.lower() for e in t.split() if(self.helper.is_ascii(e))]
+            test_tweets.append(words_filtered)
+
+        test_feature_vector = self.helper.getSVMFeatureVector(test_tweets)
+        p_labels, p_accs, p_vals = svm_predict([0] * len(test_feature_vector),\
+                                            test_feature_vector, self.classifier)
+        count = 0
+        total , correct , wrong = 0, 0, 0
+        self.accuracy = 0.0
+        for (t,l) in tweets:
+            label = p_labels[count]
+            if(label == 0):
+                label = 'positive'
+            elif(label == 1):
+                label = 'negative'
+            elif(label == 2):
+                label = 'neutral'
+
+            if(label == l):
+                correct+= 1
+            else:
+                wrong+= 1
+            total += 1
+            count += 1
+        #end loop
+        self.accuracy = (float(correct)/total)*100
+        print 'Total = %d, Correct = %d, Wrong = %d, Accuracy = %.2f' % \
+                                                (total, correct, wrong, self.accuracy)        
+    #end
+
     
     #start printStats
     def getHTML(self):

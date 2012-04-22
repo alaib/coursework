@@ -9,7 +9,8 @@ class MaxEntClassifier:
     #start __init__
     def __init__(self, data, keyword, trainingDataFile, classifierDumpFile, trainingRequired = 0):
         #Instantiate classifier helper
-        self.helper = classifier_helper.ClassifierHelper('data/positive_keywords.txt', 'data/negative_keywords.txt')
+        #self.helper = classifier_helper.ClassifierHelper('data/positive_keywords.txt', 'data/negative_keywords.txt')
+        self.helper = classifier_helper.ClassifierHelper('data/pos_mod.txt', 'data/neg_mod.txt')
         
         #Remove duplicates        
         uniq_data = []       

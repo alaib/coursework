@@ -9,7 +9,9 @@ class NaiveBayesClassifier:
     #start __init__
     def __init__(self, data, keyword, trainingDataFile, classifierDumpFile, trainingRequired = 0):
         #Instantiate classifier helper
-        self.helper = classifier_helper.ClassifierHelper('data/positive_keywords.txt', 'data/negative_keywords.txt')
+        #self.helper = classifier_helper.ClassifierHelper('data/positive_keywords.txt', 'data/negative_keywords.txt')
+        self.helper = classifier_helper.ClassifierHelper('data/pos_mod.txt', 'data/neg_mod.txt')
+        #self.helper = classifier_helper.ClassifierHelper('data/twit_positive.txt', 'data/twit_negative.txt')
         
         #Remove duplicates        
         uniq_data = []       
@@ -27,6 +29,7 @@ class NaiveBayesClassifier:
         self.neut_count = 0
         self.pos_count = 0
         self.neg_count = 0
+        self.trainingDataFile = trainingDataFile
         self.keyword = keyword
         self.html = html_helper.HTMLHelper()
         
@@ -97,6 +100,40 @@ class NaiveBayesClassifier:
         #end loop
         return tweetItems
     #end 
+
+    #start getFilteredTrainingData1
+    def getFilteredTrainingData1(self, trainingDataFile):
+        fp = open( trainingDataFile, 'rb' )
+        neg_count, pos_count = 0, 0
+        
+        reader = csv.reader( fp, delimiter=',', quotechar='"', escapechar='\\' )
+        tweetItems = []
+        count = 1       
+        for row in reader:
+            #processed_tweet = self.helper.process_tweet(row[4])
+            processed_tweet = self.helper.process_tweet(row[5])
+            #sentiment = row[1]
+            sentiment = row[0]
+            
+            if(sentiment == "0"):
+                sentiment = "negative"
+            elif(sentiment == "2"):
+                sentiment = "neutral"
+            elif(sentiment == "4"):
+                sentiment = "positive"
+                                
+            if(sentiment == 'positive'):            
+                pos_count += 1
+            elif(sentiment == 'negative'):            
+                neg_count += 1
+
+            tweet_item = processed_tweet, sentiment
+            tweetItems.append(tweet_item)
+            count +=1
+        #end loop
+        return tweetItems
+    #end 
+ 
     
     #start getMinCount
     def getMinCount(self, trainingDataFile):
@@ -129,7 +166,25 @@ class NaiveBayesClassifier:
             self.results[count] = res
             count += 1
         #end loop
-        
+    #end
+    #start accuracy
+    def accuracy(self):
+        tweets = self.getFilteredTrainingData(self.trainingDataFile)
+        total = 0
+        correct = 0
+        wrong = 0
+        self.accuracy = 0.0
+        for (t, l) in tweets:
+            label = self.classifier.classify(self.helper.extract_features(t.split()))
+            if(label == l):
+                correct+= 1
+            else:
+                wrong+= 1
+            total += 1
+        #end loop
+        self.accuracy = (float(correct)/total)*100
+        print 'Total = %d, Correct = %d, Wrong = %d, Accuracy = %.2f' % \
+                                                (total, correct, wrong, self.accuracy)        
     #end
            
     #start writeOutput
