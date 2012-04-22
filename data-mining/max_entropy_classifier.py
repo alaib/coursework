@@ -3,8 +3,8 @@ import re, pickle, csv, os
 import classifier_helper, html_helper
 
 #start class
-class NaiveBayesClassifier:
-    """ Naive Bayes Classifier """
+class MaxEntClassifier:
+    """ Maximum Entropy Classifier """
     #variables    
     #start __init__
     def __init__(self, data, keyword, trainingDataFile, classifierDumpFile, trainingRequired = 0):
@@ -32,18 +32,18 @@ class NaiveBayesClassifier:
         
         #call training model
         if(trainingRequired):
-            self.classifier = self.getNBTrainedClassifer(trainingDataFile, classifierDumpFile)
+            self.classifier = self.getMaxEntTrainedClassifer(trainingDataFile, classifierDumpFile)
         else:
             f1 = open(classifierDumpFile)            
             if(f1):
                 self.classifier = pickle.load(f1)                
                 f1.close()                
             else:
-                self.classifier = self.getNBTrainedClassifer(trainingDataFile, classifierDumpFile)
+                self.classifier = self.getMaxEntTrainedClassifer(trainingDataFile, classifierDumpFile)
     #end
     
-    #start getNBTrainedClassifier
-    def getNBTrainedClassifer(self, trainingDataFile, classifierDumpFile):        
+    #start getMaxEntTrainedClassifier
+    def getMaxEntTrainedClassifer(self, trainingDataFile, classifierDumpFile):        
         # read all tweets and labels
         tweetItems = self.getFilteredTrainingData(trainingDataFile)
         
@@ -53,8 +53,8 @@ class NaiveBayesClassifier:
             tweets.append((words_filtered, sentiment))
                     
         training_set = nltk.classify.apply_features(self.helper.extract_features, tweets)
-        # Write back classifier and word features to a file
-        classifier = nltk.NaiveBayesClassifier.train(training_set)
+        # Write back classifier        
+        classifier = nltk.classify.maxent.train_maxent_classifier_with_gis(training_set)
         outfile = open(classifierDumpFile, 'wb')        
         pickle.dump(classifier, outfile)        
         outfile.close()        
@@ -79,7 +79,7 @@ class NaiveBayesClassifier:
                 continue;
             
             if(sentiment == 'irrelevant' or sentiment == 'neutral'):                
-                if(neut_count == int(min_count*0.95)):
+                if(neut_count == int(min_count*0.98)):
                     continue
                 neut_count += 1
             elif(sentiment == 'positive'):
@@ -87,7 +87,7 @@ class NaiveBayesClassifier:
                     continue
                 pos_count += 1
             elif(sentiment == 'negative'):
-                if(neg_count == min_count):
+                if(neg_count == min_count*0.95):
                     continue
                 neg_count += 1
             
@@ -148,6 +148,6 @@ class NaiveBayesClassifier:
     #start printStats
     def getHTML(self):
         return self.html.getResultHTML(self.keyword, self.results, self.pos_count, \
-                                       self.neg_count, self.neut_count, 'naivebayes')
+                                       self.neg_count, self.neut_count, 'maxentropy')
     #end
 #end class

@@ -2,12 +2,9 @@ import urllib
 import urllib2
 import json
 
-import classifier_helper
-from classifier_helper import *
-
 #start getTwitterData
 def getData(keyword, pageNo = 1):
-    maxTweets = 50
+    maxTweets = 100
     url = 'http://search.twitter.com/search.json'    
     data = {'q': keyword, 'lang': 'en', 'page': pageNo, 'result_type': 'mixed', 'rpp': maxTweets, 'include_entities': 0}
     params = urllib.urlencode(data)

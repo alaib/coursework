@@ -1,6 +1,6 @@
 import sys
 import re
-import classifier_helper
+import classifier_helper, html_helper
 
 reload(sys)
 sys.setdefaultencoding = 'utf-8'
@@ -28,6 +28,7 @@ class BaselineClassifier:
         self.pos_count = 0
         self.neg_count = 0
         self.keyword = keyword
+        self.html = html_helper.HTMLHelper()
     #end
     
     #start classify
@@ -92,80 +93,7 @@ class BaselineClassifier:
     
     #start printStats
     def getHTML(self):
-        html = '''
-<html>
-<head><title>Twitter Sentiment Analysis</title>
-    <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.4.1/build/cssgrids/grids-min.css" />
-    <link rel="stylesheet" type="text/css" href="static/styles.css" />
-</head>
-<body>
-    <div class="yui3-g" id="doc">
-    <div class="yui3-u" id="hd">
-        <h2> Twitter Sentiment Analyzer </h2>
-    </div>
-    <div class="yui3-u" id="bd">        
-        <form name="keyform" id="key-form" method="get" onSubmit="return checkEmpty(this);">
-        <p><input type="text" value="" name="keyword" id="keyword"/><input type="submit" value="Submit" id="sub"/></p>
-        <div id="choice">
-            <input type="radio" name="method" value="baseline" checked="true">Baseline Method</input>
-            <input type="radio" name="method" value="naivebayes">Naive Bayes method</input>
-        </div>
-        </form>       
-        <div id="results">            
-'''
-        html += '<div id="stats"><p>Keyword = "' + self.keyword + '", '
-        html += 'Positive = ' + str(self.pos_count) + ", Negative = " + str(self.neg_count)
-        html += ", Neutral = "+ str(self.neut_count) + "</p></div>"
-        html += '<div id="result-chart"></div>'
-        html += '<div id="content">'
-        left = '<div id="left"><h3>Positive</h3><ul>'
-        right = '<div id="right"><h3>Negative</h3><ul>'
-        middle = '<div id="middle"><h3>Neutral</h3><ul>'
-        for i in self.results:
-            item = self.results[i]
-            if(item['label'] == 'positive'):
-                left += '<li>' + item['tweet'] + '</li>'
-            elif(item['label'] == 'neutral'):
-                middle+= '<li>' + item['tweet'] + '</li>'
-            elif(item['label'] == 'negative'):
-                right += '<li>' + item['tweet'] + '</li>'
-        left += '</ul></div>'
-        right += '</ul></div>'
-        middle += '</ul></div>'
-        html += left + middle + right + '</div>'
-        html += '''
-        </div>
-    </div>
-    <script src="http://yui.yahooapis.com/3.5.0/build/yui/yui-min.js"></script>
-    <script type="text/javascript">
-        YUI().use('charts', function (Y) 
-        { 
-            var myDataValues = [ 
-'''
-        html += '{category:"Positive", values:'+ str(self.pos_count) +'},'
-        html += '{category:"Negative", values:'+ str(self.neg_count) +'},'
-        html += '{category:"Neutral", values:'+ str(self.neut_count) +'}'
-        html += '''         
-            ];          
-            var mychart = new Y.Chart({
-                                       dataProvider:myDataValues, 
-                                       render:"#result-chart", 
-                                       type: "column"}
-                                      );
-        });
-        function checkEmpty(f) {
-            if (f.keyword.value === "") {
-                alert('Please enter a valid keyword');
-                return false;
-            }else{
-                f.submit();
-                return true;
-            }
-        }          
-    </script>
-</body>
-</html>
-'''
-        return html                            
+        return self.html.getResultHTML(self.keyword, self.results, self.pos_count, \
+                                       self.neg_count, self.neut_count, 'baseline')
     #end
 #end class    

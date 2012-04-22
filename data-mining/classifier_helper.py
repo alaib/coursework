@@ -29,6 +29,58 @@ class ClassifierHelper:
         return features
     #end
     
+    def getSVMFeatureVectorAndLabels(self, tweets):
+        sortedFeatures = sorted(self.wordFeatures)
+        map = {}
+        feature_vector = []
+        labels = []
+        for t in tweets:
+            label = 0
+            map = {}
+            #Initialize empty map
+            for w in sortedFeatures:
+                map[w] = 0
+            
+            tweet_words = t[0]
+            tweet_opinion = t[1]
+            #Fill the map
+            for word in tweet_words:
+                if word in map:
+                    map[word] = 1
+            #end for loop
+            values = map.values()
+            feature_vector.append(values)
+            if(tweet_opinion == 'positive'):
+                label = 0
+            elif(tweet_opinion == 'negative'):
+                label = 1
+            elif(tweet_opinion == 'neutral' or tweet_opinion == 'irrelevant'):
+                label = 2
+            labels.append(label)            
+        return {'feature_vector' : feature_vector, 'labels': labels}
+    #end
+    
+    #start getSVMFeatureVector
+    def getSVMFeatureVector(self, tweets):
+        sortedFeatures = sorted(self.wordFeatures)
+        map = {}
+        feature_vector = []
+        for t in tweets:
+            label = 0
+            map = {}
+            #Initialize empty map
+            for w in sortedFeatures:
+                map[w] = 0
+            #Fill the map
+            for word in t:
+                if word in map:
+                    map[word] = 1
+            #end for loop
+            values = map.values()
+            feature_vector.append(values)                    
+        return feature_vector
+    #end
+    
     #start process_tweet
     def process_tweet(self, tweet):
         #Conver to lower case

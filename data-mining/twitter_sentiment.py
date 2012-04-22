@@ -3,52 +3,8 @@ import web
 import get_twitter_data
 from get_twitter_data import *
 
-import baseline_classifier, naive_bayes_classifier
-import json, logging
-
-#start defaultHTML
-def defaultHTML(error = 0):
-    html = '''
-<html>
-<head><title>Twitter Sentiment Analysis</title>
-    <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.4.1/build/cssgrids/grids-min.css" />
-    <link rel="stylesheet" type="text/css" href="static/styles.css" />
-</head>
-<body>
-    <div class="yui3-g" id="doc">
-    <div class="yui3-u" id="hd">
-        <h2> Twitter Sentiment Analyzer </h2>
-    </div>
-    <div class="yui3-u" id="bd">
-        <form name="keyform" id="key-form" method="get" onSubmit="return checkEmpty(this);">
-        <p><input type="text" value="" name="keyword" id="keyword"/><input type="submit" value="Submit" id="sub"/></p>
-           <div id="choice">
-            <input type="radio" name="method" value="baseline" checked="true">Baseline Method</input>
-            <input type="radio" name="method" value="naivebayes">Naive Bayes method</input>
-        </div>
-        </form>
-'''
-    if(error):
-        html += '<div id="error"> Unable to fetch TWitter API data. Please try again later.</div>'
-    html += '''
-    </div>
-    <div id='ft'>by Ravikiran Janardhana</div>
-    <script type="text/javascript">
-    function checkEmpty(f) {
-        if (f.keyword.value === "") {
-            alert('Please enter a valid keyword');
-            return false;
-        }else{
-            f.submit();
-            return true;
-        }
-    }
-    </script>
-</body>
-</html>
-'''
-    return html
-#end    
+import baseline_classifier, naive_bayes_classifier, max_entropy_classifier, libsvm_classifier
+import json, logging, html_helper
 
 urls = (
     '/', 'index'
@@ -57,6 +13,7 @@ urls = (
 class index:
     def GET(self):
         query = web.ctx.get('query')
+        html = html_helper.HTMLHelper()
         if query:
             if(query[0] == '?'):
                 query = query[1:]
@@ -67,8 +24,8 @@ class index:
                     keyword = item.split('=')[1]
                 elif 'method' in item:
                     method = item.split('=')[1]
-            #end loop                    
-            tweets = getData(keyword)            
+            #end loop              
+            tweets = getData(keyword)
             if(tweets):
                 if(method == 'baseline'):
                     bc = baseline_classifier.BaselineClassifier(tweets, keyword)
@@ -82,10 +39,26 @@ class index:
                                                   trainingDataFile, classifierDumpFile, trainingRequired)
                     nb.classify()
                     return nb.getHTML()
+                elif(method == 'maxentropy'):
+                    trainingDataFile = 'data/full-corpus.csv'                
+                    classifierDumpFile = 'data/maxent_full-corpus.pickle'
+                    trainingRequired = 0
+                    maxent = max_entropy_classifier.MaxEntClassifier(tweets, keyword, \
+                                                  trainingDataFile, classifierDumpFile, trainingRequired)
+                    maxent.classify()
+                    return maxent.getHTML()
+                elif(method == 'svm'):
+                    trainingDataFile = 'data/full-corpus.csv'                
+                    classifierDumpFile = 'data/svm_full-corpus.pickle'
+                    trainingRequired = 1
+                    sc = libsvm_classifier.SVMClassifier(tweets, keyword, \
+                                                  trainingDataFile, classifierDumpFile, trainingRequired)
+                    sc.classify()
+                    return sc.getHTML()
             else:
-                return defaultHTML(error=1)                        
+                return html.getDefaultHTML(error=1)                        
         else:
-            return defaultHTML()
+            return html.getDefaultHTML()
 
 if __name__ == "__main__":
     app = web.application(urls, globals())
