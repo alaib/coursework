@@ -48,7 +48,8 @@ class index:
                     maxent.classify()
                     return maxent.getHTML()
                 elif(method == 'svm'):
-                    trainingDataFile = 'data/full-corpus.csv'                
+                    #trainingDataFile = 'data/full-corpus.csv'                
+                    trainingDataFile = 'data/training.4000.processed.noemoticon.csv'
                     classifierDumpFile = 'data/svm_full-corpus.pickle'
                     trainingRequired = 1
                     sc = libsvm_classifier.SVMClassifier(tweets, keyword, \

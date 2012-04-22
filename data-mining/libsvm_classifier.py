@@ -10,8 +10,8 @@ class SVMClassifier:
     #start __init__
     def __init__(self, data, keyword, trainingDataFile, classifierDumpFile, trainingRequired = 0):
         #Instantiate classifier helper
-        #self.helper = classifier_helper.ClassifierHelper('data/twit_positive.txt', 'data/twit_negative.txt')
-        self.helper = classifier_helper.ClassifierHelper('data/positive_keywords.txt', 'data/negative_keywords.txt')
+        self.helper = classifier_helper.ClassifierHelper('data/twit_positive.txt', 'data/twit_negative.txt')
+        #self.helper = classifier_helper.ClassifierHelper('data/positive_keywords.txt', 'data/negative_keywords.txt')
         
         #Remove duplicates        
         uniq_data = []       
@@ -46,7 +46,7 @@ class SVMClassifier:
     #start getNBTrainedClassifier
     def getSVMTrainedClassifer(self, trainingDataFile, classifierDumpFile):        
         # read all tweets and labels
-        tweetItems = self.getFilteredTrainingData(trainingDataFile)
+        tweetItems = self.getFilteredTrainingData1(trainingDataFile)
         
         tweets = []
         for (words, sentiment) in tweetItems:
@@ -61,7 +61,7 @@ class SVMClassifier:
         problem = svm_problem(self.labels, self.feature_vectors)
         param = svm_parameter('-q')
         param.C = 10
-        param.kernel_type = LINEAR        
+        param.kernel_type = LINEAR
         param.show()
         classifier = svm_train(problem, param)
         svm_save_model(classifierDumpFile, classifier)
@@ -98,6 +98,38 @@ class SVMClassifier:
                     continue
                 neg_count += 1
             
+            tweet_item = processed_tweet, sentiment
+            tweetItems.append(tweet_item)
+            count +=1
+        #end loop
+        return tweetItems
+    #end 
+        #start getFilteredTrainingData
+    def getFilteredTrainingData1(self, trainingDataFile):
+        fp = open( trainingDataFile, 'rb' )
+        neg_count, pos_count = 0, 0
+        
+        reader = csv.reader( fp, delimiter=',', quotechar='"', escapechar='\\' )
+        tweetItems = []
+        count = 1       
+        for row in reader:
+            #processed_tweet = self.helper.process_tweet(row[4])
+            processed_tweet = self.helper.process_tweet(row[5])
+            #sentiment = row[1]
+            sentiment = row[0]
+            
+            if(sentiment == "0"):
+                sentiment = "negative"
+            elif(sentiment == "2"):
+                sentiment = "neutral"
+            elif(sentiment == "4"):
+                sentiment = "positive"
+                                
+            if(sentiment == 'positive'):            
+                pos_count += 1
+            elif(sentiment == 'negative'):            
+                neg_count += 1
+
             tweet_item = processed_tweet, sentiment
             tweetItems.append(tweet_item)
             count +=1

@@ -39,7 +39,8 @@ val = maxent.getHTML()
 '''
 print 'Done'
 trainingDataFile = 'data/full-corpus.csv'                
-classifierDumpFile = 'data/svm_full-corpus.pickle'
+trainingDataFile = 'data/training.4000.processed.noemoticon.csv'
+classifierDumpFile = 'data/svm_full-corpus1.pickle'
 trainingRequired = 1
 sc = libsvm_classifier.SVMClassifier(tweets, keyword, \
                               trainingDataFile, classifierDumpFile, trainingRequired)
