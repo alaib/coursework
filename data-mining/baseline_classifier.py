@@ -12,7 +12,7 @@ class BaselineClassifier:
     #start __init__
     def __init__(self, data, keyword):
         #Instantiate classifier helper
-        self.helper = classifier_helper.ClassifierHelper('data/positive_keywords.txt', 'data/negative_keywords.txt')
+        self.helper = classifier_helper.ClassifierHelper('data/pos_mod.txt', 'data/neg_mod.txt')
         #Remove duplicates 
         uniq_data = []       
         for element in data:
@@ -34,7 +34,7 @@ class BaselineClassifier:
     #start classify
     def classify(self):
         #load positive keywords file        
-        inpfile = open("data/positive_keywords.txt", "r")            
+        inpfile = open("data/pos_mod.txt", "r")            
         line = inpfile.readline()
         positive_words = []
         while line:
@@ -42,7 +42,7 @@ class BaselineClassifier:
             line = inpfile.readline()
             
         #load negative keywords file    
-        inpfile = open("data/negative_keywords.txt", "r")            
+        inpfile = open("data/neg_mod.txt", "r")            
         line = inpfile.readline()
         negative_words = []
         while line:

@@ -28,8 +28,10 @@ class HTMLHelper:
         </div>
         </form>
 '''
-        if(error):
-            html += '<div id="error"> Unable to fetch TWitter API data. Please try again later.</div>'
+        if(error == 1):
+            html += '<div id="error">Unable to fetch TWitter API data. Please try again later.</div>'
+        elif(error == 2):
+            html += '<div id="error">Unrecognized Method of Classfication, please choose one from above.</div>'
         html += '''
     </div>
     <div id='ft'>by Ravikiran Janardhana</div>

@@ -32,31 +32,31 @@ class index:
                     bc.classify()
                     return bc.getHTML()
                 elif(method == 'naivebayes'):
-                    trainingDataFile = 'data/full-corpus.csv'
-                    #trainingDataFile = 'data/training.10000.processed.noemoticon.csv'
-                    classifierDumpFile = 'data/naivebayes_full-corpus.pickle'
+                    trainingDataFile = 'data/training_neatfile.csv'                
+                    classifierDumpFile = 'data/naivebayes_trained_model.pickle'
                     trainingRequired = 0
                     nb = naive_bayes_classifier.NaiveBayesClassifier(tweets, keyword, \
                                                   trainingDataFile, classifierDumpFile, trainingRequired)
                     nb.classify()
                     return nb.getHTML()
                 elif(method == 'maxentropy'):
-                    trainingDataFile = 'data/full-corpus.csv'                
-                    classifierDumpFile = 'data/maxent_full-corpus.pickle'
+                    trainingDataFile = 'data/training_neatfile.csv'                
+                    classifierDumpFile = 'data/maxent_trained_model.pickle'
                     trainingRequired = 0
                     maxent = max_entropy_classifier.MaxEntClassifier(tweets, keyword, \
                                                   trainingDataFile, classifierDumpFile, trainingRequired)
                     maxent.classify()
                     return maxent.getHTML()
                 elif(method == 'svm'):
-                    trainingDataFile = 'data/full-corpus.csv'                
-                    #trainingDataFile = 'data/training.10000.processed.noemoticon.csv'
-                    classifierDumpFile = 'data/svm_full-corpus.pickle'
-                    trainingRequired = 1
+                    trainingDataFile = 'data/training_neatfile.csv'                
+                    classifierDumpFile = 'data/svm_trained_model.pickle'
+                    trainingRequired = 0
                     sc = libsvm_classifier.SVMClassifier(tweets, keyword, \
                                                   trainingDataFile, classifierDumpFile, trainingRequired)
                     sc.classify()
                     return sc.getHTML()
+                else:
+                    return html.getDefaultHTML(error=2)
             else:
                 return html.getDefaultHTML(error=1)                        
         else:

@@ -10,8 +10,6 @@ class SVMClassifier:
     #start __init__
     def __init__(self, data, keyword, trainingDataFile, classifierDumpFile, trainingRequired = 0):
         #Instantiate classifier helper
-        #self.helper = classifier_helper.ClassifierHelper('data/twit_positive.txt', 'data/twit_negative.txt')
-        #self.helper = classifier_helper.ClassifierHelper('data/positive_keywords.txt', 'data/negative_keywords.txt')
         self.helper = classifier_helper.ClassifierHelper('data/pos_mod.txt', 'data/neg_mod.txt')
         
         #Remove duplicates        
@@ -61,6 +59,7 @@ class SVMClassifier:
         
         #SVM Trainer
         problem = svm_problem(self.labels, self.feature_vectors)
+        #'-q' option suppress console output
         param = svm_parameter('-q')
         param.kernel_type = LINEAR
         #param.show()
@@ -72,19 +71,16 @@ class SVMClassifier:
     #start getFilteredTrainingData
     def getFilteredTrainingData(self, trainingDataFile):
         fp = open( trainingDataFile, 'rb' )
-        min_count = self.getMinCount(trainingDataFile)        
+        min_count = self.getMinCount(trainingDataFile)   
         neg_count, pos_count, neut_count = 0, 0, 0
         
         reader = csv.reader( fp, delimiter=',', quotechar='"', escapechar='\\' )
         tweetItems = []
         count = 1       
         for row in reader:
-            processed_tweet = self.helper.process_tweet(row[4])
-            sentiment = row[1]
-            
-            #Skip first line
-            if(sentiment == 'Sentiment' or sentiment == 'irrelevant'):
-                continue;
+            #processed_tweet = self.helper.process_tweet(row[4])
+            processed_tweet = self.helper.process_tweet(row[1])
+            sentiment = row[0]
             
             if(sentiment == 'neutral'):                
                 if(neut_count == int(min_count)):
@@ -106,47 +102,14 @@ class SVMClassifier:
         return tweetItems
     #end 
 
-    #start getFilteredTrainingData1
-    def getFilteredTrainingData1(self, trainingDataFile):
-        fp = open( trainingDataFile, 'rb' )
-        neg_count, pos_count = 0, 0
-        
-        reader = csv.reader( fp, delimiter=',', quotechar='"', escapechar='\\' )
-        tweetItems = []
-        count = 1       
-        for row in reader:
-            #processed_tweet = self.helper.process_tweet(row[4])
-            processed_tweet = self.helper.process_tweet(row[5])
-            #sentiment = row[1]
-            sentiment = row[0]
-            
-            if(sentiment == "0"):
-                sentiment = "negative"
-            elif(sentiment == "2"):
-                sentiment = "neutral"
-            elif(sentiment == "4"):
-                sentiment = "positive"
-                                
-            if(sentiment == 'positive'):            
-                pos_count += 1
-            elif(sentiment == 'negative'):            
-                neg_count += 1
-
-            tweet_item = processed_tweet, sentiment
-            tweetItems.append(tweet_item)
-            count +=1
-        #end loop
-        return tweetItems
-    #end 
-    
     #start getMinCount
     def getMinCount(self, trainingDataFile):
         fp = open( trainingDataFile, 'rb' )
         reader = csv.reader( fp, delimiter=',', quotechar='"', escapechar='\\' )
         neg_count, pos_count, neut_count = 0, 0, 0
         for row in reader:
-            sentiment = row[1]
-            if(sentiment == 'irrelevant' or sentiment == 'neutral'):
+            sentiment = row[0]
+            if(sentiment == 'neutral'):
                 neut_count += 1
             elif(sentiment == 'positive'):
                 pos_count += 1
@@ -155,6 +118,7 @@ class SVMClassifier:
         #end loop
         return min(neg_count, pos_count, neut_count)
     #end
+
     #start classify
     def classify(self):
         count = 0
@@ -181,7 +145,6 @@ class SVMClassifier:
             self.results[count] = res
             count += 1
         #end loop
-        
     #end
            
     #start writeOutput
@@ -232,8 +195,7 @@ class SVMClassifier:
                                                 (total, correct, wrong, self.accuracy)        
     #end
 
-    
-    #start printStats
+    #start getHTML
     def getHTML(self):
         return self.html.getResultHTML(self.keyword, self.results, self.pos_count, \
                                        self.neg_count, self.neut_count, 'svm')

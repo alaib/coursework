@@ -2,6 +2,9 @@ import nltk.classify
 import re, pickle, csv, os
 import classifier_helper, html_helper
 
+
+from collections import defaultdict
+
 #start class
 class MaxEntClassifier:
     """ Maximum Entropy Classifier """
@@ -9,7 +12,6 @@ class MaxEntClassifier:
     #start __init__
     def __init__(self, data, keyword, trainingDataFile, classifierDumpFile, trainingRequired = 0):
         #Instantiate classifier helper
-        #self.helper = classifier_helper.ClassifierHelper('data/positive_keywords.txt', 'data/negative_keywords.txt')
         self.helper = classifier_helper.ClassifierHelper('data/pos_mod.txt', 'data/neg_mod.txt')
         
         #Remove duplicates        
@@ -28,6 +30,7 @@ class MaxEntClassifier:
         self.neut_count = 0
         self.pos_count = 0
         self.neg_count = 0
+        self.trainingDataFile = trainingDataFile
         self.keyword = keyword
         self.html = html_helper.HTMLHelper()
         
@@ -46,7 +49,9 @@ class MaxEntClassifier:
     #start getMaxEntTrainedClassifier
     def getMaxEntTrainedClassifer(self, trainingDataFile, classifierDumpFile):        
         # read all tweets and labels
-        tweetItems = self.getFilteredTrainingData(trainingDataFile)
+        # maxItems = 0 indicates read all training data
+        maxItems = 0 
+        tweetItems = self.getFilteredTrainingData(trainingDataFile, maxItems)
         
         tweets = []
         for (words, sentiment) in tweetItems:
@@ -55,7 +60,8 @@ class MaxEntClassifier:
                     
         training_set = nltk.classify.apply_features(self.helper.extract_features, tweets)
         # Write back classifier        
-        classifier = nltk.classify.maxent.train_maxent_classifier_with_gis(training_set)
+        classifier = nltk.classify.maxent.MaxentClassifier.train(training_set, 'GIS', trace=3, \
+                                    encoding=None, labels=None, sparse=True, gaussian_prior_sigma=0, max_iter = 20) 
         outfile = open(classifierDumpFile, 'wb')        
         pickle.dump(classifier, outfile)        
         outfile.close()        
@@ -63,24 +69,24 @@ class MaxEntClassifier:
     #end
     
     #start getFilteredTrainingData
-    def getFilteredTrainingData(self, trainingDataFile):
+    def getFilteredTrainingData(self, trainingDataFile, maxItems = 0):
+        #maxItems = 0 indicates read all training data
         fp = open( trainingDataFile, 'rb' )
-        min_count = self.getMinCount(trainingDataFile)        
+        if(maxItems == 0):
+            min_count = self.getMinCount(trainingDataFile)        
+        else:
+            min_count = maxItems
         neg_count, pos_count, neut_count = 0, 0, 0
         
         reader = csv.reader( fp, delimiter=',', quotechar='"', escapechar='\\' )
         tweetItems = []
         count = 1       
         for row in reader:
-            processed_tweet = self.helper.process_tweet(row[4])
-            sentiment = row[1]
+            processed_tweet = self.helper.process_tweet(row[1])
+            sentiment = row[0]
             
-            #Skip first line
-            if(sentiment == 'Sentiment'):                
-                continue;
-            
-            if(sentiment == 'irrelevant' or sentiment == 'neutral'):                
-                if(neut_count == int(min_count*0.98)):
+            if(sentiment == 'neutral'):                
+                if(neut_count == int(min_count)):
                     continue
                 neut_count += 1
             elif(sentiment == 'positive'):
@@ -88,7 +94,7 @@ class MaxEntClassifier:
                     continue
                 pos_count += 1
             elif(sentiment == 'negative'):
-                if(neg_count == min_count*0.95):
+                if(neg_count == min_count):
                     continue
                 neg_count += 1
             
@@ -105,8 +111,8 @@ class MaxEntClassifier:
         reader = csv.reader( fp, delimiter=',', quotechar='"', escapechar='\\' )
         neg_count, pos_count, neut_count = 0, 0, 0
         for row in reader:
-            sentiment = row[1]
-            if(sentiment == 'irrelevant' or sentiment == 'neutral'):
+            sentiment = row[0]
+            if(sentiment == 'neutral'):
                 neut_count += 1
             elif(sentiment == 'positive'):
                 pos_count += 1
@@ -130,9 +136,41 @@ class MaxEntClassifier:
             self.results[count] = res
             count += 1
         #end loop
-        
     #end
-           
+
+    #start accuracy
+    def accuracy(self):
+        maxItems = 0
+        tweets = self.getFilteredTrainingData(self.trainingDataFile)
+        total = 0
+        correct = 0
+        wrong = 0
+        self.accuracy = 0.0
+        for (t, l) in tweets:
+            label = self.classifier.classify(self.helper.extract_features(t.split()))
+            if(label == l):
+                correct+= 1
+            else:
+                wrong+= 1
+            total += 1
+        #end loop
+        self.accuracy = (float(correct)/total)*100
+        print 'Total = %d, Correct = %d, Wrong = %d, Accuracy = %.2f' % \
+                                                (total, correct, wrong, self.accuracy)        
+    #end
+
+    #start analyzeTweets
+    def analyzeTweets(self):
+        tweets = self.getFilteredTrainingData(self.trainingDataFile)
+        d = defaultdict(int)
+        for (t, l) in tweets:
+            for word in t.split():
+                d[word] += 1
+        #end loop
+        for w in sorted(d, key=d.get, reverse=True):
+            print w, d[w]
+    #end
+
     #start writeOutput
     def writeOutput(self, file, writeOption='w'):
         fp = open(file, writeOption)
@@ -146,7 +184,7 @@ class MaxEntClassifier:
         #end for loop            
     #end writeOutput
     
-    #start printStats
+    #start getHTML
     def getHTML(self):
         return self.html.getResultHTML(self.keyword, self.results, self.pos_count, \
                                        self.neg_count, self.neut_count, 'maxentropy')

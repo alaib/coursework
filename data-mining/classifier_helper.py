@@ -54,7 +54,7 @@ class ClassifierHelper:
                 label = 0
             elif(tweet_opinion == 'negative'):
                 label = 1
-            elif(tweet_opinion == 'neutral' or tweet_opinion == 'irrelevant'):
+            elif(tweet_opinion == 'neutral'):
                 label = 2
             labels.append(label)            
         return {'feature_vector' : feature_vector, 'labels': labels}
