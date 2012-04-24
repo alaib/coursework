@@ -11,8 +11,8 @@ class BaselineClassifier:
     #variables    
     #start __init__
     def __init__(self, data, keyword, time):
-        #Instantiate classifier helper
-        self.helper = classifier_helper.ClassifierHelper('data/pos_mod.txt', 'data/neg_mod.txt')
+        #Instantiate classifier helper        
+        self.helper = classifier_helper.ClassifierHelper('data/feature_list.txt')
         #Remove duplicates
 
         self.lenTweets = len(data)

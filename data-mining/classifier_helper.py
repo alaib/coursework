@@ -4,22 +4,16 @@ from nltk.classify import *
 
 class ClassifierHelper:
     #start __init__
-    def __init__(self, posFeatureFile, negFeatureFile):
+    def __init__(self, featureListFile):
         self.wordFeatures = []
-        # Read positive feature words
-        inpfile = open(posFeatureFile, 'r')
-        line = inpfile.readline()        
-        while line:
-            self.wordFeatures.append(line.strip())
-            line = inpfile.readline()
-        # Read negative feature words
-        inpfile = open(negFeatureFile, 'r')
+        # Read feature list
+        inpfile = open(featureListFile, 'r')
         line = inpfile.readline()        
         while line:
             self.wordFeatures.append(line.strip())
             line = inpfile.readline()
     #end    
-    
+
     #start extract_features
     def extract_features(self, document):
         document_words = set(document)

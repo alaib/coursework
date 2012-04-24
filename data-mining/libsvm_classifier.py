@@ -9,8 +9,8 @@ class SVMClassifier:
     #variables    
     #start __init__
     def __init__(self, data, keyword, time, trainingDataFile, classifierDumpFile, trainingRequired = 0):
-        #Instantiate classifier helper
-        self.helper = classifier_helper.ClassifierHelper('data/pos_mod.txt', 'data/neg_mod.txt')
+        #Instantiate classifier helper        
+        self.helper = classifier_helper.ClassifierHelper('data/feature_list.txt')
         
         self.lenTweets = len(data)
         self.origTweets = self.getUniqData(data)
@@ -20,6 +20,7 @@ class SVMClassifier:
         self.neut_count = [0] * self.lenTweets
         self.pos_count = [0] * self.lenTweets
         self.neg_count = [0] * self.lenTweets
+        self.trainingDataFile = trainingDataFile
 
         self.time = time
         self.keyword = keyword
@@ -92,7 +93,8 @@ class SVMClassifier:
     #start getFilteredTrainingData
     def getFilteredTrainingData(self, trainingDataFile):
         fp = open( trainingDataFile, 'rb' )
-        min_count = self.getMinCount(trainingDataFile)   
+        min_count = self.getMinCount(trainingDataFile)
+        min_count = 40000
         neg_count, pos_count, neut_count = 0, 0, 0
         
         reader = csv.reader( fp, delimiter=',', quotechar='"', escapechar='\\' )

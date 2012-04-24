@@ -11,8 +11,8 @@ class MaxEntClassifier:
     #variables    
     #start __init__
     def __init__(self, data, keyword, time, trainingDataFile, classifierDumpFile, trainingRequired = 0):
-        #Instantiate classifier helper
-        self.helper = classifier_helper.ClassifierHelper('data/pos_mod.txt', 'data/neg_mod.txt')
+        #Instantiate classifier helper        
+        self.helper = classifier_helper.ClassifierHelper('data/feature_list.txt')
         
         self.lenTweets = len(data)
         self.origTweets = self.getUniqData(data)
@@ -26,6 +26,7 @@ class MaxEntClassifier:
         self.time = time
         self.keyword = keyword
         self.html = html_helper.HTMLHelper()
+        self.trainingDataFile = trainingDataFile
         
         #call training model
         if(trainingRequired):
@@ -81,7 +82,7 @@ class MaxEntClassifier:
         training_set = nltk.classify.apply_features(self.helper.extract_features, tweets)
         # Write back classifier        
         classifier = nltk.classify.maxent.MaxentClassifier.train(training_set, 'GIS', trace=3, \
-                                    encoding=None, labels=None, sparse=True, gaussian_prior_sigma=0, max_iter = 20) 
+                                    encoding=None, labels=None, sparse=True, gaussian_prior_sigma=0, max_iter = 5) 
         outfile = open(classifierDumpFile, 'wb')        
         pickle.dump(classifier, outfile)        
         outfile.close()        
@@ -96,6 +97,7 @@ class MaxEntClassifier:
             min_count = self.getMinCount(trainingDataFile)        
         else:
             min_count = maxItems
+        min_count = 40000
         neg_count, pos_count, neut_count = 0, 0, 0
         
         reader = csv.reader( fp, delimiter=',', quotechar='"', escapechar='\\' )

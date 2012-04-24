@@ -29,12 +29,10 @@ class TwitterData:
             #end loop
             
             #Write data to a pickle file
-            '''
             filename = 'data/weekTweets/weekTweets_'+urllib.unquote(keyword.replace("+", " "))+'_'+str(int(random.random()*10000))+'.txt'
             outfile = open(filename, 'wb')        
             pickle.dump(self.weekTweets, outfile)        
             outfile.close()
-            '''
         elif(time == 'today'):
             for i in range(0,1):
                 params = {'since': self.weekDates[i+1], 'until': self.weekDates[i]}
