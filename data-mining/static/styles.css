@@ -47,6 +47,7 @@ a:hover{
 }
 #content{
     overflow: auto;
+    margin-top: -15px;
 }
 #left, #right, #middle{
     margin: 5px;
@@ -91,16 +92,26 @@ a:hover{
 #right{
     float: left;
 }
-
+#timeframe{
+    margin-bottom: 10px;
+    padding: 10px;
+}
 #results{
     width: 1090px;
     margin: auto;
 }
 #result-chart{
-    width: 350px;
-    height: 250px;
+    width: 400px;
+    height: 300px;
+    margin: auto;
+    padding-top: 10px;
+}
+#result-big-chart{
+    width: 600px;
+    height: 400px;
     margin: auto;
 }
+
 #stats {
     text-align: center;
 }
