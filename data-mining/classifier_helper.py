@@ -19,10 +19,20 @@ class ClassifierHelper:
         document_words = set(document)
         features = {}
         for word in self.wordFeatures:
+            word = self.replaceTwoOrMore(word) 
+            word = word.strip('\'"?,.')
             features['contains(%s)' % word] = (word in document_words)
         return features
     #end
-    
+
+    #start replaceTwoOrMore
+    def replaceTwoOrMore(self, s):
+        # pattern to look for three or more repetitions of any character, including
+        # newlines.
+        pattern = re.compile(r"(.)\1{1,}", re.DOTALL) 
+        return pattern.sub(r"\1\1", s)
+    #end
+
     def getSVMFeatureVectorAndLabels(self, tweets):
         sortedFeatures = sorted(self.wordFeatures)
         map = {}
@@ -39,6 +49,8 @@ class ClassifierHelper:
             tweet_opinion = t[1]
             #Fill the map
             for word in tweet_words:
+                word = self.replaceTwoOrMore(word) 
+                word = word.strip('\'"?,.')
                 if word in map:
                     map[word] = 1
             #end for loop
@@ -89,8 +101,9 @@ class ClassifierHelper:
         tweet = re.sub(r'#([^\s]+)', r'\1', tweet)
         #trim
         tweet = tweet.strip()
-        #remove last " at string end
-        tweet = tweet.rstrip('"')
+        #remove first/last " or 'at string end
+        tweet = tweet.rstrip('\'"')
+        tweet = tweet.lstrip('\'"')
         return tweet
     #end 
     

@@ -1,6 +1,6 @@
 import get_twitter_data
 import baseline_classifier, naive_bayes_classifier, max_entropy_classifier, libsvm_classifier
-import json,sys
+import json,sys,pickle
 
 keyword = 'iphone'
 time = 'today'
@@ -23,13 +23,13 @@ if(algorithm == 'baseline'):
     bc.classify()
     val = bc.getHTML()
 elif(algorithm == 'naivebayes'):    
-    #trainingDataFile = 'data/training_trimmed.csv'
-    trainingDataFile = 'data/full_training_dataset.csv'
+    trainingDataFile = 'data/training_trimmed.csv'
+    #trainingDataFile = 'data/full_training_dataset.csv'
     classifierDumpFile = 'data/test/naivebayes_test_model.pickle'
     trainingRequired = 1
     nb = naive_bayes_classifier.NaiveBayesClassifier(tweets, keyword, time,\
                                   trainingDataFile, classifierDumpFile, trainingRequired)
-    #nb.classify()
+    nb.classify()
     nb.accuracy()
 elif(algorithm == 'maxent'):    
     #trainingDataFile = 'data/training_trimmed.csv'
@@ -42,8 +42,8 @@ elif(algorithm == 'maxent'):
     maxent.classify()
     maxent.accuracy()
 elif(algorithm == 'svm'):    
-    #trainingDataFile = 'data/training_trimmed.csv'
-    trainingDataFile = 'data/full_training_dataset.csv'                
+    trainingDataFile = 'data/training_trimmed.csv'
+    #trainingDataFile = 'data/full_training_dataset.csv'                
     classifierDumpFile = 'data/test/svm_test_model.pickle'
     trainingRequired = 1
     sc = libsvm_classifier.SVMClassifier(tweets, keyword, time,\
