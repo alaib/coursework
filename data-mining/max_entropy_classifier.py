@@ -10,27 +10,20 @@ class MaxEntClassifier:
     """ Maximum Entropy Classifier """
     #variables    
     #start __init__
-    def __init__(self, data, keyword, trainingDataFile, classifierDumpFile, trainingRequired = 0):
+    def __init__(self, data, keyword, time, trainingDataFile, classifierDumpFile, trainingRequired = 0):
         #Instantiate classifier helper
         self.helper = classifier_helper.ClassifierHelper('data/pos_mod.txt', 'data/neg_mod.txt')
         
-        #Remove duplicates        
-        uniq_data = []       
-        for element in data:
-            if element not in uniq_data:
-                uniq_data.append(element)
-        self.origTweets = uniq_data        
-        self.tweets = []
-        for t in self.origTweets:
-            self.tweets.append(self.helper.process_tweet(t))
-        #end loop
+        self.lenTweets = len(data)
+        self.origTweets = self.getUniqData(data)
+        self.tweets = self.getProcessedTweets(self.origTweets)
         
-        #Variables
         self.results = {}
-        self.neut_count = 0
-        self.pos_count = 0
-        self.neg_count = 0
-        self.trainingDataFile = trainingDataFile
+        self.neut_count = [0] * self.lenTweets
+        self.pos_count = [0] * self.lenTweets
+        self.neg_count = [0] * self.lenTweets
+
+        self.time = time
         self.keyword = keyword
         self.html = html_helper.HTMLHelper()
         
@@ -44,6 +37,33 @@ class MaxEntClassifier:
                 f1.close()                
             else:
                 self.classifier = self.getMaxEntTrainedClassifer(trainingDataFile, classifierDumpFile)
+    #end
+            #start getUniqData
+    def getUniqData(self, data):
+        uniq_data = {}        
+        for i in data:
+            d = data[i]
+            u = []
+            for element in d:
+                if element not in u:
+                    u.append(element)
+            #end inner loop
+            uniq_data[i] = u            
+        #end outer loop
+        return uniq_data
+    #end
+    
+    #start getProcessedTweets
+    def getProcessedTweets(self, data):        
+        tweets = {}        
+        for i in data:
+            d = data[i]
+            tw = []
+            for t in d:
+                tw.append(self.helper.process_tweet(t))
+            tweets[i] = tw            
+        #end loop
+        return tweets
     #end
     
     #start getMaxEntTrainedClassifier
@@ -121,21 +141,27 @@ class MaxEntClassifier:
         #end loop
         return min(neg_count, pos_count, neut_count)
     #end
-    #start classify
-    def classify(self):
-        count = 0
-        for t in self.tweets:
-            label = self.classifier.classify(self.helper.extract_features(t.split()))
-            if(label == 'positive'):
-                self.pos_count += 1
-            elif(label == 'negative'):                
-                self.neg_count += 1
-            elif(label == 'neutral'):                
-                self.neut_count += 1
-            res = {'text': t, 'tweet': self.origTweets[count], 'label': label}
-            self.results[count] = res
-            count += 1
-        #end loop
+    
+        #start classify
+    def classify(self):        
+        for i in self.tweets:
+            tw = self.tweets[i]
+            count = 0
+            res = {}
+            for t in tw:
+                label = self.classifier.classify(self.helper.extract_features(t.split()))
+                if(label == 'positive'):
+                    self.pos_count[i] += 1
+                elif(label == 'negative'):                
+                    self.neg_count[i] += 1
+                elif(label == 'neutral'):                
+                    self.neut_count[i] += 1
+                result = {'text': t, 'tweet': self.origTweets[i][count], 'label': label}
+                res[count] = result
+                count += 1
+            #end inner loop
+            self.results[i] = res
+        #end outer loop
     #end
 
     #start accuracy
@@ -172,21 +198,23 @@ class MaxEntClassifier:
     #end
 
     #start writeOutput
-    def writeOutput(self, file, writeOption='w'):
-        fp = open(file, writeOption)
+    def writeOutput(self, filename, writeOption='w'):
+        fp = open(filename, writeOption)
         for i in self.results:
-            item = self.results[i]
-            text = item['text'].strip()
-            label = item['label']
-            if(item['label'] != 'neutral'):
+            res = self.results[i]
+            for j in res:
+                item = res[j]
+                text = item['text'].strip()
+                label = item['label']
                 writeStr = text+" | "+label+"\n"
                 fp.write(writeStr)
-        #end for loop            
-    #end writeOutput
+            #end inner loop
+        #end outer loop      
+    #end writeOutput    
     
     #start getHTML
     def getHTML(self):
-        return self.html.getResultHTML(self.keyword, self.results, self.pos_count, \
+        return self.html.getResultHTML(self.keyword, self.results, self.time, self.pos_count, \
                                        self.neg_count, self.neut_count, 'maxentropy')
     #end
 #end class

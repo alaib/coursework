@@ -1,44 +1,70 @@
 import urllib
 import urllib2
 import json
+import datetime
+import random
+import pickle
+from datetime import timedelta
 
-#start getTwitterData
-def getData(keyword, pageNo = 1):
-    maxTweets = 50
-    keyword1 = keyword + ' :)'
-    url = 'http://search.twitter.com/search.json'    
-    data = {'q': keyword, 'lang': 'en', 'page': pageNo, 'result_type': 'mixed', 'rpp': maxTweets, 'include_entities': 0}
-    params = urllib.urlencode(data)
-    tweets = []
-    try:            
-        req = urllib2.Request(url, params)
-        response = urllib2.urlopen(req)  
-        jsonData = json.load(response)
-        for item in jsonData['results']:
-            #tweet = process_tweet(item['text'])
-            tweets.append(item['text'])                    
-        #end first request
-        '''
-        keyword2 = keyword + ' :('
-        data = {'q': keyword2, 'lang': 'en', 'page': pageNo, 'result_type': 'mixed', 'rpp': maxTweets, 'include_entities': 0}
+class TwitterData:
+    #start __init__
+    def __init__(self):
+        self.currDate = datetime.datetime.now()
+        self.weekDates = []
+        self.weekDates.append(self.currDate.strftime("%Y-%m-%d"))
+        for i in range(1,7):
+            dateDiff = timedelta(days=-i)
+            newDate = self.currDate + dateDiff
+            self.weekDates.append(newDate.strftime("%Y-%m-%d"))
+        #end loop
+    #end
+
+    #start getWeeksData
+    def getWeeksData(self, keyword):
+        self.weekTweets = {}
+        for i in range(0,6):
+            params = {'since': self.weekDates[i+1], 'until': self.weekDates[i]}
+            self.weekTweets[i] = self.getData(keyword, params)
+        #end loop
+        
+        #Write data to a pickle file
+        filename = 'data/weekTweets/weekTweets_'+urllib.unquote(keyword.replace("+", " "))+'_'+str(int(random.random()*10000))+'.txt'
+        outfile = open(filename, 'wb')        
+        pickle.dump(self.weekTweets, outfile)        
+        outfile.close()
+        return self.weekTweets
+    #end
+
+    #start getTwitterData
+    def getData(self, keyword, params = {}):
+        maxTweets = 50
+        url = 'http://search.twitter.com/search.json'    
+        data = {'q': keyword, 'lang': 'en', 'page': '1', 'result_type': 'recent', 'rpp': maxTweets, 'include_entities': 0}
+
+        #Add if additional params are passed
+        if params:
+            for key, value in params.iteritems():
+                data[key] = value
+        
         params = urllib.urlencode(data)
+        tweets = {}
+        try:            
+            req = urllib2.Request(url, params)
+            response = urllib2.urlopen(req)  
+            jsonData = json.load(response)
+            t = []
+            for item in jsonData['results']:
+                t.append(item['text'])
+            tweets[0] = t
+            return tweets
+        except urllib2.URLError, e:
+            self.handleError(e)         
+    #end    
 
-        req = urllib2.Request(url, params)
-        response = urllib2.urlopen(req)  
-        jsonData = json.load(response)
-        for item in jsonData['results']:
-            tweets.append(item['text'])  
-        '''
-        return tweets
-        #end second request
-    except urllib2.URLError, e:
-        handleError(e)         
-#end    
-
-#start handleError
-def handleError(e):
-    print e.code
-    print e.read()
-    return -1
-#end
-
+    #start handleError
+    def handleError(self, e):
+        print e.code
+        print e.read()
+        return -1
+    #end
+#end class
