@@ -20,19 +20,33 @@ class TwitterData:
     #end
 
     #start getWeeksData
-    def getWeeksData(self, keyword):
+    def getTwitterData(self, keyword, time):
         self.weekTweets = {}
-        for i in range(0,6):
-            params = {'since': self.weekDates[i+1], 'until': self.weekDates[i]}
-            self.weekTweets[i] = self.getData(keyword, params)
-        #end loop
-        
-        #Write data to a pickle file
-        filename = 'data/weekTweets/weekTweets_'+urllib.unquote(keyword.replace("+", " "))+'_'+str(int(random.random()*10000))+'.txt'
-        outfile = open(filename, 'wb')        
-        pickle.dump(self.weekTweets, outfile)        
-        outfile.close()
+        if(time == 'lastweek'):
+            for i in range(0,6):
+                params = {'since': self.weekDates[i+1], 'until': self.weekDates[i]}
+                self.weekTweets[i] = self.getData(keyword, params)
+            #end loop
+            
+            #Write data to a pickle file
+            '''
+            filename = 'data/weekTweets/weekTweets_'+urllib.unquote(keyword.replace("+", " "))+'_'+str(int(random.random()*10000))+'.txt'
+            outfile = open(filename, 'wb')        
+            pickle.dump(self.weekTweets, outfile)        
+            outfile.close()
+            '''
+        elif(time == 'today'):
+            for i in range(0,1):
+                params = {'since': self.weekDates[i+1], 'until': self.weekDates[i]}
+                self.weekTweets[i] = self.getData(keyword, params)
+            #end loop
         return self.weekTweets
+    '''
+        inpfile = open('data/weekTweets/weekTweets_obama_7303.txt')
+        self.weekTweets = pickle.load(inpfile)
+        inpfile.close()
+        return self.weekTweets
+    '''
     #end
 
     #start getTwitterData
@@ -46,16 +60,14 @@ class TwitterData:
             for key, value in params.iteritems():
                 data[key] = value
         
-        params = urllib.urlencode(data)
-        tweets = {}
+        params = urllib.urlencode(data)        
         try:            
             req = urllib2.Request(url, params)
             response = urllib2.urlopen(req)  
             jsonData = json.load(response)
-            t = []
+            tweets = []
             for item in jsonData['results']:
-                t.append(item['text'])
-            tweets[0] = t
+                tweets.append(item['text'])            
             return tweets
         except urllib2.URLError, e:
             self.handleError(e)         

@@ -35,11 +35,7 @@ class index:
             if(method != 'baseline' and method != 'naivebayes' and method != 'maxentropy' and method != 'svm'):
                 return html.getDefaultHTML(error=2)
             
-            if(time == 'today'):
-                tweets = twitterData.getData(keyword)
-            elif(time == 'lastweek'):
-                tweets = twitterData.getWeeksData(keyword)
-
+            tweets = twitterData.getTwitterData(keyword, time)
             if(tweets):
                 if(method == 'baseline'):
                     bc = baseline_classifier.BaselineClassifier(tweets, keyword, time)

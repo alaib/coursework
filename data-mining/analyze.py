@@ -2,26 +2,25 @@ import get_twitter_data
 import baseline_classifier, naive_bayes_classifier, max_entropy_classifier, libsvm_classifier
 import json,sys
 
-keyword = 'iphone'
+keyword = 'obama'
 twitterData = get_twitter_data.TwitterData()
 #tweets = twitterData.getData(keyword, {'since': '2012-04-22', 'until' : '2012-04-23'})
-tweets = []
-weekTweets = twitterData.getWeeksData(keyword)
+tweets = twitterData.getWeeksData(keyword)
 
 #algorithm = 'baseline'
-#algorithm = 'naivebayes'
-algorithm = 'maxent'
+algorithm = 'naivebayes'
+#algorithm = 'maxent'
 #algorithm = 'svm'
 
 if(algorithm == 'baseline'):
-    bc = baseline_classifier.BaselineClassifier(weekTweets, keyword, 'today')
+    bc = baseline_classifier.BaselineClassifier(tweets, keyword, 'today')
     bc.classify()
     val = bc.getHTML()
 elif(algorithm == 'naivebayes'):
     trainingDataFile = 'data/training_neatfile.csv'                
     classifierDumpFile = 'data/naivebayes_trained_model.pickle'
     trainingRequired = 0
-    nb = naive_bayes_classifier.NaiveBayesClassifier(tweets, keyword, 'today',\
+    nb = naive_bayes_classifier.NaiveBayesClassifier(tweets, keyword, 'lastweek',\
                                   trainingDataFile, classifierDumpFile, trainingRequired)
     nb.classify()
     nb.accuracy()
