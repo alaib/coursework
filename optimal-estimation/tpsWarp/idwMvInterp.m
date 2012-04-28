@@ -10,9 +10,6 @@ function out = idwMvInterp(imgw, map, maxhw, p )
 %
 % Output:
 % out - interpolated image
-%
-% Author: Fitzgerald J Archibald
-% Date: 23-Apr-09
 
 outH  = size(imgw,1);
 outW  = size(imgw,2);
@@ -59,9 +56,10 @@ return;
 
 % Inverse distance weighting
 function out = idw(in, map, wk)
-
-num=sum(double(in(find(map))).*wk(find(map))); % weight the available pixel values among the neighbors
-den=sum(wk(find(map))); % sum of contributing weights within radius r
+% weight the available pixel values among the neighbors
+num=sum(double(in(find(map))).*wk(find(map))); 
+% sum of contributing weights within radius r
+den=sum(wk(find(map))); 
 
 out = num / den;
 

@@ -24,9 +24,6 @@ function [imgw, imgwr, map] = tpswarp(img, outDim, Zp, Zs, interp)
 % F.L. Bookstein, "Principal Warps: Thin-Plate splines and the
 % decomposition of deformations", IEEE Transaction on Pattern Analysis and
 % Machine Intelligence, Vol. 11, No. 6, June 1989
-%
-% Author: Fitzgerald J Archibald
-% Date: 07-Apr-09
 
 %% Initialization
 NPs = size(Zp,1); % number of landmark points

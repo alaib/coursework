@@ -17,9 +17,6 @@ function [imgw, imgwr, map] = interp2d(X, Y, img, Xwr, Ywr, outH, outW, interp)
 % imgw - interpolated image (warp+interpolate)
 % imgwr - warped image with holes
 % map - Map of the canvas with 0 indicating holes and 1 indicating pixel
-%
-% Author: Fitzgerald J Archibald
-% Date: 23-Apr-09
 
 %% initialization
 color = size(img,3);

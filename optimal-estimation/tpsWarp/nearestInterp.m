@@ -9,9 +9,6 @@ function out = nearestInterp(imgw, map, maxhw )
 %
 % Output:
 % out - interpolated image
-%
-% Author: Fitzgerald J Archibald
-% Date: 23-Apr-09
 
 outH  = size(imgw,1);
 outW  = size(imgw,2);
