@@ -7,11 +7,7 @@
 % Output: 
 % Return Landmark Locations
 
-function [Xp Yp Xs Ys] = getLandmarks(imgFixedFileName, imgMovFilename, saveFileName)
-%% Get inputs
-imgMov = imread(imgMovFilename);
-imgFixed = imread(imgFixedFileName);
-
+function [Xp Yp Xs Ys] = getLandmarks(imgFixed, imgMov, saveFileName, brainFlag)
 %% Get the landmark points
 
 NPs = input('Enter number of landmark points : ');
@@ -20,12 +16,22 @@ fprintf('Select %d correspondence / landmark points with mouse on Fig.2.\n',NPs)
 figure(2);
 title('Choose the landmark on the Moving Image first');
 Hp=subplot(1,2,1); % for landmark point selection
-image(imgFixed);    
+if brainFlag
+    imshow(imgFixed);  
+    axis on;
+else
+    image(imgFixed);
+end
 title('Fixed Image [choose second]')
 hold on;
 
 Hs=subplot(1,2,2); % for correspondence point selection
-image(imgMov);   
+if brainFlag
+    imshow(imgMov);   
+    axis on;
+else
+    image(imgMov);
+end
 title('Moving Image [choose first]')
 hold on;
 
@@ -47,6 +53,6 @@ for ix = 1:NPs
 end
 % Save landmarks if filename specified
 if strcmp(saveFileName, '') ~= 1
-    savefile(saveFileName, 'Xp', 'Yp', 'Xs', 'Ys');
+    save(saveFileName, 'Xp', 'Yp', 'Xs', 'Ys');
 end
 return;

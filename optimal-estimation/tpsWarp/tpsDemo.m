@@ -5,13 +5,14 @@ imgMovFileName = 'data\hand2.png';
 
 landmarksFileName = 'data\lm.mat';
 manualLandmarks = 1;
+brainFlag = 0;
 
 imgMov = imread(imgMovFileName);
 imgFix = imread(imgFixedFileName);
 
 % Set interpolation method
 %'nearest'; %'none' % interpolation method
-interp.method = 'invdist'; 
+interp.method = 'invdist';
 % radius or median filter dimension
 interp.radius = 5;
 %power for inverse weighting interpolation method
@@ -19,7 +20,7 @@ interp.power = 2;
 
 % Get the landmarks manually or through a file
 if manualLandmarks == 1
-    [Xp Yp Xs Ys] = getLandmarks(imgFixedFileName, imgMovFileName, '');
+    [Xp Yp Xs Ys] = getLandmarks(imgFix, imgMov, landmarksFileName, brainFlag);
 else
     load(landmarksFileName);    
 end
@@ -27,7 +28,7 @@ end
 %% Warping
 % thin plate spline warping
 [imgW, imgWr, map, bendingEnergy]  = tpswarp(imgMov,[size(imgMov,2) size(imgMov,1)],...
-                                             [Xp' Yp'],[Xs' Ys'],interp); 
+                                             [Xp' Yp'],[Xs' Ys'],interp);                                          
 imgW = uint8(imgW);
 imgWr = uint8(imgWr);
 

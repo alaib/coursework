@@ -14,7 +14,8 @@ function [imgw, imgwr, map, bendingEnergy] = tpswarp(img, outDim, Zp, Zs, interp
 % interp.radius - Max radius for nearest neighbor interpolation or
 %                 Radius of inverse weighted interpolation
 % interp.power - power for inverse weighted interpolation
-%
+% lambda = regularization paramter 
+%         (0 - exact matching, high - reduced to least squares fitting)
 % Output:
 % imgw - warped image with no holes
 % imgwr - warped image with holes
@@ -90,10 +91,21 @@ W = wW(1:size(xp,2));
 bendingEnergy = W*wK*W';
 return
 
+%% Compute Regularization val = 1/np^2(sum(sum(dist(xi,yi,xj,yi)))
+function val = computeRegularization(xp, yp, np)
+    val = 0.0;
+    for i = 1 : np
+        for j = 1 : np
+            val = val + sqrt((xp(i)-xp(j)).^2+(yp(i)-yp(j)).^2);
+        end
+    end
+    val = val / (np.^2);       
+return
+
 %% Mapping: f(x,y) = a1 + ax * x + ay * y + SUM(wi * U(|Pi-(x,y)|)) for i = 1 to n
 % np - number of landmark points
 % (xp, yp) - coordinate of landmark points
-function [Xw, Yw]=tpsMap(wW, imgH, imgW, xp, yp, np)
+function [Xw, Yw]=tpsMap(wW, imgH, imgW, xp, yp, np, regularizer)
 
 [X Y] = meshgrid(1:imgH,1:imgW); % HxW
 X=X(:)'; % convert to 1D array by reading columnwise (NWs=H*W)
@@ -117,14 +129,12 @@ wL = [wK;wP]'; % [L] = [[K P];[P' 0]]
 
 Xw  = wL*wW(:,1); % [Pw] = [L]*[W]
 Yw  = wL*wW(:,2); % [Pw] = [L]*[W]
-
 return
 
-%% k=(r^2) * log(r^2)
+%% k=(r^2) * log(r)
 function [ko]=radialBasis(ri)
-
 r1i = ri;
 r1i(find(ri==0))=realmin; % Avoid log(0)=inf
-ko = 2*(ri.^2).*log(r1i);
-
+ko = (ri.^2).*log(r1i);
+%ko = 2*(ri.^2).*log(r1i);
 return
