@@ -26,7 +26,8 @@ end
 
 %% Warping
 % thin plate spline warping
-[imgW, imgWr]  = tpswarp(imgMov,[size(imgMov,2) size(imgMov,1)],[Xp' Yp'],[Xs' Ys'],interp); 
+[imgW, imgWr, map, bendingEnergy]  = tpswarp(imgMov,[size(imgMov,2) size(imgMov,1)],...
+                                             [Xp' Yp'],[Xs' Ys'],interp); 
 imgW = uint8(imgW);
 imgWr = uint8(imgWr);
 
@@ -48,7 +49,8 @@ end
 
 Hr = subplot(1,3,3); 
 image(imgW);
-title('Registered Image');
+regStr = sprintf('Reg Image, bEnergy = %.4f', bendingEnergy);
+title(regStr);
 for ix = 1 : length(Xs),
 	impoint(gca,Ys(ix),Xs(ix));
 end

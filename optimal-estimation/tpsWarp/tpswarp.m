@@ -1,4 +1,4 @@
-function [imgw, imgwr, map] = tpswarp(img, outDim, Zp, Zs, interp)
+function [imgw, imgwr, map, bendingEnergy] = tpswarp(img, outDim, Zp, Zs, interp)
 %
 % Description: Thin-Plane spline warping of the input image (img) to
 % output image (imgw). The warping is defined by a set of reference points
@@ -48,6 +48,7 @@ Ys = Zs(:,2)';
 [wL]=computeWl(Xp, Yp, NPs);
 wY = [Xs(:) Ys(:); zeros(3,2)]; % Y = ( V| 0 0 0)'   where V = [G] where G is landmark homologous (nx2) ; Y is col vector of length (n+3)
 wW = inv(wL)*wY; % (W|a1 ax ay)' = inv(L)*Y
+bendingEnergy = computeBendingEnergy(Xp, Yp, NPs, wW);
 
 % Thin-plate spline mapping (Map all points in the plane)
 % f(x,y) = a1 + ax * x + ay * y + SUM(wi * U(|Pi-(x,y)|)) for i = 1 to n
@@ -79,6 +80,15 @@ wL = [wK wP;wP' zeros(3,3)]; % [L] = [[K P];[P' 0]]
 
 return
 
+%% Compute the bending energy, If = W * K * W' 
+function bendingEnergy = computeBendingEnergy(xp, yp, np, wW)
+rXp = repmat(xp(:),1,np); % 1xNp to NpxNp
+rYp = repmat(yp(:),1,np); % 1xNp to NpxNp
+wR = sqrt((rXp-rXp').^2 + (rYp-rYp').^2); % compute r(i,j)
+wK = radialBasis(wR); % compute [K] with elements U(r)=r^2 * log (r^2)
+W = wW(1:size(xp,2));
+bendingEnergy = W*wK*W';
+return
 
 %% Mapping: f(x,y) = a1 + ax * x + ay * y + SUM(wi * U(|Pi-(x,y)|)) for i = 1 to n
 % np - number of landmark points
