@@ -1,0 +1,1 @@
+tpsWarpDemo('data\hand2.png', 'data\hand1.png', 'data\lm.mat', 0)
