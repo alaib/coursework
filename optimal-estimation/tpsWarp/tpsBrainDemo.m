@@ -1,6 +1,8 @@
 % Start demo
 % Read fixed and moving image files
-[imgMov, imgFix] = getBrainImages('data/brain/normal1.nii', 'data/brain/krabbe2.nii');
+imgMovFileName = 'data/brain/normal1.nii';
+imgFixedFileName = 'data/brain/krabbe2.nii';
+[imgMov, imgFix] = getBrainImages(imgMovFileName, imgFixedFileName);
 %[imgMov, imgFix] = getBrainImages('data/brain/normal1.nii', 'data/brain/krabbe1.nii');
 
 % Save the landmarks
