@@ -44,12 +44,14 @@ for ix = 1:NPs
     axis(Hp);
     [Yp(ix),Xp(ix)]=ginput(1); % get the landmark point in Moving Image
     scatter(Yp(ix),Xp(ix),32,'y','o','filled'); % display the point
-    text(Yp(ix),Xp(ix),num2str(ix),'FontSize',6);
+    landmarkStr = sprintf('  %d', ix);
+    text(Yp(ix),Xp(ix), landmarkStr, 'FontSize', 8, 'Color', 'r');
 
     axis(Hs);
     [Ys(ix),Xs(ix)]=ginput(1); % get the corresponding point in Fixed Image
     scatter(Ys(ix),Xs(ix),32,'y','*'); % display the point
-    text(Ys(ix),Xs(ix),num2str(ix),'FontSize',6);
+    landmarkStr = sprintf('  %d', ix);
+    text(Ys(ix),Xs(ix), landmarkStr, 'FontSize', 8, 'Color', 'r');
 end
 % Save landmarks if filename specified
 if strcmp(saveFileName, '') ~= 1

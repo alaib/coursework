@@ -1,10 +1,16 @@
 % Start demo
 % Read fixed and moving image files
-landmarksFileName = 'data\lm3.mat';
-manualLandmarks = 0;
-brainFlag = 1;
+[imgMov, imgFix] = getBrainImages('data/brain/normal1.nii', 'data/brain/krabbe2.nii');
+%[imgMov, imgFix] = getBrainImages('data/brain/normal1.nii', 'data/brain/krabbe1.nii');
 
-[imgMov, imgFix] = getBrainImages('data/brain/krabbe1.nii', 'data/brain/normal1.nii');
+% Save the landmarks
+landmarksFileName = 'data\lm_brain.mat';
+% Set manualLandmarks to 1 if you want to enter landmarks manually
+manualLandmarks = 0;
+% Set this flag to 1 if NIFTI 3D data is being read 
+brainFlag = 1;
+% Configure the regularization parameter, 0-> exact, high -> relax exact
+lambda = 0.0;
 
 % Set interpolation method
 %'nearest'; %'none' % interpolation method
@@ -24,7 +30,7 @@ end
 %% Warping
 % thin plate spline warping
 [imgW, imgWr, map, bendingEnergy]  = tpswarp(imgMov,[size(imgMov,2) size(imgMov,1)],...
-                                             [Xp' Yp'],[Xs' Ys'],interp); 
+                                             [Xp' Yp'],[Xs' Ys'],interp, lambda); 
                                          
 imgW = imgW / abs(min(imgW(:)));
 imgW = imgW + abs(min(imgW(:)));
@@ -37,7 +43,8 @@ imshow(imgFix);
 axis on;
 title('Fixed Image');
 for ix = 1 : length(Xs),
-	impoint(gca,Ys(ix),Xs(ix));
+	h = impoint(gca,Ys(ix),Xs(ix));
+    setColor(h, 'r')
 end
 
 Hs = subplot(1,3,2); 
@@ -45,7 +52,8 @@ imshow(imgMov);
 axis on;
 title('Moving Image');
 for ix = 1 : length(Xp),
-	impoint(gca,Yp(ix),Xp(ix));
+	h = impoint(gca,Yp(ix),Xp(ix));
+    setColor(h, 'r')
 end
 
 Hr = subplot(1,3,3); 
@@ -54,6 +62,7 @@ axis on;
 regStr = sprintf('Reg Image, bEnergy = %.4f', bendingEnergy);
 title(regStr);
 for ix = 1 : length(Xs),
-	impoint(gca,Ys(ix),Xs(ix));
+	h = impoint(gca,Ys(ix),Xs(ix));
+    setColor(h, 'r')
 end
 %end
