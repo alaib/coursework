@@ -2,7 +2,7 @@
 import re
 import csv
 import pprint
-import nltk
+import nltk.classify
 
 #start replaceTwoOrMore
 def replaceTwoOrMore(s):
@@ -80,7 +80,7 @@ def getFeatureList(fileName):
 #end
 
 #start extract_features
-def extract_features(tweet, featureList):
+def extract_features(tweet):
     tweet_words = set(tweet)
     features = {}
     for word in featureList:
@@ -105,5 +105,14 @@ for row in inpTweets:
     tweets.append((featureVector, sentiment));
 #end loop
 
-training_set = nltk.classify.apply_features(extract_features, tweets, featureList)
-pp.pprint(training_set)
+training_set = nltk.classify.util.apply_features(extract_features, tweets)
+#pp.pprint(training_set)
+
+# Train the Naive Bayes classifier
+NBClassifier = nltk.NaiveBayesClassifier.train(training_set)
+
+# Test the classifier
+testTweet = 'Congrats @ravikiranj, i heard you wrote a new tech post on sentiment analysis'
+processedTestTweet = processTweet(testTweet)
+sentiment = NBClassifier.classify(extract_features(getFeatureVector(processedTestTweet, stopWords)))
+print "testTweet = %s, sentiment = %s\n" % (testTweet, sentiment)
