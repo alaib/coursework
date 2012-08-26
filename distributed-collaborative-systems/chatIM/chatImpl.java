@@ -21,6 +21,7 @@ public class chatImpl extends UnicastRemoteObject implements chatInterface {
 	JTextArea enteredText;
 	JTextArea userList;
 	JTextField statusText;
+	JTextField topicText;
 	Container container;
 	DateFormat dateFormat;
     Date date;	   
@@ -48,18 +49,24 @@ public class chatImpl extends UnicastRemoteObject implements chatInterface {
         enteredText = new JTextArea(30, 50);  
         enteredText.setEditable(false);
         enteredText.setBackground(Color.LIGHT_GRAY);
-        
+                        
         userList = new JTextArea(30, 20);
         userList.setEditable(false);
         userList.setBackground(Color.LIGHT_GRAY);
         
         statusText = new JTextField(32);
         statusText.setEditable(false);
+        
+        topicText = new JTextField(32);
+        topicText.setEditable(true);
+        topicText.setText("Topic: Talk about La Liga!!!");
+        
 		timer = new Timer();
                 
         container.add(new JScrollPane(enteredText), BorderLayout.CENTER);
         container.add(new JScrollPane(userList), BorderLayout.EAST);
-        container.add(statusText, BorderLayout.SOUTH);        
+        container.add(statusText, BorderLayout.SOUTH);
+        container.add(topicText, BorderLayout.NORTH);
         frame.setTitle("Chat Server");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();      
@@ -67,7 +74,10 @@ public class chatImpl extends UnicastRemoteObject implements chatInterface {
         
     	message = msg;
     	dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-        date = new Date();        
+        date = new Date();
+        
+        String s = "["+dateFormat.format(date)+"] Chat Server is online\n";
+        enteredText.append(s);
     }
     
     public String handleEvent(String clientName, String clientStatus, String newMsg, int EVENT_CODE) throws RemoteException {		 
@@ -112,6 +122,8 @@ public class chatImpl extends UnicastRemoteObject implements chatInterface {
     public void clientExit(String cName, String cStatus){
     	String msg = "";
     	userList.setText(msg);
+    	msg = "["+dateFormat.format(date)+"] "+ cName + " left the chat session\n";
+    	enteredText.append(msg);
     }
     
     public void changeClientStatus(String cName, String cStatus){

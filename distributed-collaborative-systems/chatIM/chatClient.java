@@ -66,7 +66,7 @@ public class chatClient{
         container.add(statusList, BorderLayout.NORTH);
 
         // display the window, with focus on typing box
-        frame.setTitle("Chat Client");
+        frame.setTitle("Chat Client - "+clientName);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
         typedText.requestFocusInWindow();
