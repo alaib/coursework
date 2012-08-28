@@ -2,16 +2,18 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.rmi.Naming;
 
+import javax.swing.BorderFactory;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -24,10 +26,14 @@ public class chatClient{
     // GUI stuff
     private JTextArea  enteredText;
     private JTextField typedText;
+    private JTextField topicText;
     private JFrame frame;
     private Container container;
     private chatInterface chWindow;
     private JComboBox statusList;
+    private JPanel uPanel;
+    private JPanel lPanel;
+    private JLabel topicLabel;
     
     //Constants    
     private int EVENT_NEW_MSG = 1;
@@ -37,10 +43,15 @@ public class chatClient{
     private int EVENT_CLIENT_JOIN = 5;
     private int EVENT_CLIENT_STATUS_CHANGE = 6;
     private int EVENT_CLIENT_EXIT = 7;
+    private int EVENT_CHANGE_TOPIC = 8;
+    
+    //Strings
+    String prevTopic;
     
     //Client
     String clientName;
     String clientStatus;
+    
 
     public chatClient() {
     	//Create client
@@ -50,8 +61,13 @@ public class chatClient{
         // create GUI stuff   	 
     	enteredText = new JTextArea(10, 32);
     	typedText = new JTextField(32);
+    	topicText = new JTextField(32);
+    	
         enteredText.setEditable(true);
         enteredText.setBackground(Color.LIGHT_GRAY);
+        
+        topicLabel = new JLabel("Topic:");  
+        topicLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         
         String[] statusStrings = {"Available", "Busy", "Invisible", "Idle"};
         statusList = new JComboBox(statusStrings);
@@ -61,9 +77,21 @@ public class chatClient{
         
         frame = new JFrame();
         container = frame.getContentPane();
-        container.add(new JScrollPane(enteredText), BorderLayout.CENTER);
-        container.add(typedText, BorderLayout.SOUTH);
-        container.add(statusList, BorderLayout.NORTH);
+        
+        //Upper Panel
+        uPanel = new JPanel(new FlowLayout());
+        uPanel.add(statusList);
+        uPanel.add(topicLabel);
+        uPanel.add(topicText);
+                
+        //Lower Panel
+        lPanel = new JPanel(new BorderLayout());
+        lPanel.add(new JScrollPane(enteredText), BorderLayout.CENTER);
+        lPanel.add(typedText, BorderLayout.SOUTH);
+        
+        //Add both panels to container
+        container.add(uPanel, BorderLayout.NORTH);
+        container.add(lPanel, BorderLayout.SOUTH);                      
 
         // display the window, with focus on typing box
         frame.setTitle("Chat Client - "+clientName);
@@ -72,11 +100,18 @@ public class chatClient{
         typedText.requestFocusInWindow();
         frame.setVisible(true);
         
+        //Strings
+        prevTopic = "";
+        
+        //Event listeners
         setEventListeners();
         
+        //Connect to Server        
         try {
 	        chWindow =(chatInterface) Naming.lookup ("rmi://localhost/Chat");
-	        chWindow.handleEvent(clientName, clientStatus, typedText.getText(), EVENT_CLIENT_JOIN);	        
+	        String msg = chWindow.handleEvent(clientName, clientStatus, typedText.getText(), EVENT_CLIENT_JOIN);
+	        prevTopic = msg;
+	        topicText.setText(msg);
 	    }catch (Exception e){
 	        System.out.println ("chatClient exception: " + e);
 	    }
@@ -102,7 +137,8 @@ public class chatClient{
        typedText.addActionListener(new ActionListener(){
     	    public void actionPerformed(ActionEvent e){
     	    	try {      	    		
-    		        chWindow.handleEvent(clientName, clientStatus, typedText.getText(), EVENT_NEW_MSG);
+    		        String msg = chWindow.handleEvent(clientName, clientStatus, typedText.getText(), EVENT_NEW_MSG);
+    		        enteredText.append(msg);
     		    }catch (Exception e1){
     		        System.out.println("chatClient exception: " + e1);
     		    }
@@ -122,13 +158,22 @@ public class chatClient{
 	   		        System.out.println("chatClient exception: " + e1);
 	   		    }    	            	       
    	        }
-        });       
-    }
-    
-    public void actionPerformed(ActionEvent e) {
-          
-    }    	   
-       
+        });   
+        
+        topicText.addActionListener(new ActionListener(){
+    	    public void actionPerformed(ActionEvent e){
+    	    	try {      	
+    	    		if(!topicText.getText().equals(prevTopic)){
+    	    			String msg = chWindow.handleEvent(clientName, clientStatus, topicText.getText(), EVENT_CHANGE_TOPIC);
+    	    			prevTopic = topicText.getText();
+    	    		}    		        
+    		    }catch (Exception e1){
+    		        System.out.println("chatClient exception: " + e1);
+    		    }    	        
+    	        typedText.requestFocusInWindow();    	        
+    	    }
+    	});
+    }       
     
     public static void main (String[] argv){
     	final chatClient client = new chatClient();

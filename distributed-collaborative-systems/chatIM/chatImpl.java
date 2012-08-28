@@ -1,6 +1,7 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
+import java.awt.FlowLayout;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.text.DateFormat;
@@ -9,7 +10,10 @@ import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import javax.swing.BorderFactory;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -23,6 +27,10 @@ public class chatImpl extends UnicastRemoteObject implements chatInterface {
 	JTextField statusText;
 	JTextField topicText;
 	Container container;
+	JPanel lPanel;
+	JPanel uPanel;
+	JLabel topicLabel;
+	
 	DateFormat dateFormat;
     Date date;	   
     
@@ -34,13 +42,14 @@ public class chatImpl extends UnicastRemoteObject implements chatInterface {
     private int EVENT_CLIENT_JOIN = 5;
     private int EVENT_CLIENT_STATUS_CHANGE = 6;
     private int EVENT_CLIENT_EXIT = 7;
+    private int EVENT_CHANGE_TOPIC = 8;
     
     //Timer
     Timer timer;
 
   
     public chatImpl (String msg) throws RemoteException {  
-		frame = new JFrame("This is a test");
+		frame = new JFrame();
     	frame.setSize(400, 200);    	
     	
     	container = frame.getContentPane();
@@ -58,15 +67,28 @@ public class chatImpl extends UnicastRemoteObject implements chatInterface {
         statusText.setEditable(false);
         
         topicText = new JTextField(32);
-        topicText.setEditable(true);
-        topicText.setText("Topic: Talk about La Liga!!!");
+        topicText.setEditable(false);
+        topicText.setText("Spanish La Liga");
+        topicText.setBackground(Color.LIGHT_GRAY);
+        
+        topicLabel = new JLabel("Topic:");        
+        topicLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         
 		timer = new Timer();
-                
-        container.add(new JScrollPane(enteredText), BorderLayout.CENTER);
-        container.add(new JScrollPane(userList), BorderLayout.EAST);
-        container.add(statusText, BorderLayout.SOUTH);
-        container.add(topicText, BorderLayout.NORTH);
+              
+		uPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		uPanel.add(topicLabel);
+        uPanel.add(topicText);
+        
+        lPanel = new JPanel(new BorderLayout());
+        lPanel.add(new JScrollPane(enteredText), BorderLayout.CENTER);
+        lPanel.add(new JScrollPane(userList), BorderLayout.EAST);
+        lPanel.add(statusText, BorderLayout.SOUTH);        
+        
+        container.add(uPanel, BorderLayout.NORTH);
+        container.add(lPanel, BorderLayout.SOUTH);
+        
+
         frame.setTitle("Chat Server");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();      
@@ -100,10 +122,15 @@ public class chatImpl extends UnicastRemoteObject implements chatInterface {
     		}, 1500);
     	}else if(EVENT_CODE == EVENT_CLIENT_JOIN){
     		clientJoin(clientName, clientStatus);
+    		msg = topicText.getText();
     	}else if(EVENT_CODE == EVENT_CLIENT_STATUS_CHANGE){
     		changeClientStatus(clientName, clientStatus);
     	}else if(EVENT_CODE == EVENT_CLIENT_EXIT){
     		clientExit(clientName, clientStatus);
+    	}else if(EVENT_CODE == EVENT_CHANGE_TOPIC){
+    		topicText.setText(message);
+    		msg = "["+dateFormat.format(date)+"] "+ clientName + " changed topic to '" + message +"'\n";
+    		enteredText.append(msg);
     	}
         return msg;
     }
