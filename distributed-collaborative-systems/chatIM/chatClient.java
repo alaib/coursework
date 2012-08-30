@@ -2,6 +2,7 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -52,13 +53,30 @@ public class chatClient{
     String clientName;
     String clientStatus;
     
+    //Data
+    String [] data;
+    
+    //KeyCount
+    int keyCount = 0;
+    
 
     public chatClient() {
+    	initModel();
+    	initView();
+    	initController();          
+    }
+    
+    public void initModel(){
     	//Create client
     	clientName = "John";
-    	clientStatus = "Available";
-    	
-        // create GUI stuff   	 
+    	clientStatus = "Available";    	
+                
+        //Strings
+        prevTopic = "";    	
+    }
+    
+    public void initView(){
+    	// create GUI stuff   	 
     	enteredText = new JTextArea(10, 32);
     	typedText = new JTextField(32);
     	topicText = new JTextField(32);
@@ -73,8 +91,7 @@ public class chatClient{
         statusList = new JComboBox(statusStrings);
         statusList.setSelectedIndex(0);
         statusList.setEditable(false);
-        
-        
+                
         frame = new JFrame();
         container = frame.getContentPane();
         
@@ -99,19 +116,21 @@ public class chatClient{
         frame.pack();
         typedText.requestFocusInWindow();
         frame.setVisible(true);
-        
-        //Strings
-        prevTopic = "";
-        
-        //Event listeners
+    }
+    
+    public void initController(){
+    	//Event listeners
         setEventListeners();
         
-        //Connect to Server        
+      //Connect to Server        
         try {
 	        chWindow =(chatInterface) Naming.lookup ("rmi://localhost/Chat");
-	        String msg = chWindow.handleEvent(clientName, clientStatus, typedText.getText(), EVENT_CLIENT_JOIN);
+	        data = chWindow.handleEvent(clientName, clientStatus, typedText.getText(), EVENT_CLIENT_JOIN);	        
+	        String msg = data[0];
+	        String history = data[1];
 	        prevTopic = msg;
 	        topicText.setText(msg);
+	        enteredText.append("====Chat Session History===\n"+history);
 	    }catch (Exception e){
 	        System.out.println ("chatClient exception: " + e);
 	    }
@@ -123,10 +142,14 @@ public class chatClient{
             	//Do something
             }
  
-            public void keyPressed(KeyEvent e) {            	
+            public void keyPressed(KeyEvent e) {     
+            	keyCount++;
             	if(e.getKeyCode() != KeyEvent.VK_ENTER){
-            		try {	        
-        		        chWindow.handleEvent(clientName, clientStatus, typedText.getText(), EVENT_KEY_PRESS);        		        
+            		try {	
+            			if(keyCount != 1 && keyCount%5 != 0){
+            				return;
+            			}
+        		        data = chWindow.handleEvent(clientName, clientStatus, typedText.getText(), EVENT_KEY_PRESS);        		        
         		    }catch (Exception e1){
         		        System.out.println("chatClient exception: " + e1);
         		    }            		
@@ -137,7 +160,9 @@ public class chatClient{
        typedText.addActionListener(new ActionListener(){
     	    public void actionPerformed(ActionEvent e){
     	    	try {      	    		
-    		        String msg = chWindow.handleEvent(clientName, clientStatus, typedText.getText(), EVENT_NEW_MSG);
+    		        data = chWindow.handleEvent(clientName, clientStatus, typedText.getText(), EVENT_NEW_MSG);
+    		        String msg = data[0];
+    		        msg.replace(clientName+" : ", "me : ");
     		        enteredText.append(msg);
     		    }catch (Exception e1){
     		        System.out.println("chatClient exception: " + e1);
@@ -153,7 +178,7 @@ public class chatClient{
 	   	    		JComboBox cb = (JComboBox)e.getSource();	   	    		
 	   	    		Object item = cb.getSelectedItem();
 	   	    		clientStatus = (String) item;
-	   	    		chWindow.handleEvent(clientName, clientStatus, typedText.getText(), EVENT_CLIENT_STATUS_CHANGE);
+	   	    		data = chWindow.handleEvent(clientName, clientStatus, typedText.getText(), EVENT_CLIENT_STATUS_CHANGE);
 	   		    }catch (Exception e1){
 	   		        System.out.println("chatClient exception: " + e1);
 	   		    }    	            	       
@@ -164,7 +189,8 @@ public class chatClient{
     	    public void actionPerformed(ActionEvent e){
     	    	try {      	
     	    		if(!topicText.getText().equals(prevTopic)){
-    	    			String msg = chWindow.handleEvent(clientName, clientStatus, topicText.getText(), EVENT_CHANGE_TOPIC);
+    	    			chWindow.handleEvent(clientName, clientStatus, topicText.getText(), EVENT_CHANGE_TOPIC);
+    	    			String msg = data[0];
     	    			prevTopic = topicText.getText();
     	    		}    		        
     		    }catch (Exception e1){
@@ -180,7 +206,7 @@ public class chatClient{
     	Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
             public void run() {
             	try{
-            		client.chWindow.handleEvent(client.clientName, client.clientStatus, "", client.EVENT_CLIENT_EXIT);
+            		client.data = client.chWindow.handleEvent(client.clientName, client.clientStatus, "", client.EVENT_CLIENT_EXIT);
             	}catch(Exception e){
             		System.out.println("chatClient exception: "+ e);
             	}

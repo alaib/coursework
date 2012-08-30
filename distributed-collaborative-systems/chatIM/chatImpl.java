@@ -7,6 +7,7 @@ import java.rmi.server.UnicastRemoteObject;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -17,6 +18,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+
+import org.apache.commons.collections.buffer.CircularFifoBuffer;
 
 public class chatImpl extends UnicastRemoteObject implements chatInterface {    
 	private static final long serialVersionUID = -6313448627522080760L;
@@ -45,11 +48,29 @@ public class chatImpl extends UnicastRemoteObject implements chatInterface {
     private int EVENT_CHANGE_TOPIC = 8;
     
     //Timer
-    Timer timer;
+    Timer clearStatusTimer;
+    Timer typedTimer;
+    
+    //Buffer
+    CircularFifoBuffer buffer;
 
   
     public chatImpl (String msg) throws RemoteException {  
-		frame = new JFrame();
+    	initModel(msg);
+    	initView();
+    	initController();
+    }
+    
+    public void initModel(String msg){
+    	clearStatusTimer = new Timer();
+    	typedTimer = new Timer();
+    	message = msg;
+    	dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+    	buffer = new CircularFifoBuffer(10);    
+    }
+    
+    public void initView(){
+    	frame = new JFrame();
     	frame.setSize(400, 200);    	
     	
     	container = frame.getContentPane();
@@ -74,9 +95,7 @@ public class chatImpl extends UnicastRemoteObject implements chatInterface {
         topicLabel = new JLabel("Topic:");        
         topicLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         
-		timer = new Timer();
-              
-		uPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        uPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		uPanel.add(topicLabel);
         uPanel.add(topicText);
         
@@ -88,69 +107,100 @@ public class chatImpl extends UnicastRemoteObject implements chatInterface {
         container.add(uPanel, BorderLayout.NORTH);
         container.add(lPanel, BorderLayout.SOUTH);
         
-
         frame.setTitle("Chat Server");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();      
-        frame.setVisible(true);             
+        frame.setVisible(true);
         
-    	message = msg;
-    	dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-        date = new Date();
-        
-        String s = "["+dateFormat.format(date)+"] Chat Server is online\n";
-        enteredText.append(s);
+        //Init Msg
+        String s = "["+dateFormat.format(new Date())+"] Chat Server is online\n";
+        enteredText.append(s);                
+        buffer.add((Object)s);
     }
     
-    public String handleEvent(String clientName, String clientStatus, String newMsg, int EVENT_CODE) throws RemoteException {		 
+    public void initController(){
+        
+    }
+    public String[] handleEvent(String clientName, String clientStatus, String newMsg, int EVENT_CODE) throws RemoteException {		 
     	if(!newMsg.isEmpty()){
     		message = newMsg;
     	}
     	String msg = "";
+    	String history = "";
     	if(EVENT_CODE == EVENT_NEW_MSG){
-	        msg = "["+dateFormat.format(date)+"] "+ clientName + " : " + message +"\n";
+	        msg = "["+dateFormat.format(new Date())+"] "+ clientName + " : " + message +"\n";
 	        enteredText.append(msg);
+	        buffer.add((Object)msg);
 	        clearStatus();
     	}else if(EVENT_CODE == EVENT_KEY_PRESS){    		
-    		msg = "["+dateFormat.format(date)+"] "+ clientName + " is typing ...";
+    		msg = "["+dateFormat.format(new Date())+"] "+ clientName + " is typing ...";
     		statusText.setText(msg);
-    		//Clear status automatically after 1 second
-    		timer.schedule(new TimerTask() {
+    		//Remove existing timers
+    		typedTimer.purge();    		
+    		clearStatusTimer.purge();
+    		
+    		//Set to typed after 1 second
+    		final String backupClientName = clientName;
+    		typedTimer.schedule(new TimerTask() {
     			public void run() {
-    				clearStatus();
+    				setTypedStatus(backupClientName);
     			}
-    		}, 1500);
+    		}, 1500);    		
     	}else if(EVENT_CODE == EVENT_CLIENT_JOIN){
-    		clientJoin(clientName, clientStatus);
+    		history = clientJoin(clientName, clientStatus);
     		msg = topicText.getText();
+    		buffer.add((Object)msg);
     	}else if(EVENT_CODE == EVENT_CLIENT_STATUS_CHANGE){
     		changeClientStatus(clientName, clientStatus);
     	}else if(EVENT_CODE == EVENT_CLIENT_EXIT){
     		clientExit(clientName, clientStatus);
     	}else if(EVENT_CODE == EVENT_CHANGE_TOPIC){
     		topicText.setText(message);
-    		msg = "["+dateFormat.format(date)+"] "+ clientName + " changed topic to '" + message +"'\n";
+    		msg = "["+dateFormat.format(new Date())+"] "+ clientName + " changed topic to '" + message +"'\n";
     		enteredText.append(msg);
+    		buffer.add((Object)msg);
     	}
-        return msg;
+    	String[] data = new String[2];
+    	data[0] = msg;
+    	data[1] = history;
+        return data;
     }
     
     public void clearStatus(){
     	statusText.setText("");
-    }   
+    }
     
-    public void clientJoin(String cName, String cStatus){
+    public void setTypedStatus(String cName){    	
+		String msg = "["+dateFormat.format(new Date())+"] "+ cName + " has typed";
+		statusText.setText(msg);
+		clearStatusTimer.schedule(new TimerTask() {
+			public void run() {
+				clearStatus();
+			}
+		}, 1500); 
+    }
+    
+    public String clientJoin(String cName, String cStatus){
     	String msg = " " + cName + " - " + cStatus + "\n";
     	userList.append(msg);
-    	msg = "["+dateFormat.format(date)+"] "+ cName + " joined the chat session\n";
+    	msg = "["+dateFormat.format(new Date())+"] "+ cName + " joined the chat session\n";
     	enteredText.append(msg);
+    	String history = "";    	
+    	Iterator it = buffer.iterator();
+    	while(it.hasNext()){
+    		Object elem = it.next();
+    		history = history + (String)elem;
+    	}
+    	buffer.add((Object)msg);
+    	return history;
     }
     
     public void clientExit(String cName, String cStatus){
     	String msg = "";
     	userList.setText(msg);
-    	msg = "["+dateFormat.format(date)+"] "+ cName + " left the chat session\n";
+    	msg = "["+dateFormat.format(new Date())+"] "+ cName + " left the chat session\n";
     	enteredText.append(msg);
+    	buffer.add((Object)msg);
     }
     
     public void changeClientStatus(String cName, String cStatus){
