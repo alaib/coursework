@@ -61,6 +61,7 @@ public class ChatServerImpl extends UnicastRemoteObject implements ChatServerInt
     private int EVENT_CLIENT_STATUS_CHANGE = 6;
     private int EVENT_CLIENT_EXIT = 7;
     private int EVENT_CHANGE_TOPIC = 8;
+    private int EVENT_CHANGE_STATUS_MSG = 9;
     
     //Timer
     Timer clearStatusTimer;
@@ -117,7 +118,7 @@ public class ChatServerImpl extends UnicastRemoteObject implements ChatServerInt
         topicText.setText("Spanish La Liga");        
         
         topicLabel = new JLabel("Topic:");        
-        topicLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        //topicLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         
         uPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));        
 		uPanel.add(topicLabel);
@@ -170,7 +171,7 @@ public class ChatServerImpl extends UnicastRemoteObject implements ChatServerInt
     	}
     }
     
-    public void modUserList(String cName, String cStatus, String action){
+    public void modUserList(String cName, String cStatus, String newStatus, String action){
     	//Current hack
     	if(action.equals("exit")){
     		HTMLDocument d = (HTMLDocument) userListPane.getDocument();    		
@@ -185,7 +186,7 @@ public class ChatServerImpl extends UnicastRemoteObject implements ChatServerInt
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}		
-	    	String html = "<div id='" + cName + "' <img width=14 height=14 src='"+imgsrc+"' />&nbsp;"+cName+"</div>";    		    		
+	    	String html = "<div id='" + cName + "'<a href='#' title='yes' style='text-decoration: none;'><img border=0 width=14 height=14 src='"+imgsrc+"' />&nbsp;"+cName+"</a></div>";    		    		
     		HTMLDocument d = (HTMLDocument) userListPane.getDocument();    		
     		Element e = d.getElement(d.getDefaultRootElement(), HTML.Attribute.ID, "endList");
     		try {
@@ -205,8 +206,21 @@ public class ChatServerImpl extends UnicastRemoteObject implements ChatServerInt
 			} catch (MalformedURLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}		
-	    	String html = "<img width=14 height=14 src='"+imgsrc+"' />&nbsp;"+cName;   
+			}
+			String html = "";
+			String croppedStatus = "";
+			if(newStatus.length() > 9){
+				croppedStatus = newStatus.substring(0, 10);
+				croppedStatus = croppedStatus + "...";
+			}else{
+				croppedStatus = newStatus;
+			}
+			if(!newStatus.equals("")){
+				html = "<a href='#' style='text-decoration: none;'><img style='border: none';  width=14 height=14 src='"+imgsrc+"' />&nbsp;"+cName+"</a>";
+			}else{	    	   
+				html = "<a href='#' style='text-decoration: none;'><img style='border: none';  width=14 height=14 src='"+imgsrc+"' />&nbsp;"+
+					   cName+" - <span title='"+newStatus+"'>"+croppedStatus+"</span></a>";
+			}
 	    	
     		HTMLDocument d = (HTMLDocument) userListPane.getDocument();        		    		    		    		    
     		Element e = d.getElement(d.getDefaultRootElement(), HTML.Attribute.ID, cName);
@@ -219,7 +233,37 @@ public class ChatServerImpl extends UnicastRemoteObject implements ChatServerInt
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-    	}
+    	}else if(action.equals("modifyStatus")){
+    		String imgPath = "images/"+cStatus.toLowerCase()+".png";
+	    	String imgsrc = "";
+			try {
+				imgsrc = new File(imgPath).toURL().toExternalForm();
+			} catch (MalformedURLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}		
+			String croppedStatus = "";
+			if(newStatus.length() > 9){
+				croppedStatus = newStatus.substring(0, 10);
+				croppedStatus = croppedStatus + "...";
+			}else{
+				croppedStatus = newStatus;
+			}
+	    	String html = "<a href='#' style='text-decoration: none;'><img style='border: none'; width=14 height=14 src='"+imgsrc+"' />&nbsp;"+
+	    				  cName+" - <span title='"+newStatus+"'>"+croppedStatus+"</span></a>";   
+	    	
+    		HTMLDocument d = (HTMLDocument) userListPane.getDocument();        		    		    		    		    
+    		Element e = d.getElement(d.getDefaultRootElement(), HTML.Attribute.ID, cName);
+    		try {
+				d.setInnerHTML(e, html);
+			} catch (BadLocationException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+    	}    	
     }    
     
     public String[] handleEvent(String clientName, String clientStatus, String newMsg, int EVENT_CODE) throws RemoteException {		 
@@ -228,24 +272,28 @@ public class ChatServerImpl extends UnicastRemoteObject implements ChatServerInt
     	}
     	String msg = "";
     	String history = "";
+    	String userList = "";
     	if(EVENT_CODE == EVENT_NEW_MSG){
     		msg = clientNewMessage(clientName, newMsg, EVENT_CODE);	        
     	}else if(EVENT_CODE == EVENT_KEY_PRESS){    		    		  
     		msg = clientKeyPress(clientName, EVENT_CODE);
     	}else if(EVENT_CODE == EVENT_CLIENT_JOIN){
     		history = clientJoin(clientName, clientStatus, EVENT_CODE);
-    		msg = topicText.getText();    		
+    		msg = topicText.getText();
+    		userList = userListPane.getText();
     	}else if(EVENT_CODE == EVENT_CLIENT_STATUS_CHANGE){
-    		changeClientStatus(clientName, clientStatus, EVENT_CODE);    		    		
+    		changeClientStatus(clientName, clientStatus, newMsg, EVENT_CODE);    		    		
     	}else if(EVENT_CODE == EVENT_CLIENT_EXIT){
     		clientExit(clientName, clientStatus, EVENT_CODE);
     	}else if(EVENT_CODE == EVENT_CHANGE_TOPIC){
-    		msg = clientChangeTopic(clientName, message, EVENT_CODE);
-    		
+    		msg = clientChangeTopic(clientName, message, EVENT_CODE);    		
+    	}else if(EVENT_CODE == EVENT_CHANGE_STATUS_MSG){
+    		changeClientStatusMsg(clientName, clientStatus, newMsg, EVENT_CODE);
     	}
-    	String[] data = new String[2];
+    	String[] data = new String[3];
     	data[0] = msg;
     	data[1] = history;
+    	data[2] = userList;
         return data;
     }
     
@@ -279,7 +327,7 @@ public class ChatServerImpl extends UnicastRemoteObject implements ChatServerInt
     
     public String clientJoin(String cName, String cStatus, int EVENT_CODE){
     	String msg = " " + cName + " - " + cStatus + "</br>";    	
-    	modUserList(cName, cStatus, "add");
+    	modUserList(cName, cStatus, "", "add");
     	msg = "["+dateFormat.format(new Date())+"] <strong>"+ cName + "</strong> joined the chat session</br>";
     	appendArchive(msg);    	
     	String history = "";    	
@@ -294,8 +342,8 @@ public class ChatServerImpl extends UnicastRemoteObject implements ChatServerInt
     	data.put("event_code", Integer.toString(EVENT_CODE));
         data.put("msg", msg);
         data.put("clientName", cName);
-        sendUpdateToAllClients(data);
-            	
+        data.put("clientStatus", cStatus);
+        sendUpdateToAllClients(data);            	
     	return history;
     }
     
@@ -313,6 +361,11 @@ public class ChatServerImpl extends UnicastRemoteObject implements ChatServerInt
 				setTypedStatus(backupClientName);
 			}
 		}, 1000);
+		Map <String, String> data = new HashMap<String, String>();
+    	data.put("event_code", Integer.toString(EVENT_CODE));
+        data.put("msg", msg);
+        data.put("clientName", clientName);        
+        sendUpdateToAllClients(data); 
 		return msg;
     }
     
@@ -330,6 +383,18 @@ public class ChatServerImpl extends UnicastRemoteObject implements ChatServerInt
         
         sendUpdateToAllClients(data);		
 		return msg;
+    }
+    
+    public void changeClientStatusMsg(String clientName, String clientStatus, String newStatus, int EVENT_CODE){
+    	modUserList(clientName, clientStatus, newStatus, "modifyStatus");
+    	String msg = " " + clientName + " changed his status message to <em>" + newStatus + "</em></br>";
+		Map <String, String> data = new HashMap<String, String>();
+    	data.put("event_code", Integer.toString(EVENT_CODE));
+        data.put("msg", msg);
+        data.put("clientName", clientName);
+        data.put("clientStatus", clientStatus);
+        data.put("newStatus", newStatus);
+        sendUpdateToAllClients(data);            	
     }
     
     public void sendUpdateToAllClients(Map <String, String> data){
@@ -352,7 +417,7 @@ public class ChatServerImpl extends UnicastRemoteObject implements ChatServerInt
     	String msg = "";    	
     	msg = "["+dateFormat.format(new Date())+"] <strong>"+ cName + "</strong> left the chat session</br>";    	
     	appendArchive(msg);
-    	modUserList(cName, "", "exit");
+    	modUserList(cName, "", "", "exit");
     	buffer.add((Object)msg);
     	//Unregister the client
     	clientMap.remove(cName);
@@ -361,18 +426,18 @@ public class ChatServerImpl extends UnicastRemoteObject implements ChatServerInt
     	data.put("event_code", Integer.toString(EVENT_CODE));
         data.put("msg", msg);
         data.put("clientName", cName);
-        data.put("newClientStatus", cStatus);        
+        data.put("clientStatus", cStatus);        
         sendUpdateToAllClients(data);		    	    	
     }
     
-    public void changeClientStatus(String cName, String cStatus, int EVENT_CODE){
+    public void changeClientStatus(String cName, String cStatus, String newMsg, int EVENT_CODE){
     	String msg = " " + cName + " - " + cStatus + "</br>";
 		Map <String, String> data = new HashMap<String, String>();
     	data.put("event_code", Integer.toString(EVENT_CODE));
         data.put("msg", msg);
         data.put("clientName", cName);
-        data.put("newClientStatus", cStatus);        
-        sendUpdateToAllClients(data);		    	
-    	modUserList(cName, cStatus, "modify");
+        data.put("clientStatus", cStatus);        
+        sendUpdateToAllClients(data);        
+    	modUserList(cName, cStatus, newMsg, "modify");
     }	
 }

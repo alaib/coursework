@@ -9,7 +9,7 @@ public class CallbackClientImpl extends UnicastRemoteObject implements CallbackC
    }
 
    public void handleNotify(Map <String, String> data){
-	   c.handleCallback(data);
+	   c.handleCallback(data);	   
    }      
 
 }// end CallbackClientImpl class   

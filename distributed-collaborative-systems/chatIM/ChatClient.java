@@ -7,16 +7,25 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
+import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.Vector;
 
-import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -28,8 +37,12 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.JTextPane;
 import javax.swing.plaf.basic.BasicComboBoxRenderer;
 import javax.swing.text.BadLocationException;
+import javax.swing.text.Element;
+import javax.swing.text.html.HTML;
+import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
 //AWT
 //SWING
@@ -43,6 +56,7 @@ public class ChatClient{
     private JEditorPane userListPane;
     private JScrollPane userListScrollPane;
     private JTextField typedText;
+    private JTextPane statusText;
     private JTextField topicText;
     private JFrame frame;
     private Container container;
@@ -50,7 +64,9 @@ public class ChatClient{
     public JComboBox statusList;
     private JPanel uPanel;
     private JPanel lPanel;
+    private JPanel lPanel2;
     private JLabel topicLabel;
+    private JTextField typingStatus;
     
     //Constants    
     private int EVENT_NEW_MSG = 1;
@@ -61,6 +77,7 @@ public class ChatClient{
     private int EVENT_CLIENT_STATUS_CHANGE = 6;
     private int EVENT_CLIENT_EXIT = 7;
     private int EVENT_CHANGE_TOPIC = 8;
+    private int EVENT_CHANGE_STATUS_MSG = 9;
     
     //Strings
     String prevTopic;
@@ -77,6 +94,14 @@ public class ChatClient{
     
     //CallbackClient
     CallbackClientInterface cbClient;
+    
+    //Boolean
+    boolean setFocusFirst;
+    
+    //Timers
+    DateFormat dateFormat;
+    Timer clearStatusTimer;
+    Timer typedTimer;
     
     public ChatClient() {
     	preInit();    	          
@@ -163,27 +188,41 @@ public class ChatClient{
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}        
+        setFocusFirst = false;
+        clearStatusTimer = new Timer();
+    	typedTimer = new Timer();    	
+    	dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
     }
     
     public void initView(){
     	// create GUI stuff   	     	
-    	typedText = new JTextField(32);
-    	topicText = new JTextField(32);
+    	typedText = new JTextField(32);   
+    	
+    	typingStatus = new JTextField(32);
+    	typingStatus.setBackground(Color.LIGHT_GRAY);
+    	typingStatus.setEditable(false);
+    	
+    	statusText = new JTextPane();
+    	statusText.setContentType("text/html");
+    	String statusHTML = "<div style='color:gray'>Set your status...</div>";
+    	statusText.setText(statusHTML);
+    	statusText.setPreferredSize(new Dimension(250, 20));
+    	statusText.setEditable(true);
+    	
+    	topicText = new JTextField(20);
     	
     	archivePane = new JEditorPane();        
         archivePane.setEditable(false);
         archivePane.setContentType("text/html");
-        archivePane.setPreferredSize(new Dimension(350, 300));  
-        
+        archivePane.setPreferredSize(new Dimension(300, 300));          
         
         userListPane = new JEditorPane();        
         userListPane.setEditable(false);
         userListPane.setContentType("text/html");
-        userListPane.setPreferredSize(new Dimension(200, 300));
+        userListPane.setPreferredSize(new Dimension(150, 300));
             	        
-        topicLabel = new JLabel("Topic:");  
-        topicLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        topicLabel = new JLabel("Topic:");
                 
         Vector model = new Vector();
         model.addElement(new Item(new ImageIcon("images/available.png"), "Available"));
@@ -199,23 +238,28 @@ public class ChatClient{
         frame = new JFrame();
         container = frame.getContentPane();
         
-        //Upper Panel
-        uPanel = new JPanel(new FlowLayout());
-        uPanel.add(statusList);
+        //Upper Panel                
+        uPanel = new JPanel();
+        uPanel.add(statusList);        
+        uPanel.add(statusText);
         uPanel.add(topicLabel);
         uPanel.add(topicText);
                 
         //Lower Panel
         lPanel = new JPanel(new BorderLayout());
         archiveScrollPane = new JScrollPane(archivePane);
-        userListScrollPane = new JScrollPane(userListPane);
+        userListScrollPane = new JScrollPane(userListPane);        
         lPanel.add(archiveScrollPane, BorderLayout.CENTER);
         lPanel.add(userListScrollPane, BorderLayout.EAST);
         lPanel.add(typedText, BorderLayout.SOUTH);
         
+        lPanel2 = new JPanel(new BorderLayout());
+        lPanel2.add(typingStatus, BorderLayout.CENTER);
+        
         //Add both panels to container
         container.add(uPanel, BorderLayout.NORTH);
-        container.add(lPanel, BorderLayout.SOUTH);                      
+        container.add(lPanel, BorderLayout.CENTER);
+        container.add(lPanel2, BorderLayout.SOUTH);
 
         // display the window, with focus on typing box
         frame.setTitle("Chat Client - "+clientName);
@@ -253,6 +297,7 @@ public class ChatClient{
 	        data = chWindow.handleEvent(clientName, clientStatus, typedText.getText(), EVENT_CLIENT_JOIN);	        
 	        String msg = data[0];
 	        String history = data[1];
+	        String userList = data[2];
 	        prevTopic = msg;
 	        topicText.setText(msg);
 	        archivePane.setText("==== Begin Chat Session History ===");	        
@@ -261,6 +306,7 @@ public class ChatClient{
 	        	appendArchive(histBuffer[i]);
 	        }	 
 	        appendArchive("=== End Chat Session History ===</br></br>");
+	        userListPane.setText(userList);
 	    }catch (Exception e){
 	        System.out.println ("chatClient exception: " + e);
 	    }
@@ -311,7 +357,13 @@ public class ChatClient{
 	   	    		JComboBox cb = (JComboBox)e.getSource();	   	    		
 	   	    		Item item = (Item)cb.getSelectedItem();
 	   	    		clientStatus = item.getText();
-	   	    		data = chWindow.handleEvent(clientName, clientStatus, typedText.getText(), EVENT_CLIENT_STATUS_CHANGE);
+	   	    		String statusMsg = "";
+	   	    		String text = statusText.getDocument().getText(0, statusText.getDocument().getLength());
+	   	    		if(!text.contains("Set your status...")){
+	   	    			statusMsg = text;
+	   	    		}	   	    		
+	   	    		data = chWindow.handleEvent(clientName, clientStatus, text, EVENT_CLIENT_STATUS_CHANGE);
+	   	    		modUserList(clientName, clientStatus, "modify");
 	   		    }catch (Exception e1){
 	   		        System.out.println("chatClient exception: " + e1);
 	   		    }    	            	       
@@ -332,21 +384,83 @@ public class ChatClient{
     	        typedText.requestFocusInWindow();    	        
     	    }
     	});
+                      
+        FocusListener fListen = new FocusListener(){			
+			public void focusGained(FocusEvent e) {
+				// TODO Auto-generated method stub
+				String text = "";				
+				try {
+					text = statusText.getDocument().getText(0, statusText.getDocument().getLength());
+				} catch (BadLocationException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}				
+				if(text.contains("Set your status...")){
+					statusText.setText("<div style='color:black;'></div>");
+				}				
+			}
+			public void focusLost(FocusEvent e) {
+				// TODO Auto-generated method stub			
+			}        	
+        };        	 
+        statusText.addFocusListener(fListen);
+        
+        statusText.addKeyListener(new KeyAdapter(){ 
+            public void keyPressed(KeyEvent e) {
+            	if(e.getKeyCode() == KeyEvent.VK_ENTER){
+            		typedText.requestFocusInWindow();
+            		String text = "";
+					try {
+						text = statusText.getDocument().getText(0, statusText.getDocument().getLength());
+					} catch (BadLocationException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+            		try {
+						data = chWindow.handleEvent(clientName, clientStatus, text, EVENT_CHANGE_STATUS_MSG);
+					} catch (RemoteException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+             	}         	            	            	
+             }
+         });
     }       
     
-    public void handleCallback(Map <String, String> data){
-    	int EVENT_CODE = Integer.parseInt(data.get("event_code"), 10);
+    public void handleCallback(Map <String, String> data){    	
+    	int EVENT_CODE = Integer.parseInt(data.get("event_code"), 10);    	
     	
     	if(EVENT_CODE == EVENT_NEW_MSG){
     		appendArchive(data.get("msg"));	        
     	}else if(EVENT_CODE == EVENT_KEY_PRESS){    		    		  
     		//Nothing to do
+    		String cName = data.get("clientName");    		    		
+    		typingStatus.setText(data.get("msg"));
+    		//Remove existing timers
+    		typedTimer.purge();    		
+    		clearStatusTimer.purge();
+    		
+    		//Set to typed after 1 second
+    		final String backupClientName = cName;
+    		typedTimer.schedule(new TimerTask() {
+    			public void run() {
+    				setTypedStatus(backupClientName);
+    			}
+    		}, 1000);    		
     	}else if(EVENT_CODE == EVENT_CLIENT_JOIN){
     		appendArchive(data.get("msg"));
+    		String cName = data.get("clientName");
+    		String cStatus = data.get("clientStatus");
+    		modUserList(cName, cStatus, "add");
     	}else if(EVENT_CODE == EVENT_CLIENT_STATUS_CHANGE){
-    		//Change client availability status    		    		
+    		//Change client availability status    		
+    		String cName = data.get("clientName");
+    		String cStatus = data.get("clientStatus");
+    		modUserList(cName, cStatus, "modify");    		
     	}else if(EVENT_CODE == EVENT_CLIENT_EXIT){
     		appendArchive(data.get("msg"));
+    		String cName = data.get("clientName");
+    		modUserList(cName, "", "exit");
     	}else if(EVENT_CODE == EVENT_CHANGE_TOPIC){
     		appendArchive(data.get("msg"));  
     		String topic = data.get("newTopic");
@@ -354,6 +468,72 @@ public class ChatClient{
     		typedText.requestFocusInWindow();
     	}    	
     }
+    
+    public void setTypedStatus(String cName){    					
+		String msg = "["+dateFormat.format(new Date())+"] "+ cName + " has typed";
+		typingStatus.setText(msg);
+		clearStatusTimer.schedule(new TimerTask() {
+			public void run() {
+				clearStatus();
+			}
+		}, 1000); 
+    }
+    
+    public void clearStatus(){
+    	typingStatus.setText("");
+    }
+    
+    public void modUserList(String cName, String cStatus, String action){
+    	//Current hack
+    	if(action.equals("exit")){
+    		HTMLDocument d = (HTMLDocument) userListPane.getDocument();    		
+    		Element e = d.getElement(d.getDefaultRootElement(), HTML.Attribute.ID, cName);  
+    		d.removeElement(e);    		
+    	}else if(action.equals("add")){
+	    	String imgPath = "images/"+cStatus.toLowerCase()+".png";
+	    	String imgsrc = "";
+			try {
+				imgsrc = new File(imgPath).toURL().toExternalForm();
+			} catch (MalformedURLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}		
+	    	String html = "<div id='" + cName + "' <img width=14 height=14 src='"+imgsrc+"' />&nbsp;"+cName+"</div>";    		    		
+    		HTMLDocument d = (HTMLDocument) userListPane.getDocument();    		
+    		Element e = d.getElement(d.getDefaultRootElement(), HTML.Attribute.ID, "endList");
+    		try {
+				d.insertBeforeEnd(e, html);
+			} catch (BadLocationException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}    			    
+    	}else if(action.equals("modify")){
+    		String imgPath = "images/"+cStatus.toLowerCase()+".png";
+	    	String imgsrc = "";
+			try {
+				imgsrc = new File(imgPath).toURL().toExternalForm();
+			} catch (MalformedURLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}		
+	    	String html = "<img width=14 height=14 src='"+imgsrc+"' />&nbsp;"+cName;   
+	    	
+    		HTMLDocument d = (HTMLDocument) userListPane.getDocument();        		    		    		    		    
+    		Element e = d.getElement(d.getDefaultRootElement(), HTML.Attribute.ID, cName);
+    		try {
+				d.setInnerHTML(e, html);
+			} catch (BadLocationException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+    	}
+    }    
     
     class ItemRenderer extends BasicComboBoxRenderer{    
     public Component getListCellRendererComponent(
