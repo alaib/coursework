@@ -220,7 +220,7 @@ public class ChatClient{
         userListPane = new JEditorPane();        
         userListPane.setEditable(false);
         userListPane.setContentType("text/html");
-        userListPane.setPreferredSize(new Dimension(150, 300));
+        userListPane.setPreferredSize(new Dimension(200, 300));
             	        
         topicLabel = new JLabel("Topic:");
                 
@@ -362,8 +362,8 @@ public class ChatClient{
 	   	    		if(!text.contains("Set your status...")){
 	   	    			statusMsg = text;
 	   	    		}	   	    		
-	   	    		data = chWindow.handleEvent(clientName, clientStatus, text, EVENT_CLIENT_STATUS_CHANGE);
-	   	    		modUserList(clientName, clientStatus, "modify");
+	   	    		data = chWindow.handleEvent(clientName, clientStatus, statusMsg, EVENT_CLIENT_STATUS_CHANGE);
+	   	    		modUserList(clientName, clientStatus, statusMsg, "modify");
 	   		    }catch (Exception e1){
 	   		        System.out.println("chatClient exception: " + e1);
 	   		    }    	            	       
@@ -416,11 +416,15 @@ public class ChatClient{
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
-            		try {
-						data = chWindow.handleEvent(clientName, clientStatus, text, EVENT_CHANGE_STATUS_MSG);
-					} catch (RemoteException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
+					if(!text.equals("")){
+	            		try {
+							data = chWindow.handleEvent(clientName, clientStatus, text, EVENT_CHANGE_STATUS_MSG);
+							modUserList(clientName, clientStatus, text, "modify");
+							System.out.println(text);
+						} catch (RemoteException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
 					}
              	}         	            	            	
              }
@@ -450,23 +454,34 @@ public class ChatClient{
     	}else if(EVENT_CODE == EVENT_CLIENT_JOIN){
     		appendArchive(data.get("msg"));
     		String cName = data.get("clientName");
-    		String cStatus = data.get("clientStatus");
-    		modUserList(cName, cStatus, "add");
+    		String cStatus = data.get("clientStatus");    		
+    		modUserList(cName, cStatus, "", "add");
     	}else if(EVENT_CODE == EVENT_CLIENT_STATUS_CHANGE){
     		//Change client availability status    		
     		String cName = data.get("clientName");
     		String cStatus = data.get("clientStatus");
-    		modUserList(cName, cStatus, "modify");    		
+    		String sMsg = data.get("newStatus");
+    		String msg = data.get("msg");
+    		appendArchive(msg);
+    		modUserList(cName, cStatus, sMsg, "modify");    		
     	}else if(EVENT_CODE == EVENT_CLIENT_EXIT){
     		appendArchive(data.get("msg"));
-    		String cName = data.get("clientName");
-    		modUserList(cName, "", "exit");
+    		String cName = data.get("clientName");    		
+    		modUserList(cName, "", "", "exit");
     	}else if(EVENT_CODE == EVENT_CHANGE_TOPIC){
     		appendArchive(data.get("msg"));  
     		String topic = data.get("newTopic");
     		topicText.setText(topic);
     		typedText.requestFocusInWindow();
-    	}    	
+    	}else if(EVENT_CODE == EVENT_CHANGE_STATUS_MSG){
+    		//Change client availability status    		
+    		String cName = data.get("clientName");
+    		String cStatus = data.get("clientStatus");
+    		String sMsg = data.get("newStatus");
+    		String msg = data.get("msg");
+    		appendArchive(msg);
+    		modUserList(cName, cStatus, sMsg, "modify");    		
+    	}
     }
     
     public void setTypedStatus(String cName){    					
@@ -483,8 +498,11 @@ public class ChatClient{
     	typingStatus.setText("");
     }
     
-    public void modUserList(String cName, String cStatus, String action){
+    public void modUserList(String cName, String cStatus, String newStatus, String action){
     	//Current hack
+    	if(newStatus.contains("Set your status...")){
+    		newStatus = "";    		
+    	}
     	if(action.equals("exit")){
     		HTMLDocument d = (HTMLDocument) userListPane.getDocument();    		
     		Element e = d.getElement(d.getDefaultRootElement(), HTML.Attribute.ID, cName);  
@@ -498,7 +516,7 @@ public class ChatClient{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}		
-	    	String html = "<div id='" + cName + "' <img width=14 height=14 src='"+imgsrc+"' />&nbsp;"+cName+"</div>";    		    		
+	    	String html = "<div id='" + cName + "'><img class='statImg' border=0 width=14 height=14 src='"+imgsrc+"' />&nbsp;"+cName+"</div>";    		    		
     		HTMLDocument d = (HTMLDocument) userListPane.getDocument();    		
     		Element e = d.getElement(d.getDefaultRootElement(), HTML.Attribute.ID, "endList");
     		try {
@@ -518,8 +536,13 @@ public class ChatClient{
 			} catch (MalformedURLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}		
-	    	String html = "<img width=14 height=14 src='"+imgsrc+"' />&nbsp;"+cName;   
+			}
+			String html = "";			
+			if(newStatus.equals("")){
+				html = "<img style='border: none';  width=14 height=14 src='"+imgsrc+"' />&nbsp;"+cName;
+			}else{	    	   
+				html = "<img style='border: none';  width=14 height=14 src='"+imgsrc+"' />&nbsp;"+cName+"<span style='color:#778899'>-"+newStatus+"</span>";
+			}
 	    	
     		HTMLDocument d = (HTMLDocument) userListPane.getDocument();        		    		    		    		    
     		Element e = d.getElement(d.getDefaultRootElement(), HTML.Attribute.ID, cName);
@@ -532,8 +555,30 @@ public class ChatClient{
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-    	}
-    }    
+    	}else if(action.equals("modifyStatus")){
+    		String imgPath = "images/"+cStatus.toLowerCase()+".png";
+	    	String imgsrc = "";
+			try {
+				imgsrc = new File(imgPath).toURL().toExternalForm();
+			} catch (MalformedURLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}					
+	    	String html = "<img class='statImg' style='border: none'; width=14 height=14 src='"+imgsrc+"' />&nbsp;"+cName+"<span style='color:#778899'> - "+newStatus+"</span>";   
+	    	
+    		HTMLDocument d = (HTMLDocument) userListPane.getDocument();        		    		    		    		    
+    		Element e = d.getElement(d.getDefaultRootElement(), HTML.Attribute.ID, cName);
+    		try {
+				d.setInnerHTML(e, html);
+			} catch (BadLocationException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+    	}    	
+    }        
     
     class ItemRenderer extends BasicComboBoxRenderer{    
     public Component getListCellRendererComponent(
