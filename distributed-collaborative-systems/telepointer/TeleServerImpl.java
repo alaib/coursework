@@ -23,8 +23,6 @@ import javax.swing.text.html.HTMLEditorKit;
 public class TeleServerImpl extends UnicastRemoteObject implements TeleServerInterface {    	
 	//ClientListMap
     Map <String, TeleClientCallbackInterface> clientMap;
-    Map <String, Color> colorMap;
-    Map <String, Point> pointMap;
     TeleServerView view;
     TeleServerModel model;
     DateFormat dateFormat;
@@ -42,10 +40,10 @@ public class TeleServerImpl extends UnicastRemoteObject implements TeleServerInt
     	currDim = new Dimension(450, 470);    	
     }
 	
-	public void handleEvent(String cName, Point p, Dimension d, Color c, int STATUS_CODE) throws RemoteException {
+	public void handleEvent(String cName, Point p, Dimension d, int STATUS_CODE) throws RemoteException {
 		currPoint = p;
 		currDim = d;
-		sendUpdateToAllClients(cName, p, d, c, STATUS_CODE);		
+		sendUpdateToAllClients(cName, p, d, STATUS_CODE);		
 	}
 	
 	public Point getCurrPoint() throws RemoteException{
@@ -55,22 +53,14 @@ public class TeleServerImpl extends UnicastRemoteObject implements TeleServerInt
 	public Dimension getCurrDim() throws RemoteException{
 		return currDim;
 	}
-	
-	public Map <String, Color> getColorList() throws RemoteException{
-		return colorMap;
-	}
-	
-	public Map <String, Point> getPointList() throws RemoteException{
-		return pointMap;
-	}
-	
-	public void sendUpdateToAllClients(String cName, Point p, Dimension d, Color c, int STATUS_CODE){	    	
+			
+	public void sendUpdateToAllClients(String cName, Point p, Dimension d, int STATUS_CODE){	    	
     	for(Map.Entry<String, TeleClientCallbackInterface> item : clientMap.entrySet()){
     		String clientName = item.getKey();
     		TeleClientCallbackInterface tcCallback = item.getValue();
     		if(!clientName.equals(cName)){
     			try {
-					tcCallback.handleNotify(p, d, c, STATUS_CODE);
+					tcCallback.handleNotify(p, d, STATUS_CODE);
 				} catch (RemoteException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -79,18 +69,12 @@ public class TeleServerImpl extends UnicastRemoteObject implements TeleServerInt
     	}	    
 	}
 	
-	public void registerCallback(String cName, Color c, TeleClientCallbackInterface tCallback){
+	public void registerCallback(String cName, TeleClientCallbackInterface tCallback){
 		if(!clientMap.containsKey(cName)){
 			clientMap.put(cName, tCallback);
 			String msg = "["+dateFormat.format(new Date())+"] <strong>" + cName + "</strong> has joined the telepointer session </br>";			
 			view.appendArchive(msg);
-		}
-		if(!colorMap.containsKey(cName)){
-			colorMap.put(cName, c);
-		}
-		if(!pointMap.containsKey(cName)){
-			pointMap.put(cName, new Point(25, 90));
-		}
+		}		
 	}
 	
 	public void unRegisterCallback(String cName){		
@@ -102,21 +86,13 @@ public class TeleServerImpl extends UnicastRemoteObject implements TeleServerInt
 				currPoint = new Point(25, 90);    	
 		    	currDim = new Dimension(450, 470);
 			}		
-		}			
-		if(colorMap.containsKey(cName)){
-			colorMap.remove(cName);
-		}
-		if(pointMap.containsKey(cName)){
-			pointMap.remove(cName);
-		}
+		}					
 	}
 	
     public class TeleServerModel{
     	public TeleServerModel(TeleServerImpl ts){
     		ts.dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-    		ts.clientMap = new HashMap<String, TeleClientCallbackInterface>();
-    		ts.colorMap = new HashMap<String, Color>();
-    		ts.pointMap = new HashMap<String, Point>();
+    		ts.clientMap = new HashMap<String, TeleClientCallbackInterface>();    		
     	}
     }
     

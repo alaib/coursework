@@ -212,7 +212,7 @@ public class TeleClient {
 			if(e.getStateChange() == ItemEvent.SELECTED){				
 				setVisible(true);
 				try {					
-					tc.teleInt.registerCallback(tc.clientName, Color.RED, tc.teleClientCallback);
+					tc.teleInt.registerCallback(tc.clientName, tc.teleClientCallback);
 					Point p = tc.teleInt.getCurrPoint();
 					Dimension d = tc.teleInt.getCurrDim();
 					tc.handleCallback(p, d, MOVE_POINTER);
@@ -332,7 +332,7 @@ public class TeleClient {
 		            glassPane.repaint();
 		            Dimension d = new Dimension(tc.cView.frame.getSize());
 		            try {
-						tc.teleInt.handleEvent(tc.clientName, glassPanePoint, d, Color.RED, tc.MOVE_POINTER);
+						tc.teleInt.handleEvent(tc.clientName, glassPanePoint, d, tc.MOVE_POINTER);
 					} catch (RemoteException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();

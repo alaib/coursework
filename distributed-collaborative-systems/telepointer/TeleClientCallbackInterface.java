@@ -5,5 +5,5 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 public interface TeleClientCallbackInterface extends Remote {
-    public void handleNotify(Point p, Dimension d, Color c, int STATUS_CODE) throws RemoteException;    
+    public void handleNotify(Point p, Dimension d, int STATUS_CODE) throws RemoteException;    
 }
