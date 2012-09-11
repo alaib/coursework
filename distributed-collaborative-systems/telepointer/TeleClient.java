@@ -53,7 +53,8 @@ public class TeleClient {
 		if(STATUS_CODE == MOVE_POINTER){
 			if(this.cView.toggleBtn.isSelected()){
 				this.cView.gPane.setPoint(p);
-				this.cView.gPane.repaint();			
+				this.cView.gPane.repaint();	
+				this.cView.gPane.listener.prevPoint = p;
 			}
 		}		
 	}
@@ -199,10 +200,11 @@ public class TeleClient {
 	public class MyGlassPane extends JComponent implements ItemListener{
 		Point point;
 		TeleClient tc;
+		public PaneListener listener;
 		
 		public MyGlassPane(TeleClient tClient, AbstractButton toggleBtn, JEditorPane editorPane, Container contentPane){
 			tc = tClient;
-			PaneListener listener = new PaneListener(tc, toggleBtn, editorPane, this, contentPane);
+			listener = new PaneListener(tc, toggleBtn, editorPane, this, contentPane);
 			addMouseListener(listener);
 			addMouseMotionListener(listener);
 			//setVisible(true);
@@ -256,6 +258,7 @@ public class TeleClient {
 		public PaneListener(TeleClient tClient, Component tBtn, JEditorPane ePane, MyGlassPane gPane, Container cPane){
 			toolkit = Toolkit.getDefaultToolkit();
 			this.tc = tClient;
+			this.prevPoint = new Point(25, 90);
 			this.toggleBtn = tBtn;
 			this.glassPane = gPane;
 			this.contentPane = cPane;	
@@ -320,17 +323,25 @@ public class TeleClient {
 	         
 	        //Update the glass pane if requested.
 	        if (repaint) {
-	            glassPane.setPoint(glassPanePoint);
-	            glassPane.repaint();
-	            Dimension d = new Dimension(tc.cView.frame.getSize());
-	            try {
-					tc.teleInt.handleEvent(tc.clientName, glassPanePoint, d, tc.MOVE_POINTER);
-				} catch (RemoteException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-	        }
-	        prevPoint = glassPanePoint;
+	        	//Check if the dragged area is inside our circle
+	        	Point center = new Point(prevPoint.x - 10, prevPoint.y - 10);
+	        	int radiusSquare = (int)Math.pow(30, 2);
+	        	int distance = (int)Math.pow((center.x - glassPanePoint.x), 2) + (int)Math.pow((center.y - glassPanePoint.y), 2);
+	        	//String msg = "center = "+center+", prevPoint = "+prevPoint+",glassPanePoint = "+glassPanePoint + ",radius^2 = "+radiusSquare+", distance = "+distance;
+	        	//System.out.println(msg);
+	        	if(distance <= radiusSquare){
+		            glassPane.setPoint(glassPanePoint);
+		            glassPane.repaint();
+		            Dimension d = new Dimension(tc.cView.frame.getSize());
+		            try {
+						tc.teleInt.handleEvent(tc.clientName, glassPanePoint, d, tc.MOVE_POINTER);
+					} catch (RemoteException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+		            prevPoint = glassPanePoint;
+	        	}	        	
+	        }	        
 	    }		
 	}
 	
