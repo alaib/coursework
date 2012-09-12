@@ -42,7 +42,7 @@ public class TeleClientExtra{
 	String clientName;	
 	Map <String, Color> colorMap;
     Map <String, Point> pointMap;
-    Color[] colorList = new Color[]{Color.RED, Color.CYAN, Color.YELLOW, Color.BLUE};
+    Color[] colorList = new Color[]{Color.RED, Color.CYAN, Color.BLUE, Color.GRAY};
     Color clientColor;
 	
 	//Constants
@@ -173,7 +173,7 @@ public class TeleClientExtra{
 			//Setup Container
 			contentPane = frame.getContentPane();
 			contentPane.setLayout(new BorderLayout());
-			contentPane.setPreferredSize(new Dimension(450, 470));
+			contentPane.setPreferredSize(new Dimension(537, 547));
 			
 			//Add toggle widget
 	        toggleBtn = new JCheckBox("Activate Telepointer");
@@ -184,11 +184,11 @@ public class TeleClientExtra{
 	        editorPane = new JEditorPane();
 	        try{
 	        	editorPane.setContentType("text/html");
-	        	String imgPath = "images/linux-architecture.jpg";
+	        	String imgPath = "images/distributed.jpg";
 	        	String imgsrc = new File(imgPath).toURL().toExternalForm();
 	        	
 	        	String html = "<html><body>" +
-	        				  "<div style='margin: 10px 0px 0px 35px;'><img  width=337 height=382 src='"+imgsrc+"'/></div>"+
+	        				  "<div><img  width=497 height=477 src='"+imgsrc+"'/></div>"+
 	        				  "</body></html>";	        		        
 	        	editorPane.setText(html);
 	        	editorPane.setEditable(false);

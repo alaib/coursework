@@ -154,7 +154,8 @@ public class TeleClient {
 			//Setup Container
 			contentPane = frame.getContentPane();
 			contentPane.setLayout(new BorderLayout());
-			contentPane.setPreferredSize(new Dimension(450, 470));
+			//contentPane.setPreferredSize(new Dimension(450, 470));
+			contentPane.setPreferredSize(new Dimension(537, 547));
 			
 			//Add toggle widget
 	        toggleBtn = new JCheckBox("Activate Telepointer");
@@ -165,11 +166,11 @@ public class TeleClient {
 	        editorPane = new JEditorPane();
 	        try{
 	        	editorPane.setContentType("text/html");
-	        	String imgPath = "images/linux-architecture.jpg";
+	        	String imgPath = "images/distributed.jpg";
 	        	String imgsrc = new File(imgPath).toURL().toExternalForm();
 	        	
 	        	String html = "<html><body>" +
-	        				  "<div style='margin: 10px 0px 0px 35px;'><img  width=337 height=382 src='"+imgsrc+"'/></div>"+
+	        				  "<div><img  width=497 height=477 src='"+imgsrc+"'/></div>"+
 	        				  "</body></html>";	        		        
 	        	editorPane.setText(html);
 	        	editorPane.setEditable(false);
@@ -224,6 +225,7 @@ public class TeleClient {
 				setVisible(false);
 				try {
 					tc.teleInt.unRegisterCallback(tc.clientName);
+					tc.cView.gPane.listener.prevPoint = new Point(25, 90);
 				} catch (RemoteException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
