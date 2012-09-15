@@ -148,11 +148,14 @@ f(z+h) = f(z) + \frac{df(z)}{dz}h + \frac{1}{2}\frac{d^2f(z)}{d^2z}h^2 + O(h^3).
 \]
 Derive a bound on the error of the finite differences approximation using the above expression. You can use big O notation to express this bound.
 \[
-\textrm{Err}(z_0,h) = \abs{\frac{f(z_0+h) - f(z_0)}{h} - \frac{df(z_0)}{dz}} \leq \answer
+\textrm{Err}(z_0,h) = \abs{\frac{f(z_0+h) - f(z_0)}{h} - \frac{df(z_0)}{dz}} \leq \frac{1}{2} \frac{d^{2}f(z_{0})}{d{z_{0}}^{2}} h + \frac{O(h^{3})}{h}
 \]
 
-Specifically for sigmoid function plug in appropriate derivative on the right hand side of the inequality. If $h=10^{-5}$ and $z_0 = 0$ the error of the finite difference should be about \answer.
+Specifically for sigmoid function plug in appropriate derivative on the right hand side of the inequality. If $h=10^{-5}$ and $z_0 = 0$ the error of the finite difference should be about $\frac{O(h^{3})}{h} = 10^{-5 \times 2} = 10^{-10}$.
+
 Does this agree with the histogram of error that is in the figure above?
+
+\textbf{Ans.} At $h=10^{-5}$ and $z_0 = 0$ the error of the finite differences and actual derivative (See prob 6 (histogram)) is $9.4645 \times e^{-12}$. As per the above inequality, the difference is $10^{-10}$. They are \textbf{in agreement} upto a precision of 10 decimal places and the absolute difference between the two is $9.0536 \times e^{-11}$.
 
 \newproblem{1pt}
 Let
