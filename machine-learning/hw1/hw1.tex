@@ -164,7 +164,7 @@ f(z) = \frac{1}{1 + \myexp{-z}} = p
 \EEQ
 express $z$ in terms of $p$
 \[
-z = \answer.
+z = \ln{(\frac{p}{1-p})}.
 \]
 Now suppose
 \BEQ\label{eq:qz}
@@ -172,35 +172,43 @@ Now suppose
 \EEQ
 and express $z$ in terms of $q$
 \[
-z = \answer.
+z = \ln{(\frac{1-q}{q})}.
 \]
 Given Eqs.\eqref{eq:pz},\eqref{eq:qz} express $q$ in terms of $p$
 \[
-q = \answer.
+q = 1-p. 
 \]
 Express $f(-z)$ in terms of $f(z)$
 \[
-f(-z) = \answer.
+f(-z) = 1 - f(z).
 \]
 Hint: the manipulations that are useful here are either subtraction from 1 (as in $1-x$), computing inverse (as in $\frac{1}{x}$), and taking logarithm (as in $\log(x)$).
 
 \section*{Log of sigmoid}
 \newproblem{1pt}
+
 Let $g(z)$ be log of sigmoid function
 \[
 g(z) = \mylog{ \frac{1}{1+ \myexp{-z}} }.
 \]
 Compute its derivative and fill it in here
 \[
-\frac{dg(z)}{dz} =  \answer.%here goes your derivative of log sigmoid, but before the % character otherwise it will be commented out
+\frac{dg(z)}{dz} = \frac{1}{\frac{1}{1+e^{-z}}} \frac{d}{dz}(\frac{1}{1+e^{-z}}) = (1+e^{-z}) \frac{1}{e^{z}(1+e^{-z})^{2}} = \frac{1}{e^{z}(1+e^{-z})}.
 \]
-Check your derivative by comparing its value to the finite difference approximation.
 
+\[
+\frac{dg(z)}{dz} = \frac{1}{1+e^{z}}.
+\]
+
+Check your derivative by comparing its value to the finite difference approximation.
 
 \newproblem{1pt}
 Compute second derivative of $g(z)$
 \[
-\frac{dg(z)}{dz} =  \answer.%here goes your derivative of log sigmoid, but before the % character otherwise it will be commented out
+\frac{d^{2}g(z)}{dz^{2}} = \frac{d}{dz}(\frac{1}{1+e^{z}}) = -1 (1+e^{z})^{-2} e^{z}.
+\]
+\[
+\frac{d^{2}g(z)}{dz^{2}} = \frac{-e^{z}}{(1+e^{z})^{2}}.
 \]
 Check the second derivative by comparing its value to the finite difference of the {\em first} derivatives you computed above.
 
