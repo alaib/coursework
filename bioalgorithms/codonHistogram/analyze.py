@@ -1,6 +1,9 @@
-#!/bin/python
+#!/usr/bin/python
 import sys;
 import pprint;
+
+#DEBUG Flag
+DEBUG = 0
 
 #Declare the DNA codon table
 codonMap = {
@@ -34,12 +37,14 @@ codonMap = {
 aminoAcids = sorted(set(codonMap.values()))
 codons = sorted(set(codonMap.keys()))
 
+#Initialize aminoAcidCount to 0
 aminoCount = {}
 for c in aminoAcids:
     aminoCount[c] = 0
 
 aminoCount['Total'] = 0
 
+#Initialize codonCount to 0
 codonCount = {}
 for c in codons:
     codonCount[c] = 0
@@ -56,15 +61,19 @@ elif(lenArgs % 2 != 1):
     print "Filename/Offset argument missing, Usage: python analyze.py file1.fa offset1 [file2.fa offset 2 ...]"
     sys.exit()
 
-fileList = []
+if DEBUG:
+    outfile = open('test', 'w')
+
 i = 1
-#outfile = open('test', 'w')
 #Iterate over all files
 while(i < lenArgs):
+    #Read filename and offset
     fName = str(sys.argv[i])
     offset = int(sys.argv[i+1])
-    #print fName, offset
     f = open(fName)
+
+    if DEBUG:
+        print fName, offset
 
     #skip header
     c = f.read(1)
@@ -78,34 +87,44 @@ while(i < lenArgs):
         if(c != '\n'):
             j += 1
 
-    #start codon starts (read 3 consecutive chars and check the codonMap to update codon)
+    #start codon starts (read 3 consecutive chars and check the codonMap to find the mapping aminoAcid)
     while(True):
         j = 1
         amino = ''
         while(j <= 3):
             c = f.read(1)
+            if(not c):
+                break
             if(c != '\n'):
                 amino += c
                 j += 1
         #end
-        #print amino
-        #outfile.write(amino)
+        if DEBUG:
+            print amino
+            outfile.write(amino)
+
+        #Get AminoAcid mapping
         cName = codonMap[amino]
 
+        #Increment count 
         aminoCount[cName] += 1
         codonCount[amino] += 1
 
         aminoCount['Total'] += 1
         codonCount['Total'] += 1
 
+        #Stop if 'Stop' codon is found
         if(cName == 'Stop'):
-            #print fName, amino, cName
+            if DEBUG:
+                print fName, amino, cName
             break
-        
+    #Skip by two
     i += 2
 #end while loop    
-#outfile.close()
+if DEBUG:    
+    outfile.close()
 
+#Create codonFinal struct which maps aminoAcid to codons and their respective counts
 codonFinal = {} 
 for c in aminoCount:
     if(c != 'Total'):
@@ -117,7 +136,15 @@ for c in codonCount:
         amino = codonMap[c]
         codonFinal[amino][c] = codonCount[c]
 
-codonOut = open('codonHisto.txt', 'w')
+if DEBUG:
+    print aminoCount
+    print codonCount
+    pprint.pprint(codonFinal)
+
+#Write out codon histogram
+codonFileName = 'codonHisto.txt'
+print 'Writing codon histogram to', codonFileName
+codonOut = open(codonFileName, 'w')
 codonOut.write('Amino Acid\t\tCodon\tCount\tPercentage\n')
 codonOut.write('==============================================\n')
 for c in sorted(codonFinal.keys()):
@@ -136,7 +163,10 @@ for c in sorted(codonFinal.keys()):
 #end loop
 codonOut.close()
 
-aminoOut = open('aminoHisto.txt', 'w')
+#Write out amino acid histogram
+aminoFileName = 'aminoHisto.txt'
+print 'Writing amino acid histogram to', aminoFileName
+aminoOut = open(aminoFileName, 'w')
 aminoOut.write('Amino Acid\t\tCount\tPercentage\n')
 aminoOut.write('=================================\n')
 total = aminoCount['Total']
@@ -152,7 +182,3 @@ for c in sorted(aminoCount.keys()):
             aminoOut.write(c+'\t\t\t'+str(value)+'\t\t'+str(percent)+'%\n')
 #end loop
 aminoOut.close()
-
-#print aminoCount
-#print codonCount
-#pprint.pprint(codonFinal)
