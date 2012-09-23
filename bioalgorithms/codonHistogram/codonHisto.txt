@@ -1,0 +1,87 @@
+Amino Acid		Codon	Count	Percentage
+==============================================
+Alanine			GCA		13		6.6%
+Alanine			GCC		74		37.56%
+Alanine			GCG		5		2.54%
+Alanine			GCT		105		53.3%
+
+Arginine		AGG		7		8.14%
+Arginine		CGC		18		20.93%
+Arginine		CGG		7		8.14%
+Arginine		CGA		15		17.44%
+Arginine		AGA		9		10.47%
+Arginine		CGT		30		34.88%
+
+Asparagine		AAT		11		20.75%
+Asparagine		AAC		42		79.25%
+
+Aspartic acid	GAT		38		48.1%
+Aspartic acid	GAC		41		51.9%
+
+Cysteine		TGC		29		80.56%
+Cysteine		TGT		7		19.44%
+
+Glutamic acid	GAG		70		65.42%
+Glutamic acid	GAA		37		34.58%
+
+Glutamine		CAA		20		28.17%
+Glutamine		CAG		51		71.83%
+
+Glycine			GGT		188		42.92%
+Glycine			GGG		18		4.11%
+Glycine			GGA		81		18.49%
+Glycine			GGC		151		34.47%
+
+Histidine		CAC		18		72.0%
+Histidine		CAT		7		28.0%
+
+Isoleucine		ATT		11		22.0%
+Isoleucine		ATA		1		2.0%
+Isoleucine		ATC		38		76.0%
+
+Leucine			CTT		5		4.35%
+Leucine			CTG		62		53.91%
+Leucine			CTA		3		2.61%
+Leucine			CTC		36		31.3%
+Leucine			TTA		1		0.87%
+Leucine			TTG		8		6.96%
+
+Lysine			AAG		56		69.14%
+Lysine			AAA		25		30.86%
+
+Methionine		ATG		32		100.0%
+
+Phenylalanine	TTC		54		79.41%
+Phenylalanine	TTT		14		20.59%
+
+Proline			CCT		162		52.09%
+Proline			CCG		2		0.64%
+Proline			CCA		19		6.11%
+Proline			CCC		128		41.16%
+
+Serine			TCT		23		26.44%
+Serine			AGC		29		33.33%
+Serine			TCG		1		1.15%
+Serine			AGT		9		10.34%
+Serine			TCC		19		21.84%
+Serine			TCA		6		6.9%
+
+Stop			TAG		1		25.0%
+Stop			TGA		0		0.0%
+Stop			TAA		3		75.0%
+
+Threonine		ACC		42		53.85%
+Threonine		ACA		8		10.26%
+Threonine		ACG		8		10.26%
+Threonine		ACT		20		25.64%
+
+Tryptophan		TGG		15		100.0%
+
+Tyrosine		TAT		7		17.95%
+Tyrosine		TAC		32		82.05%
+
+Valine			GTA		2		1.98%
+Valine			GTC		32		31.68%
+Valine			GTT		18		17.82%
+Valine			GTG		49		48.51%
+

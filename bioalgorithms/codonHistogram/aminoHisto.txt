@@ -1,0 +1,23 @@
+Amino Acid		Count	Percentage
+=================================
+Alanine			197		9.5%
+Arginine		86		4.15%
+Asparagine		53		2.56%
+Aspartic acid	79		3.81%
+Cysteine		36		1.74%
+Glutamic acid	107		5.16%
+Glutamine		71		3.42%
+Glycine			438		21.13%
+Histidine		25		1.21%
+Isoleucine		50		2.41%
+Leucine			115		5.55%
+Lysine			81		3.91%
+Methionine		32		1.54%
+Phenylalanine	68		3.28%
+Proline			311		15.0%
+Serine			87		4.2%
+Stop			4		0.19%
+Threonine		78		3.76%
+Tryptophan		15		0.72%
+Tyrosine		39		1.88%
+Valine			101		4.87%
