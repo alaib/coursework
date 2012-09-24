@@ -35,29 +35,47 @@ def compatible(a, ab):
     return 1, sites
 #end compatible
 
-#a = [1, 2, 3]
-a = [3, 2, 1]
+def compatibleBranchAndBound(a, b, ab):
+    aComp, sites1 = compatible(a, ab)
+    if(aComp == 0):
+        return 0
+
+    bComp, sites2 = compatible(b, ab)
+    if(bComp == 0):
+        return 0
+    
+    #Check if cuts are made at right places
+    cutSites = {}
+    val = 0
+    for i in range(len(ab)):
+        val += ab[i]
+        cutSites[val] = 0
+    for i in range(len(sites1)):
+        cutSites[sites1[i]] = 1
+    for i in range(len(sites2)):
+        cutSites[sites2[i]] = 1
+        
+    fullComp = 1
+    if(0 in cutSites.values()):
+        fullComp = 0
+
+    return fullComp
+#end
+
+#a = [3, 2, 1]
+a = [1, 3, 2]
 a = [2, 3, 1]
 b = [2, 4]
 #ab = [1, 1, 2, 2]
 #ab = [1, 2, 1, 2]
 ab = [2, 1, 2, 1]
 
-[c1, siteList1] = compatible(a, ab)
-[c2, siteList2] = compatible(b, ab)
+comp = compatibleBranchAndBound(a, b, ab)
 
-if(c1):
-    print "Compatible with A"
+if(comp):
+    print "Compatible"
 else:
-    print "Not Compatible with A"
+    print "Not Compatible"
 print "a = ", a
-print "ab = ", ab
-print "sites = ", siteList1
-
-if(c2):
-    print "Compatible with B"
-else:
-    print "Not Compatible with A"
 print "b = ", b
 print "ab = ", ab
-print "sites = ", siteList2
