@@ -155,7 +155,7 @@ Specifically for sigmoid function plug in appropriate derivative on the right ha
 
 Does this agree with the histogram of error that is in the figure above?
 
-\textbf{Ans.} At $h=10^{-5}$ and $z_0 = 0$ the error of the finite differences and actual derivative (See prob 6 (histogram)) is $9.4645 \times e^{-12}$. As per the above inequality, the difference is $10^{-10}$. They are \textbf{in agreement} upto a precision of 10 decimal places and the absolute difference between the two is $9.0536 \times e^{-11}$.
+\textbf{Ans.} At $h=10^{-5}$ and $z_0 = 0$ the error of the finite differences and actual derivative (See prob 6 (histogram)) is $9.4645 \times e^{-12}$. As per the above inequality, the difference is $10^{-10}$. They are \textbf{in agreement} ( $9.4645 \times e^{-12} <= 10^{-10}$ ).
 
 \newproblem{1pt}
 Let
@@ -221,26 +221,18 @@ p(y | \xx_i,\beta_0,\beta) = \frac{1}{1 + \myexp{-y_i(\beta_0 + \bket{\beta}{\xx
 Write a matlab function that computes log probability of label $y$ given a vector of features $\xx$ and $\beta_0,\beta$.
 \begin{verbatim}
 function logP = logProbLogReg(y,X,beta0,beta)
-    logP = log(1 ./ (1 + exp(-1 .* y .* (beta0 + beta * X))));
+    logP = log(1 ./ (1 + exp(-1 .* y .* (beta0 + X * beta))));
 end
 \end{verbatim}
 
 Now write a matlab function that uses the above function to compute log probability of label $+1$ for a vector of features $\xx$ and $\beta_0,\beta$
 \begin{verbatim}
-function predY = predictY(X,beta0,beta)
-logProbY = logProgLogReg(X,1,beta0,beta);
-if logProbY > ...
-    predY = ...
-else
-    predY = ...
-end
-
 function predY = predictY(X, beta0, beta)
     logProbY = logProbLogReg(1, X, beta0, beta);
-    if logProbY > 0 % needs to be filled
-        predY = 1; % needs to be filled
+    if logProbY > log(0.5)
+        predY = +1;
     else
-        predY = 1; % needs to be filled
+        predY = -1;
     end
 end
 \end{verbatim}
@@ -253,56 +245,138 @@ Given Eq.\eqref{eq:plr} we can write out log-likelihood
 Now using function $\texttt{logProbLogReg}$ that you obtained for the previous problem, write a matlab function that computes loglikelihood
 \begin{verbatim}
 function val = LogLikLogReg(y,X,beta0,beta)
-val = 0;
-for i=1:length(y)
-    val = val + logProbLogReg(y(i), X(i), beta0, beta);
+    val = 0;
+    for i=1:length(y)
+        val = val + logProbLogReg(y(i), X(i,:), beta0, beta);
+    end
 end
 \end{verbatim}
 \newproblem{1pt}
 Write a function that computes gradient of log-likelihood of logistic regression Eq.\eqref{eq:ll}
 \begin{verbatim}
 function [dbeta0,dbeta] = dLogLikLogReg(y,X,beta0,beta)
-dbeta0 = ...
-for i=1:length(beta)
-    dbeta(i) = ...
+    dbeta0 = sum(y ./ (1 + exp(y .* (beta0 + X * beta))));
+    for j=1:length(beta)
+        dbeta(j) = sum( (y .* X(:,j)) ./ (1 + exp(y .* (beta0 + X * beta))));            
+    end
 end
 \end{verbatim}
 You can make sure that your implementation is correct using the finite differences trick.
 \newproblem{1pt}
 Implement a gradient ascent algorithm for fitting logistic regression and paste it below.
 \begin{verbatim}
-function [beta0,beta] = fitLogReg(y,X)
-...
+function [beta0, beta] = fitLogReg(y, X)    
+    %initialize beta0 and beta
+    beta0 = 0;
+    beta = zeros(size(X, 2),1);
+
+    %initialize gradients
+    dbeta0 = 1;
+    dbeta = zeros(size(X,2), 1);
+    
+    % initialize step size (or learning rate) and max iterations
+    eta = 1e-5; % learning rate or step size    
+    it = 0; 
+    itmax = 2000; % maximum number of iterations    
+        
+    while (sum(abs(dbeta)) + abs(dbeta0)) > 1e-10 % continue whilst gradient is large        
+        % increment the number of updates carried out
+        it = it + 1; 
+        
+        % reset gradients
+        dbeta0 = 0; 
+        dbeta = 0 * dbeta;
+        
+        % compute gradients
+        dbeta0 = sum(y ./ (1 + exp(y .* (beta0 + X * beta))));
+                
+        for j = 1 : length(beta)                            
+            dbeta(j) = sum( (y .* X(:,j)) ./ (1 + exp(y .* (beta0 + X * beta))));
+        end
+        
+        % update beta0 and beta
+        beta0 = beta0 + eta .* dbeta0;
+        beta = beta + eta .* dbeta;        
+
+        % break out if max iterations has been reached
+        if it > itmax
+            break; 
+        end
+    end   
+end
 \end{verbatim}
-Run it with fixed step size $s=0.01$, for 20 iterations, on data stored in \texttt{hw\theHW.mat}.
+
+Run it with fixed step size $s=1e-5$, for 2000 iterations, on data stored in \texttt{hw\theHW.mat}.
 Note that \texttt{load hw\theHW.mat} loads the $y$ and $X$ variables, on which you can run by issuing command
 \texttt{[beta0,beta] = fitLogReg(y,X)}.
 Report resulting $\beta_0,\beta$
 \begin{verbatim}
-beta0 = ...
-beta0 = ...
+beta0 = 0.0010957
+beta = [-0.02143 0.1607 -0.01822 -0.04918 -0.04604 -0.04639 0.01162
+        -0.0135 -0.02906 -0.0188 -0.0289 -0.03046 0.05342 0.03906
+        -0.002518 -0.02692 -0.04047 -0.01994 -0.004227 0.0609 0.008589
+        -0.06795 -0.00126 0.03886 0.05141 -0.0403 0.008485 0.1646
+        0.1339 -0.02296 -0.003384 0.1003 0.006759 0.124 0.04619
+        -0.04314 -0.009258 -0.02412 0.00347 -0.00027 0.01741 0.01438
+        -0.003812 -0.01127 -0.02109 -0.008545 0.01536 -0.04617 0.08574
+        -0.001652 0.003295 -0.001149 0.01731 -0.01149 0.00503 0.02695
+        -0.01551 0.004767 -0.001546 0.00791 0.0126 0.00849 -0.01074
+        -0.00753 0.01142 -0.0002641 -0.0001921 -0.00126 -0.006484 -0.0002133
+        -0.01787 -0.005508 -0.01482 -7.031e-005 0.003101 0.001028 -0.03209
+        0.001426 -0.04631 0.001077 0.01083 0.002858 -0.05803 -0.01238
+        -0.02531 -0.0473 0.0009134 -0.001276 -0.2578 -0.03866 -0.05325
+        0.001799 0.01528 0.01037 -0.0326 0.01012 -0.007789 -0.006569
+        -0.01981 -0.001454 0.0006085 -0.01635 -0.000497 -0.0006021 -0.02542
+        0.0001593 -0.09198 0.1555 0.01523 -0.08047 0.06645 0.009665
+        -0.1879 0.07071 -0.2866 0.1835 0.04374 0.0006091 -0.05094
+        0.08198 0.01465 0.06707 0.01884 0.1883 0.009685 0.0434
+        0.00253 0.02507 -0.01647 0.003903 -0.03436 -0.02429 0.03313
+        0.003609 0.00776 0.02836 0.05266 0.009622 0.02063 0.0359
+        0.03319 0.02649 0.01353 0.05517 0.02412 0.0346 0.03049
+        0.03749 0.04143 0.004976 -0.01309 -0.01127 0.02519 -0.02121
+        0.01663 -0.02574 -0.0211 -0.04929 -0.03417 -0.01576 -0.03091
+        -0.02881 -0.03066 -0.04566 -0.04843 0.0002199 -0.05544 -0.01424
+        -0.004019 -0.01473 -0.03598 -0.02181 0.002669 -0.03686 -0.0008104
+        -0.0184 -0.006603 -0.02072 -0.02646 -0.002791 0.04217 0.04199
+        0.003642 0.03562 0.03278 0.04564 0.008575 0.01454 -0.01995
+        0.04076 0.01194 0.02964 0.03056 0.00102 -0.01413 0.008393
+        0.02805 0.02004 0.01452 0.01527 0.04959 0.03062 0.04593
+        0.002911 -0.00366 -0.02184 -0.01791 -0.0217 0.02037 -0.03698
+        0.006691 -0.005006 0.009788 0.00524 0.002131 0.02802 0.02835
+        -0.009176 0.004066 -0.02371 -0.03402 -0.03748 0.009218 -0.004869
+        -0.02866 -0.03108 0.0121 -0.03262 -0.01632 -0.04654 0.007686
+        -0.0789 0.007168 -0.01708 0.01133 -0.02453
+       ]
 \end{verbatim}
 \newproblem{1pt}
 Implement estimation of prediction error using cross validation
 \begin{verbatim}
-load hw1.mat
-rand('seed',1); K = 5; N = length(y);
-indices = crossvalind('Kfold',N,K);
-for k=1:K
-    testX = x(indices == k,:);
-    testY = y(indices == k);
+load  hw1.mat
+X = X';
+y = y';
+rand('seed',1);
+K  =  5;
+N  =  length(y);
+indices  =  crossvalind('Kfold',N,K);
+err = zeros(K, 1);
+err1 = zeros(K, 1);
 
-    trainX = x(indices ~= k,:);
-    trainY = y(indices ~= k,:);
-
-    [beta0,beta] = optimizeLogLikLogReg(trainX,trainY);
-
-    for i=1:length(testY)
-        predY = ...
-        err(k) = err(k) + ...
-    end
+for  k = 1 : K
+    testX  =  X(indices  ==  k,:);
+    testY  =  y(indices  ==  k);    
+    trainX  =  X(indices  ~=  k,:);
+    trainY  =  y(indices  ~=  k);    
+    [beta0,beta]  =  fitLogReg(trainY, trainX);    
+    
+    predY = zeros(1, size(testY, 1));
+    for  i=1:length(testY)
+        predY(i) = beta0 + testX(i,:) * beta;        
+        err(k) = err(k) + abs(testY(i)-predY(i));
+    end   
 end
-cvErr = err/length(y);
+
+cvErr  =  sum(err)/length(y);
+display(cvErr);
 \end{verbatim}
-Once done, run this on data stored in \texttt{hw\theHW.mat}. The cross-validation estimate of error on that dataset is \answer.
+Once done, run this on data stored in \texttt{hw\theHW.mat}. The cross-validation estimate of error on that dataset is $1.1363$.
 \end{document}
