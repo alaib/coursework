@@ -4,7 +4,6 @@ import util.models.VectorChangeEvent;
 import util.models.VectorChangeSupport;
 import util.models.VectorListener;
 import util.models.VectorListenerRegisterer;
-import bus.uigen.ObjectEditor;
 
 @StructurePattern(StructurePatternNames.VECTOR_PATTERN)
 public class VectorStringHistory implements StringHistory, VectorListenerRegisterer {
@@ -26,14 +25,10 @@ public class VectorStringHistory implements StringHistory, VectorListenerRegiste
 			@Override
 			public void updateVector(VectorChangeEvent evt) {
 				// TODO Auto-generated method stub
-				System.out.println("new event caught");
-				System.out.println(evt);
 				int evtType = evt.getEventType();
-				if(evtType == VectorChangeEvent.AddComponentEvent){
-					String newStr = (String)evt.getNewValue();
-					int newSize = evt.getNewSize();
-					//System.out.println("NewStr = "+newStr+", NewSize = "+newSize);
-				}
+				String newVal = (String)evt.getNewValue();
+				String oldVal = (String)evt.getOldValue();
+				System.out.println("EvtType = "+evtType+", OldValue = "+oldVal+",NewValue = "+newVal);
 			}
 			
 		};
@@ -62,7 +57,7 @@ public class VectorStringHistory implements StringHistory, VectorListenerRegiste
 			vChangeSupport.fireUpdateVector(ve);
 		}
 	}
-
+	
 	@Override
 	public void addVectorListener(VectorListener vL) {
 		vChangeSupport.addVectorListener(vL);
