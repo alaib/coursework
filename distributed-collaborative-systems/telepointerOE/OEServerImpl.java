@@ -33,6 +33,10 @@ public class OEServerImpl extends UnicastRemoteObject implements OEServerInterfa
     //Constants
   	public int MOVE_POINTER = 1;
   	public int CLIENT_JOIN = 2;
+	public int CLIENT_EXIT = 3;
+	public int CLIENT_STATUS_CHANGE = 4;
+	public int CLIENT_TOPIC_CHANGE = 5;
+	public int CLIENT_NEW_MSG = 6;
   	
     public OEServerImpl (String msg) throws RemoteException {  
     	model = new OEServerModel(this);
@@ -41,16 +45,30 @@ public class OEServerImpl extends UnicastRemoteObject implements OEServerInterfa
     }
 	
 	public void handleTelePointerEvent(String cName, Point p, int STATUS_CODE) throws RemoteException {
+		//System.out.println("TelePointer request received from client = "+cName+", status_code = "+STATUS_CODE);
 		currPoint = p;
 		sendTelePointerUpdateToAllClients(cName, p, STATUS_CODE);		
 	}
 	
 	public void handleChatEvent(String cName, String[] data, int STATUS_CODE) throws RemoteException {
+		//System.out.println("ChatEvent request received from client = "+cName+", status_code = "+STATUS_CODE);
 		String result[] = new String[2];
 		result[0] = this.computeUserList();
 		if(STATUS_CODE == this.CLIENT_JOIN){
 			String clientStatus = data[0];
 			clientStatusMap.put(cName, clientStatus);
+		}else if(STATUS_CODE == this.CLIENT_STATUS_CHANGE){
+			if(this.clientStatusMap.containsKey(cName)){
+				String clientStatus = data[0];
+				clientStatusMap.put(cName, clientStatus);
+				result[0] = this.computeUserList();
+			}
+		}else if(STATUS_CODE == this.CLIENT_TOPIC_CHANGE){
+			String newTopic = data[1];
+			result[1] = newTopic;
+		}else if(STATUS_CODE == this.CLIENT_NEW_MSG){
+			String newMsg = data[1];
+			result[1] = newMsg;
 		}
 		sendChatEventUpdateToAllClients(cName, result, STATUS_CODE);
 	}

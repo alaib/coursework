@@ -137,6 +137,13 @@ public class CustomChatUI {
 					String msg = ch.clientName + " : " + typedTextUI.getText();
 					archivePaneUI.append(msg + "\n");
 					ch.historyBuffer.addElement(msg);
+					ch.data[0] = ch.clientStatus.toString();
+					ch.data[1] = msg;
+					try {
+						ch.serverInt.handleChatEvent(ch.clientName, ch.data, ch.CLIENT_NEW_MSG);
+					} catch (RemoteException e1) {
+						e1.printStackTrace();
+					}
 				} catch (Exception e1) {
 					System.out.println("chatClient exception: " + e1);
 				}
@@ -154,15 +161,11 @@ public class CustomChatUI {
 					String newKey = ch.clientName + " - "
 							+ cb.getSelectedItem().toString();
 					int index = ch.userList.indexOf(oldKey);
-					System.out.println("OldKey = " + oldKey + ", NewKey = "
-							+ newKey + ", Index = " + index);
 					if (index >= 0) {
 						ch.userList.set(index, newKey);
 					}
 					ch.setClientStatusFromObj(cb.getSelectedItem());
 					modUserList(ch.clientName, cb.getSelectedItem().toString());
-					// data = chWindow.handleEvent(clientName, clientStatus,
-					// statusMsg, EVENT_CLIENT_STATUS_CHANGE);
 				} catch (Exception e1) {
 					System.out.println("chatClient exception: " + e1);
 				}
@@ -196,7 +199,7 @@ public class CustomChatUI {
 			if (s.contains(cName + " - ")) {
 				s = cName + " - " + status;
 			}
-			newList += s;
+			newList += s + "\n";
 		}
 		userListPaneUI.setText(newList);
 	}
@@ -319,7 +322,9 @@ class CBListener extends MouseInputAdapter {
 			this.cui.c.setX(glassPanePoint.x);
 			this.cui.c.setY(glassPanePoint.y);
 			try {
-				this.cui.ch.serverInt.handleTelePointerEvent(this.cui.ch.clientName, glassPanePoint, this.cui.ch.MOVE_POINTER);
+				this.cui.ch.serverInt.handleTelePointerEvent(
+						this.cui.ch.clientName, glassPanePoint,
+						this.cui.ch.MOVE_POINTER);
 			} catch (RemoteException e1) {
 				e1.printStackTrace();
 			}

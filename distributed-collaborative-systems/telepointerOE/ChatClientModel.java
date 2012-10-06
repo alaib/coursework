@@ -29,7 +29,11 @@ public class ChatClientModel implements PropertyListenerRegisterer {
 	protected int MOVE_POINTER = 1;
 	protected int CLIENT_JOIN = 2;
 	protected int CLIENT_EXIT = 3;
-	protected String data[] = new String[1];
+	protected int CLIENT_STATUS_CHANGE = 4;
+	protected int CLIENT_TOPIC_CHANGE = 5;
+	protected int CLIENT_NEW_MSG = 6;
+	
+	protected String data[] = new String[2];
 	
 	public enum uStatus {
 		Available, Busy, Invisible, Idle
@@ -94,17 +98,51 @@ public class ChatClientModel implements PropertyListenerRegisterer {
 		this.topic = topic;
 		propertyChangeSupport.firePropertyChange("topic", null, topic);
 		cui.topicTextUI.setText(topic);
+		
+		//Send Update to Everyone
+		Throwable t = new Throwable(); 
+		StackTraceElement[] elements = t.getStackTrace(); 
+		String calleeMethod = elements[1].getMethodName(); 
+		if(!calleeMethod.equals("handleChatEventNotify")){
+			data[0] = this.clientStatus.toString();
+			data[1] = this.topic;
+			try {
+				this.serverInt.handleChatEvent(this.clientName, data, this.CLIENT_TOPIC_CHANGE);
+			} catch (RemoteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 
 	public void setMessage(String s) {
 		message = "";
-		String elem = clientName + " : " + s;
+		Throwable t = new Throwable(); 
+		StackTraceElement[] elements = t.getStackTrace(); 
+		String calleeMethod = elements[1].getMethodName(); 
+		String elem = "";
+		if(!calleeMethod.equals("handleChatEventNotify")){
+			elem = clientName + " : " + s;
+		}else{
+			elem = s;
+		}
 		propertyChangeSupport.firePropertyChange("message", null, message);
 		
 		historyBuffer.addElement(elem);
 		// Send update to CUI
 		cui.archivePaneUI.append(elem + "\n");
 		cui.typedTextUI.setText("");
+		
+		//Send update to everyone
+		if(!calleeMethod.equals("handleChatEventNotify")){
+			data[0] = this.clientStatus.toString();
+			data[1] = elem;
+			try {
+				this.serverInt.handleChatEvent(this.clientName, data, this.CLIENT_NEW_MSG);
+			} catch (RemoteException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	public String getMessage() {
@@ -159,6 +197,21 @@ public class ChatClientModel implements PropertyListenerRegisterer {
 	    // Send update to CUI
 		String value = this.clientStatus.toString();
 		cui.statusListUI.setSelectedItem(value);
+		
+		// Send to everyone
+		Throwable t = new Throwable(); 
+		StackTraceElement[] elements = t.getStackTrace(); 
+		String calleeMethod = elements[1].getMethodName(); 
+		if(!calleeMethod.equals("handleChatEventNotify")){
+			data[0] = this.clientStatus.toString();
+			try {
+				this.serverInt.handleChatEvent(this.clientName, data, this.CLIENT_STATUS_CHANGE);
+			} catch (RemoteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
 	}
 
 	@Override
@@ -182,17 +235,22 @@ public class ChatClientModel implements PropertyListenerRegisterer {
 		}
 	}
 	
-	public void handleChatEventNotify(String[] data, int STATUS_CODE){
-		if(STATUS_CODE == this.CLIENT_JOIN){
+	public void handleChatEventNotify(String[] result, int STATUS_CODE){
+		if(STATUS_CODE == this.CLIENT_JOIN || STATUS_CODE == this.CLIENT_STATUS_CHANGE){
 			this.userList.clear();
-			System.out.println(data);
-			String users = data[0];
+			String users = result[0];
 			String []userList = users.split("\\n");
 			for(String s : userList){
 				String []splitData = s.split("-");
 				this.addToUserList(splitData[0].trim(), this.convertToUserStatus(splitData[1].trim()));
 			}
 			this.cui.userListPaneUI.setText(users);
+		}else if(STATUS_CODE == this.CLIENT_TOPIC_CHANGE){
+			String newTopic = result[1];
+			this.setTopic(newTopic);
+		}else if(STATUS_CODE == this.CLIENT_NEW_MSG){
+			String newMsg = result[1];
+			this.setMessage(newMsg);
 		}
 	}
 
