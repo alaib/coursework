@@ -41,7 +41,7 @@ public class OEServerImpl extends UnicastRemoteObject implements OEServerInterfa
     public OEServerImpl (String msg) throws RemoteException {  
     	model = new OEServerModel(this);
     	view = new OEServerView();
-    	currPoint = new Point(25, 90);    	
+    	currPoint = new Point(10, 100);    	
     }
 	
 	public void handleTelePointerEvent(String cName, Point p, int STATUS_CODE) throws RemoteException {
@@ -52,7 +52,7 @@ public class OEServerImpl extends UnicastRemoteObject implements OEServerInterfa
 	
 	public void handleChatEvent(String cName, String[] data, int STATUS_CODE) throws RemoteException {
 		//System.out.println("ChatEvent request received from client = "+cName+", status_code = "+STATUS_CODE);
-		String result[] = new String[2];
+		String result[] = new String[3];
 		result[0] = this.computeUserList();
 		if(STATUS_CODE == this.CLIENT_JOIN){
 			String clientStatus = data[0];
@@ -69,6 +69,9 @@ public class OEServerImpl extends UnicastRemoteObject implements OEServerInterfa
 		}else if(STATUS_CODE == this.CLIENT_NEW_MSG){
 			String newMsg = data[1];
 			result[1] = newMsg;
+		}else if(STATUS_CODE == this.CLIENT_EXIT){
+			this.unRegisterCallback(cName);
+			result[0] = this.computeUserList();
 		}
 		sendChatEventUpdateToAllClients(cName, result, STATUS_CODE);
 	}
@@ -99,6 +102,9 @@ public class OEServerImpl extends UnicastRemoteObject implements OEServerInterfa
     		if(!clientName.equals(cName) || STATUS_CODE == this.CLIENT_JOIN){
     			try {
 					tcCallback.handleChatEventNotify(data, STATUS_CODE);
+					if(STATUS_CODE == this.CLIENT_JOIN){
+						tcCallback.handleTelePointerNotify(this.currPoint, this.MOVE_POINTER);
+					}
 				} catch (RemoteException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -183,7 +189,7 @@ public class OEServerImpl extends UnicastRemoteObject implements OEServerInterfa
 	        
 	        //Init Msg
 	        dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-	        String s = "["+dateFormat.format(new Date())+"] Telepointer Server is online</br>";
+	        String s = "["+dateFormat.format(new Date())+"] Object Editor Server is online</br>";
 	        appendArchive(s);	          
 		}
 		

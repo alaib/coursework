@@ -84,12 +84,12 @@ public class Circle implements Oval, PropertyListenerRegisterer {
 		Throwable t = new Throwable(); 
 		StackTraceElement[] elements = t.getStackTrace(); 
 		String calleeMethod = elements[1].getMethodName(); 
-		if(calleeMethod.equals("redispatchMouseEvent")){
+		if(calleeMethod.equals("redispatchMouseEvent") || calleeMethod.equals("addCircle")){
 			this.calledFromCustom = 1;
 		}else{
 			this.calledFromCustom = 0;
 		}
-		if(calleeMethod.equals("handleTelePointerNotify")){
+		if(calleeMethod.equals("handleTelePointerNotify") || calleeMethod.equals("addCircle")){
 			this.sendEvt = 0;
 		}else{
 			this.sendEvt = 1;

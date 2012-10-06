@@ -67,6 +67,14 @@ public class ChatClientModel implements PropertyListenerRegisterer {
 	public void addCircle(Circle circle){
 		c = circle;
 		this.cui.addCircle(c);
+		try {
+			Point p = this.serverInt.getCurrPoint();
+			this.c.setX(p.x);
+			this.c.setY(p.y);
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public void addListeners() {
@@ -230,13 +238,15 @@ public class ChatClientModel implements PropertyListenerRegisterer {
 	//Don't change method name, if yes change setX and setY method in Circle
 	public void handleTelePointerNotify(Point p, int STATUS_CODE){
 		if(STATUS_CODE == this.MOVE_POINTER){
-			this.c.setX(p.x);
-			this.c.setY(p.y);
+			if(this.c != null){
+				this.c.setX(p.x);
+				this.c.setY(p.y);
+			}
 		}
 	}
 	
 	public void handleChatEventNotify(String[] result, int STATUS_CODE){
-		if(STATUS_CODE == this.CLIENT_JOIN || STATUS_CODE == this.CLIENT_STATUS_CHANGE){
+		if(STATUS_CODE == this.CLIENT_JOIN || STATUS_CODE == this.CLIENT_STATUS_CHANGE || STATUS_CODE == this.CLIENT_EXIT){
 			this.userList.clear();
 			String users = result[0];
 			String []userList = users.split("\\n");
@@ -272,7 +282,8 @@ public class ChatClientModel implements PropertyListenerRegisterer {
     	Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
             public void run() {
             	try{
-            		ch.serverInt.unRegisterCallback(ch.clientName);
+            		ch.data[0] = ch.clientStatus.toString();
+            		ch.serverInt.handleChatEvent(ch.clientName, ch.data, ch.CLIENT_EXIT);
             	}catch(Exception e){
             		System.out.println("chatClientModel exception: "+ e);
             	}
