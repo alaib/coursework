@@ -1,11 +1,11 @@
 \documentclass{article}
 \include{hwdefs}
 \begin{document}
-\author{Ravikiran Janardhana}
+\author{Wile E. Coyote}
 \setcounter{HW}{2}
 \title{COMP  790-124, HW\theHW}
 \maketitle
-\newcommand{\vectornorm}[1]{\left|\left|#1\right|\right|}
+
 
 { Deadline: 10/22/2012 11:59PM EST}
 
@@ -14,6 +14,8 @@
 
 
 \noindent\rule{\textwidth}{3pt}
+
+
 
 
 In the next few problems we will derive and implement an ADMM algorithm for logistic regression with a fused lasso penalty.  You can refer to the ADMM write up available on the course website  \url{http://www.cs.unc.edu/~vjojic/comp790/notes/ADMMFLSA.pdf}, but note that, while there are similarities with the problems below, there are differences as well.
@@ -27,7 +29,7 @@ The optimization problem for logistic regression with a fused lasso penalty is g
 We are going to introduce new variables $\zz^0, \zz^1, \zz^2$ and reformulate the problem
 \BEAS
 \mathop{\textrm{minimize}}_{\ww,\zz_0,\zz_1,\zz^2} && \sum_i \mylog{1 + \myexp{-y_i\zz^0}} + \lambda\nrmo{\zz^1} + \mu\nrmo{\zz^2}\\
-\textrm{subject to} && \zz^0_i = \xx_i\ww, i=1,\dots n \\
+\textrm{subject to} && z^0_i = \xx_i\ww, i=1,\dots n \\
 && \zz^1 = \ww \\
 && \zz^2 = \DD\ww
 \EEAS
@@ -36,7 +38,7 @@ Write out the augmented lagrangian for the above problem
 \BEAS
 \textrm{AL}(\ww,\zz^0,\zz^1,\zz^2,\uu^0,\uu^1,\uu^2) &=&  \sum_i \log\{1+\exp\{-y_{i}z_{i}^{0}\}\} + \lambda\nrmo{\zz^{1}} + \mu\nrmo{\zz^2} + \\
 && \sum_{i} u_{i}^{0} (z_{i}^{0} - \xx_{i}\ww) + \uu^{1} (\zz^{1} - \ww) + \uu^{2} (\zz^{2} - \DD\ww) + \\
-&& \sum_{i} \frac{\rho}{2} \nrmt{z_{i}^{0} - \xx_{i}\ww} + \frac{\rho}{2} \nrmt{\zz^{1} - \ww} + \frac{\rho}{2} \nrmt{\zz^{2} - \DD\ww} \\
+&& \sum_{i} \frac{\rho}{2} \nrmt{z_{i}^{0} - \xx_{i}\ww}^{2} + \frac{\rho}{2} \nrmt{\zz^{1} - \ww}^{2} + \frac{\rho}{2} \nrmt{\zz^{2} - \DD\ww}^{2} \\
 \EEAS
 
 Hint: Make sure that you have all the terms from the objective, that is logistic regression and the two norms. For each constraint you should have a term that involves the dual variables, for example $u^0_i(z^0_i - \xx_i\ww)$, and a term that augments the lagrangian, for example $\frac{\rho}{2}\nrmt{z^0_i - \xx_i\ww}$.
@@ -61,10 +63,10 @@ function val = computeAL(y, X, D, lambda, mu, rho, w, z0, z1, z2, u0, u1, u2)
     
     term31 = 0.0;
     for i = 1 : size(z, 2)
-        term31 = term21 + ((rho/2) * computeL2Norm(z0(i) - (w * X(:, i))));        
+        term31 = term21 + ((rho/2) * computeL2Norm(z0(i) - (w * X(:, i))).^2);        
     end
-    term32 = (rho/2) * computeL2Norm(z1 - w);
-    term33 = (rho/2) * computeL2Norm(z2 - w * D);
+    term32 = (rho/2) * (computeL2Norm(z1 - w).^2);
+    term33 = (rho/2) * (computeL2Norm(z2 - w * D).^2);
     
     val = term11 + term12 + term13 + ...
           term21 + term22 + term23 + ...
@@ -84,6 +86,7 @@ function value = computeL2Norm(z)
     for i = 1 : size(z, 2)
         value = value + abs(z(i)).^2;
     end
+    value = sqrt(value);
 end
 \end{verbatim}
 
@@ -91,48 +94,47 @@ end
 \newproblem{1pt}
 We will use superscript $k$ to indicate the iteration, so for example $\ww^k$ denotes the state of variable $\ww$ in the $k^\tth$ iteration. Collect the terms in the augmented lagrangian that involve $\ww$, complete the square and plug in the resulting expression below
 \BEAS
-\ww^k &=& \argmin_\ww \sum_{i} u_{i}^{0,k-1} (z_{i}^{0,k-1} - \xx_{i}^{k-1}\ww) + \uu^{1,k-1} (\zz^{1,k-1} - \ww) + \uu^{2} (\zz^{2,k-1} - \DD\ww) + \\
-&& \sum_{i} \frac{\rho}{2} \nrmt{z_{i}^{0,k-1} - \xx_{i}^{k-1}\ww} + \frac{\rho}{2} \nrmt{\zz^{1,k-1} - \ww} + \frac{\rho}{2} \nrmt{\zz^{2,k-1} - \DD\ww} \\
+\ww^k &=& \argmin_\ww \sum_{i} u_{i}^{0,k-1} (z_{i}^{0,k-1} - \xx_{i}\ww) + \uu^{1,k-1} (\zz^{1,k-1} - \ww) + \uu^{2} (\zz^{2,k-1} - \DD\ww) + \\
+&& \sum_{i} \frac{\rho}{2} \nrmt{z_{i}^{0,k-1} - \xx_{i}\ww}^{2} + \frac{\rho}{2} \nrmt{\zz^{1,k-1} - \ww}^{2} + \frac{\rho}{2} \nrmt{\zz^{2,k-1} - \DD\ww}^{2} 
 \EEAS
 
 \BEAS
-\ww^k &=& \argmin_\ww \sum_{i} \frac{\rho}{2} \nrmt{z_{i}^{0,k-1} - \xx_{i}^{k-1}\ww + \frac{1}{\rho}u_{i}^{0,k-1}}^{2} + \\
+\ww^k &=& \argmin_\ww \sum_{i} \frac{\rho}{2} \nrmt{z_{i}^{0,k-1} - \xx_{i}\ww + \frac{1}{\rho}u_{i}^{0,k-1}}^{2} + \\
 && \frac{\rho}{2} \nrmt{z^{1,k-1} - \ww + \frac{1}{\rho}\uu^{1,k-1}}^{2} + \\
-&& \frac{\rho}{2} \nrmt{z^{2,k-1} - \DD\ww + \frac{1}{\rho}\uu^{2,k-1}}^{2} \\
+&& \frac{\rho}{2} \nrmt{z^{2,k-1} - \DD\ww + \frac{1}{\rho}\uu^{2,k-1}}^{2} 
 \EEAS
 
 \BEAS
-\ww^k &=& \argmin_\ww \frac{\rho}{2} \nrmt{\begin{bmatrix} \xx_{i}^{k-1} \\ \II \\ \DD \end{bmatrix}\ww - \begin{bmatrix} \zz^{0,k-1} + \frac{1}{\rho} \uu^{0, k-1} \\ \zz^{1,k-1} + \frac{1}{\rho} \uu^{1, k-1} \\ \zz^{2,k-1} + \frac{1}{\rho} \uu^{2, k-1} \end{bmatrix} }^{2} \\
+\ww^k &=& \argmin_\ww \frac{\rho}{2} \nrmt{\begin{bmatrix} \xx \\ \II \\ \DD \end{bmatrix}\ww - \begin{bmatrix} \zz^{0,k-1} + \frac{1}{\rho} \uu^{0, k-1} \\ \zz^{1,k-1} + \frac{1}{\rho} \uu^{1, k-1} \\ \zz^{2,k-1} + \frac{1}{\rho} \uu^{2, k-1} \end{bmatrix} }^{2} 
 \EEAS
-
-
-
 
 When completing squares here do it so that $\ww,\uu_0,\zz_0$ occur under one, $\ww,\uu_1,\zz_1$ occur under another, and $\ww,\uu_1,\zz_2$ occur under yet another norm term.
 
 Same thing for $z^0_i$, note that here we are considering just a single $z^0_i$ not the full vector. You can convince yourself that if you write out the objective for the full vector it is separable into objectives across $z^0_i$.
 \BEAS
-z_i^{0,k} &=& \argmin_{z_i^0}   \answer \\
+z_i^{0,k} &=& \argmin_{z_i^0}   \log{\{1+exp\{-y_{i}z_{i}^{0}\}\}} + \frac{\rho}{2}\nrmt{z_{i}^{0}-\xx_{i}\ww^{k}+\frac{1}{\rho}u_{i}^{0,k-1}}^{2} 
 \EEAS
 And once more for $z^1_i$, using the fact that $\nrmo{\zz^1} = \sum_i |z^1_i|$
 \BEAS
-z_i^{1,k} &=& \argmin_{z_i^1}   \answer \\
+z_i^{1,k} &=& \argmin_{z_i^1}   \frac{\lambda}{\rho}\nrmo{z_{i}^{1}} + \frac{1}{2} \nrmt{z_{i}^{1} - \ww^{k} + \frac{1}{\rho}u_{i}^{1,k-1}}^{2} 
 \EEAS
 Finally, do the same for $z^2_i$
 \BEAS
-z_i^{2,k} &=& \argmin_{z_i^2}   \answer \\
+z_i^{2,k} &=& \argmin_{z_i^2}   \frac{\mu}{\rho} \nrmo{z_{i}^{2}} + \frac{1}{2} \nrmt{z_{i}^{2} - \DD\ww^{k} + \frac{1}{\rho}u_{i}^{2,k-1}}^{2} 
 \EEAS
 
 
 \newproblem{1pt} Copy over the update for $\ww$ from above
 \BEAS
-\ww^k &=& \argmin_\ww  \answer.
+\ww^k &=& \argmin_\ww  \frac{\rho}{2} \nrmt{\begin{bmatrix} \xx \\ \II \\ \DD \end{bmatrix}\ww - \begin{bmatrix} \zz^{0,k-1} + \frac{1}{\rho} \uu^{0, k-1} \\ \zz^{1,k-1} + \frac{1}{\rho} \uu^{1, k-1} \\ \zz^{2,k-1} + \frac{1}{\rho} \uu^{2, k-1} \end{bmatrix} }^{2}
 \EEAS
 Note that $\ww = \II\ww$ and refer to the appendix of the Lecture 4 notes on how to stack these two linear systems, as well as code to do it. Of course, the ADMM writeup also has some of this. Implement a function that gives update for $\ww$
 \begin{verbatim}
-function w = updatew(X,b,z0,z1,u0,u1,rho)
-w = ...
+function  w  =  updatew(X, n, D, z0, z1, z2, u0, u1, u2, rho)
+    w  =  [X; eye(n); D] \ [z0+((1/rho)*u0); z1+((1/rho)*u1); z2+((1/rho)*u2)];
+end
 \end{verbatim}
+
 \newproblem{1pt}
 To update $z^0_i$ we will be solving an optimization problem
 \[
@@ -172,7 +174,7 @@ for it=1:MAX_ITER
 
     % backtracking with the Wolfe condition check
     step = 1;
-    while objective(z + step*dz) > val + ALPHA*step*dz
+    while objective(z + step*dz) > val + ALPHA*step*dz*d
           step = step*BETA;
     end
     z = z + step*dz;
@@ -206,33 +208,48 @@ function z0i = updatez0i( ... )
 
 \newproblem{1pt} Copy over update for $z^1$ from above
 \[
-z_i^{1,k} = \argmin_{z_I^1}   \answer.
+z_i^{1,k} = \argmin_{z_I^1}   \frac{\lambda}{\rho}\nrmo{z_{i}^{1}} + \frac{1}{2} \nrmt{z_{i}^{1} - \ww^{k} + \frac{1}{\rho}u_{i}^{1,k-1}}^{2}
 \]
 
-Refer to ADMM writeup on how to solve this in a closed form the problem of this shape and write it out here
+Refer to ADMM writeup on how to solve this in a closed form the problem of this shape and write it out here.
+
+The optimization is simply Lasso regression and can be solved in a closed form update as below (where S is shrinkThreshold function and is implemented as below):-
 \[
-z_i^{1,k} = \answer.
+z_i^{1,k} = S(\ww^{k} - \frac{1}{\rho}u_{i}^{1,k-1}, \frac{\lambda}{\rho}) 
 \]
 write code to implement this update
 \begin{verbatim}
-function z1i = updatez1i( ... )
-z1i = ...
+function z1i = updatez1i(w, u1i, lambda, rho)
+    z1i = shrinkThreshold(w - 1/rho*u1i, lambda/rho);        
+end
+
+function  x  =  shrinkThreshold(x,lambda)
+    x  =  sign(x).*max(abs(x)  -  lambda,0);
+end
 \end{verbatim}
 
 \newproblem{1pt} Copy over update for $z_i^2$ from above
 \[
-z_i^{2,k} = \argmin_{z_i^2}   \answer.
+z_i^{2,k} = \argmin_{z_i^2}   \frac{\mu}{\rho} \nrmo{z_{i}^{2}} + \frac{1}{2} \nrmt{z_{i}^{2} - \DD\ww^{k} + \frac{1}{\rho}u_{i}^{2,k-1}}^{2} 
 \]
 
-Refer to ADMM writeup on how to solve this in a closed form the problem of this shape and write it out here
+Refer to ADMM writeup on how to solve this in a closed form the problem of this shape and write it out here.
+
+The optimization is simply Lasso regression and can be solved in a closed form update as below (where S is shrinkThreshold function and is implemented as below):-
 \[
-z_i^{2,k} = \answer.
+z_i^{2,k} = S(\DD\ww^{k} - \frac{1}{\rho}u_{i}^{2, k-1}, \frac{\mu}{\rho}) 
 \]
 write code to implement this update
 \begin{verbatim}
-function z1i = updatez2i( ... )
-z2i = ...
+function z2i = updatez2i(w, D, u2i, mu, rho)    
+    z2i = shrinkThreshold(Dw - 1/rho*u2i, mu/rho);
+end
+
+function  x  =  shrinkThreshold(x,lambda)
+    x  =  sign(x).*max(abs(x)  -  lambda,0);
+end
 \end{verbatim}
+
 \newproblem{2pt} Putting all of this together
 \begin{verbatim}
 function w = solveLogRegFusedLasso(y,X,D)
@@ -267,7 +284,7 @@ for it=1:MAXIT
     assert(after < before + 1e-6);
 
     before = after;
-    for i=1:length(y)
+    for i=1:size(D,1)
         z2(i) = updatez2i( ... );
     end
     after = computeAL(y,X,D,lambda,mu,rho,w,z0,z1,z2,u0,u1,u2);
@@ -295,18 +312,18 @@ p(x = k | \eta) = \answer.
 \]
 Write out base measure, sufficient statistic, natural parameter $\eta$ in terms of $\lambda$, log-normalizing function
 \BEAS
-h(x) &=& \answer\\
-T(x) &=& \answer \\
-\eta &=& \answer \\
-A(\eta) &=& \answer
+h(x) &=& \frac{1}{x!}\\
+T(x) &=& x \\
+\eta &=& log(\lambda) \\
+A(\eta) &=& e^{\eta}
 \EEAS
 Compute derivative of the log-normalizing function
 \[
-\frac{\partial}{\partial \eta} A(\eta) = \answer
+\frac{\partial}{\partial \eta} A(\eta) = e^{\eta}
 \]
 Compute the inverse mapping of the derivative of the log-normalizing function
 \[
-\left(\frac{\partial}{\partial \eta} A\right)^{-1} = \answer
+\left(\frac{\partial}{\partial \eta} A\right)^{-1} = log(\eta)
 \]
 Let the observed counts be
 \[
@@ -314,11 +331,11 @@ Let the observed counts be
 \]
 The sample empirical mean of sufficient statistic is, plug-in value,
 \[
-\sum_{i} \frac{1}{N} T(x_i)  = \answer.
+\sum_{i} \frac{1}{N} T(x_i)  = 5.6667.
 \]
 Then the maximum likelihood estimate for $\eta$ of the Poisson distribution in exponential family form is, plug-in value,
 \[
-\left(\frac{\partial}{\partial \eta} A\right)^{-1}\left(\sum_{i} \frac{1}{N} T(x_i)\right) = \answer.
+\left(\frac{\partial}{\partial \eta} A\right)^{-1}\left(\sum_{i} \frac{1}{N} T(x_i)\right) = log(5.6667) = 1.7346.
 \]
 \newproblem{1pt}
 Now to confirm that we did this right we are going to explicitly derive a maximum likelihood solution of Poisson distribution. The log-likelihood is
@@ -327,11 +344,11 @@ Now to confirm that we did this right we are going to explicitly derive a maximu
 \]
 Plug-in $h(x_i),T(x_i),A(\eta)$ for Poisson distribution.
 \[
-\LL(\eta;\xx) = \answer.
+\LL(\eta;\xx) = \sum_{i}^n log(\frac{1}{x_{i}!}) + \eta x_{i} - e^{\eta}.
 \]
 Take a derivative of log-likelihood with respect to $\eta$ and equate it to zero. Solve the equation for $\eta$
 \[
-\eta^{\textrm{ML}} = \answer.
+\eta^{\textrm{ML}} = log\{\frac{1}{n} \sum_{i}^n x_{i}\}.
 \]
 
 \newproblem{1pt}
@@ -347,8 +364,8 @@ Replace \texttt{emptiness.pdf} with \texttt{aPoissonExample.pdf} below.
 
 \begin{figure}[H]
 \begin{center}
-\includegraphics[scale=0.5]{emptiness.pdf}
-\caption{This is emptiness, it earns no points.}
+\includegraphics[scale=0.5, angle=90]{aPoissonExample.pdf}
+\caption{Poisson Distribution Histogram}
 \end{center}
 \end{figure}
 
@@ -364,12 +381,15 @@ Replace \texttt{emptiness.pdf} with \texttt{HW2Counts.pdf} below.
 
 \begin{figure}[H]
 \begin{center}
-\includegraphics[scale=0.5]{emptiness.pdf}
-\caption{This is emptiness, it earns no points.}
+\includegraphics[scale=0.5, angle=90]{HW2Counts.pdf}
+\caption{Homework 2 Counts Histogram.}
 \end{center}
 \end{figure}
-Comment on the differences between the two histograms and a possible cause \answer.
+Comment on the differences between the two histograms and a possible cause.
 
+\textbf{Ans.} The first histogram is of a poisson distribution with mean $\lambda$ = 15. The second histogram is a combination of two distributions (poisson and normal). The first half can be explained by a Poission distribution with mean $\lambda <$ 5 and the second half of the histogram resembles a gaussian/normal distribution with a non-zero mean and variance.
+
+\vspace{2mm}
 \newproblem{1pt}
 We will model a vector of counts $\xx$ as samples from a mixture of two Poisson distributions. The graphical model is simple
 \begin{center}
@@ -431,11 +451,10 @@ Write a Matlab function that computer $q(z_i)$
 \begin{verbatim}
 function qzi = computeQ(xi,etas,pis)
 for c=1:2
-    qzi(c) = ... %
+    qzi(c) = log(...) %
 end
-qzi = qzi/sum(qzi);
+qzi = exp(qzi - logsum(qzi));
 \end{verbatim}
-If you feel confident you can write this function using log probability and logsum.
 \newproblem{1pt} Recall M-step, where we eliminated portions of the objective that do not depend on $\eta$
 \[
 M: \eta^{\textrm new} = \argmax_\eta  \sum_{\zz} q^{\textrm{new}}(\zz) \log p(\xx,\zz|\eta)
@@ -484,7 +503,7 @@ end
 \newproblem{2pt} Putting it all together,
 \begin{verbatim}
 function [eta,pi] = EMMoP(x)
-etas = mean(x) + 0.0001*rand(2,1);
+etas = log(mean(x) + 0.0001*rand(2,1));
 pis = 0.5*ones(2,1);
 
 for it=1:MAXIT
@@ -506,7 +525,7 @@ end
 function bound = computeBound(q,x,etas,pis)
 for i=1:length(x)
     for c=1:2
-        bound = bound + q(c,i)*(etas(c)*x-exp(x));
+        bound = bound + q(c,i)*(etas(c)*x(i)-exp(etas(c))+log(pis(c)));
     end
 end
 for i=1:length(x)
@@ -532,6 +551,5 @@ Load \texttt{hw2.mat} and run \texttt{EMMoP} code on \texttt{x}. Report here res
 etas = ...
 pis = ...
 \end{verbatim}
-
 
 \end{document}
