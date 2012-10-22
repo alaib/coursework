@@ -6,6 +6,8 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -17,6 +19,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+
+import misc.Constants;
 
 import oeHelper.Circle;
 import client.ChatClient;
@@ -38,6 +42,7 @@ public class CustomChatUI {
 	Container containerUI;
 	JPanel uPanelUI, lPanelUI;
 	JScrollPane userListScrollPaneUI, archiveScrollPaneUI;
+	public int updateIssued = 0;
 
 	public enum uStatus {
 		Available, Busy, Invisible, Idle
@@ -142,7 +147,7 @@ public class CustomChatUI {
 					newData[0] = ch.clientStatus.toString();
 					newData[1] = msg;
 					ch.modifyData(newData);
-					ch.sendChatEvtToServer();
+					ch.sendChatEvtToServer(newData, Constants.CLIENT_NEW_MSG);
 				} catch (Exception e1) {
 					System.out.println("chatClient exception: " + e1);
 				}
@@ -188,8 +193,111 @@ public class CustomChatUI {
 				typedTextUI.requestFocusInWindow();
 			}
 		});
+		
+		topicTextUI.addKeyListener(new KeyListener(){
+			@Override
+			public void keyTyped(KeyEvent e) {
+
+			}
+
+			@Override
+			public void keyPressed(KeyEvent e) {
+
+			}
+
+			@Override
+			public void keyReleased(KeyEvent e) {
+				// TODO Auto-generated method stub
+				String currStr = topicTextUI.getText();
+				Character k = e.getKeyChar();
+				/*
+				if(Character.isAlphabetic(k) || Character.isLetterOrDigit(k) || Character.isJavaLetterOrDigit(k)){
+					currStr = topicTextUI.getText()+String.valueOf(k);
+				}else{
+					currStr = topicTextUI.getText();
+				}
+				*/
+				
+				if(currStr.equals(prevTopic)){
+					//Do nothing
+				}else{
+					//Else figure out what has changed
+					int prevLength = prevTopic.length();
+					int currLength = currStr.length();
+					String[] data = new String[2];
+					
+					if(prevLength > currLength){
+						//Deletion
+						int pos = -1;
+						for(int i = 0; i < currLength; i++){
+							if(prevTopic.charAt(i) != currStr.charAt(i)){
+								pos = i;
+								break;
+							}
+						}
+						if(pos == -1){
+							pos = prevLength-1;
+						}
+						if(pos > -1 && pos < prevLength){
+							Character c = prevTopic.charAt(pos);
+							updateIssued = 1;
+							ch.lTopic.removeElementAt(pos);
+							updateIssued = 0;
+							data[0] = Integer.toString(pos);
+							data[1] = String.valueOf(c);
+							ch.sendChatEvtToServer(data, Constants.CLIENT_TOPIC_CHANGE_DELETE);
+						}
+					}else if(prevLength < currLength){
+						//Insertion
+						int pos = -1;
+						for(int i = 0; i < prevLength; i++){
+							if(prevTopic.charAt(i) != currStr.charAt(i)){
+								pos = i;
+								break;
+							}
+						}
+						if(pos == -1){
+							pos = currLength - 1;
+						}
+						if(pos > -1 && pos < currLength){
+							Character c = currStr.charAt(pos);
+							updateIssued = 1;
+							ch.lTopic.insertElementAt(c, pos);
+							updateIssued = 0;
+							data[0] = Integer.toString(pos);
+							data[1] = String.valueOf(c);
+							ch.sendChatEvtToServer(data, Constants.CLIENT_TOPIC_CHANGE_INSERT);
+						}
+					}
+					prevTopic = currStr;
+				}
+			}
+			
+		});
 	}
 
+	public void updateTopic(String[] data, int STATUS_CODE, int otherUpdate){
+		String currStr = topicTextUI.getText();
+		int pos = Integer.parseInt(data[0], 10);
+		Character c = data[1].charAt(0);
+		
+		if(STATUS_CODE == Constants.CLIENT_TOPIC_CHANGE_DELETE){
+			String newStr = new StringBuffer(currStr).deleteCharAt(pos).toString();
+			topicTextUI.setText(newStr);
+			if(otherUpdate == 0){
+				ch.sendChatEvtToServer(data, Constants.CLIENT_TOPIC_CHANGE_DELETE);
+			}
+			prevTopic = newStr;
+		}else if(STATUS_CODE == Constants.CLIENT_TOPIC_CHANGE_INSERT){
+			String newStr = new StringBuffer(currStr).insert(pos, c).toString();
+			topicTextUI.setText(newStr);
+			if(otherUpdate == 0){
+				ch.sendChatEvtToServer(data, Constants.CLIENT_TOPIC_CHANGE_INSERT);
+			}
+			prevTopic = newStr;
+		}
+	}
+	
 	public void modUserList(String cName, String status) {
 		String list = userListPaneUI.getText();
 		String[] lines = list.split(System.getProperty("line.separator"));

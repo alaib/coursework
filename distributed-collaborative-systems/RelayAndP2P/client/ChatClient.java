@@ -19,11 +19,13 @@ import relayServer.RelayServerInterface;
 import sessionServer.SessionServerInterface;
 import util.annotations.StructurePattern;
 import util.annotations.StructurePatternNames;
+import util.models.AListenableString;
 import util.models.AListenableVector;
 import util.models.PropertyListenerRegisterer;
+import util.models.VectorChangeEvent;
+import util.models.VectorListener;
 import bus.uigen.OEFrame;
 import bus.uigen.ObjectEditor;
-import bus.uigen.trace.TraceableDisplayAndWaitManagerFactory;
 import customUI.CustomChatUI;
 import customUI.TemporaryUI;
 
@@ -38,6 +40,7 @@ import customUI.TemporaryUI;
 public class ChatClient implements PropertyListenerRegisterer {
 	public String message = "";
 	public String topic = "";
+	public AListenableString lTopic = new AListenableString("");
 	public VectorStringHistory historyBuffer = new VectorStringHistory();
 	public AListenableVector<String> userList = new AListenableVector<String>();
 	PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
@@ -63,11 +66,17 @@ public class ChatClient implements PropertyListenerRegisterer {
 	public String clientName;
 	public uStatus clientStatus = uStatus.Available;
 	protected CustomChatUI cui; 
+	ChatClient self;
 	
+	int otherUpdate = 0;
+	
+	VectorListener vListener;
 	ChatClient(String cName, String m) {
 		mode = m;
-		addListeners();
+		self = this;
+		addListeners(self);
 		addPropertyChangeListener(pListener);
+		lTopic.addVectorListener(vListener);
 		this.clientName = cName;
 		this.clientMap = new HashMap<String, ClientCallbackInterface>();    		
 		this.clientStatusMap = new HashMap<String, String>();    		
@@ -100,17 +109,13 @@ public class ChatClient implements PropertyListenerRegisterer {
 						}
 						String connUser = splitArr[0].trim();
 						if(!connUser.equals(this.clientName)){
-							System.out.println("User = "+connUser);
 							ClientCallbackInterface cb = sServerInt.getCallback(connUser);
 							if(!clientMap.containsKey(connUser)){
 								clientMap.put(connUser, cb);
-								System.out.println(connUser+" callback put on top on list");
 								this.issueConnEstablishMsg(connUser);
 								sServerInt.sendMyCallbackToUser(this.clientName, connUser);
-								System.out.println("Sent my call back to user = "+connUser);
 							}
 							this.data[0] = uList;
-							System.out.println("Sent updates to all clients that "+this.clientName+" joined");
 							this.sendChatEventUpdateToAllClients(this.clientName, this.data, Constants.CLIENT_JOIN);
 						}
 					}	
@@ -148,12 +153,12 @@ public class ChatClient implements PropertyListenerRegisterer {
 		this.setMessage(connUser+" joined the chat session, Connection Established");
 	}
 	
-	public void sendChatEvtToServer(){
+	public void sendChatEvtToServer(String[] newData, int STATUS_CODE){
 		try {
 			if(mode.equals("relayer")){
-				this.rServerInt.handleChatEvent(this.clientName, this.data, Constants.CLIENT_NEW_MSG);
+				this.rServerInt.handleChatEvent(this.clientName, newData, STATUS_CODE);
 			}else{
-				this.sendChatEventUpdateToAllClients(this.clientName, this.data, Constants.CLIENT_NEW_MSG);
+				this.sendChatEventUpdateToAllClients(this.clientName, newData, STATUS_CODE);
 			}
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
@@ -216,13 +221,53 @@ public class ChatClient implements PropertyListenerRegisterer {
 		this.cui.myGlassPane.repaint();
 	}
 	
-	public void addListeners() {
+	public void addListeners(ChatClient c) {
 		pListener = new PropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent e) {
 				String property = e.getPropertyName();
-				System.out.println(property + " changed to " + e.getNewValue());
 			}
 		};
+		vListener = new VectorListener(){
+			@Override
+			public void updateVector(VectorChangeEvent evt) {
+				int evtType = evt.getEventType();
+				Character newVal = (Character)evt.getNewValue();
+				Character oldVal = (Character)evt.getOldValue();
+				int pos = evt.getPosition();
+				//Object, EventType, oldSize, null, element, newSize
+				if(evtType == VectorChangeEvent.AddComponentEvent){
+					//System.out.println("Event = AddComponent, pos = "+pos+", oldVal = "+oldVal+", newVal = "+newVal);
+				}else if(evtType == VectorChangeEvent.DeleteComponentEvent){
+					if(self.cui.updateIssued == 0){
+						String[] data = new String[2];
+						data[0] = Integer.toString(pos);
+						data[1] = Character.toString(oldVal);
+						self.cui.updateTopic(data, Constants.CLIENT_TOPIC_CHANGE_DELETE, self.otherUpdate);
+						if(self.otherUpdate == 1){
+							self.otherUpdate = 0;
+						}
+					}
+				}else if(evtType == VectorChangeEvent.InsertComponentEvent){
+					if(self.cui.updateIssued == 0){
+						String[] data = new String[2];
+						data[0] = Integer.toString(pos);
+						data[1] = Character.toString(newVal);
+						self.cui.updateTopic(data, Constants.CLIENT_TOPIC_CHANGE_INSERT, self.otherUpdate);
+						if(self.otherUpdate == 1){
+							self.otherUpdate = 0;
+						}
+					}
+				}else if(evtType == VectorChangeEvent.ReplaceComponentEvent){
+					//System.out.println("Event = ReplaceComponent, pos = "+pos+", oldVal = "+oldVal+", newVal = "+newVal);
+				}else if(evtType == VectorChangeEvent.ClearEvent){
+					//System.out.println("Event = ClearComponent, pos = "+pos+", oldVal = "+oldVal+", newVal = "+newVal);
+				}
+			}
+		};
+	}
+	
+	public String retrieveMode(){
+		return this.mode;
 	}
 
 	public void addClientCallback(String cName, ClientCallbackInterface cb){
@@ -447,6 +492,15 @@ public class ChatClient implements PropertyListenerRegisterer {
 		}else if(STATUS_CODE == Constants.CLIENT_NEW_MSG){
 			String newMsg = result[1];
 			this.setMessage(newMsg);
+		}else if(STATUS_CODE == Constants.CLIENT_TOPIC_CHANGE_DELETE){
+			int pos = Integer.parseInt(result[0], 10);
+			this.otherUpdate = 1;
+			lTopic.removeElementAt(pos);
+		}else if(STATUS_CODE == Constants.CLIENT_TOPIC_CHANGE_INSERT){
+			int pos = Integer.parseInt(result[0], 10);
+			Character c = result[1].charAt(0);
+			this.otherUpdate = 1;
+			lTopic.insert(pos, c);
 		}
 	}
 

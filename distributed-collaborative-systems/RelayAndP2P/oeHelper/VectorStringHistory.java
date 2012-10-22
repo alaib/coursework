@@ -36,7 +36,7 @@ public class VectorStringHistory implements StringHistory, VectorListenerRegiste
 				int evtType = evt.getEventType();
 				String newVal = (String)evt.getNewValue();
 				String oldVal = (String)evt.getOldValue();
-				System.out.println("EvtType = "+evtType+", OldValue = "+oldVal+",NewValue = "+newVal);
+				//System.out.println("EvtType = "+evtType+", OldValue = "+oldVal+",NewValue = "+newVal);
 			}
 			
 		};

@@ -73,6 +73,12 @@ public class RelayServerImpl extends UnicastRemoteObject implements RelayServerI
 		}else if(STATUS_CODE == Constants.CLIENT_EXIT){
 			this.unRegisterCallback(cName);
 			result[0] = this.computeUserList();
+		}else if(STATUS_CODE == Constants.CLIENT_TOPIC_CHANGE_DELETE){
+			result[0] = data[0];
+			result[1] = data[1];
+		}else if(STATUS_CODE == Constants.CLIENT_TOPIC_CHANGE_INSERT){
+			result[0] = data[0];
+			result[1] = data[1];
 		}
 		sendChatEventUpdateToAllClients(cName, result, STATUS_CODE);
 	}
