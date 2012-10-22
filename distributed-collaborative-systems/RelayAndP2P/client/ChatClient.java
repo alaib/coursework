@@ -9,17 +9,23 @@ import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.util.HashMap;
+import java.util.Map;
 
+import misc.Constants;
+import oeHelper.Circle;
+import oeHelper.VectorStringHistory;
+import relayServer.RelayServerInterface;
+import sessionServer.SessionServerInterface;
 import util.annotations.StructurePattern;
 import util.annotations.StructurePatternNames;
 import util.models.AListenableVector;
 import util.models.PropertyListenerRegisterer;
 import bus.uigen.OEFrame;
 import bus.uigen.ObjectEditor;
-import oeHelper.*;
-import customUI.*;
-import relayServer.*;
-import misc.*;
+import bus.uigen.trace.TraceableDisplayAndWaitManagerFactory;
+import customUI.CustomChatUI;
+import customUI.TemporaryUI;
 
 /**
  * 
@@ -37,10 +43,18 @@ public class ChatClient implements PropertyListenerRegisterer {
 	PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
 	PropertyChangeListener pListener;
 	Circle c;
-	OERelayServerInterface serverInt;
-	OEClientCallbackImpl callback;
+	TemporaryUI tempUI;
+	RelayServerInterface rServerInt;
+	SessionServerInterface sServerInt;
+	ClientCallbackImpl callback;
 	
+	Map <String, ClientCallbackInterface> clientMap;
+    Map <String, String> clientStatusMap;
+    
 	String data[] = new String[2];
+	String result[] = new String[2];
+	String mode = "";
+	String connUserList[];
 	
 	public enum uStatus {
 		Available, Busy, Invisible, Idle
@@ -50,17 +64,58 @@ public class ChatClient implements PropertyListenerRegisterer {
 	public uStatus clientStatus = uStatus.Available;
 	protected CustomChatUI cui; 
 	
-	ChatClient(String cName) {
+	ChatClient(String cName, String m) {
+		mode = m;
 		addListeners();
 		addPropertyChangeListener(pListener);
 		this.clientName = cName;
+		this.clientMap = new HashMap<String, ClientCallbackInterface>();    		
+		this.clientStatusMap = new HashMap<String, String>();    		
 		this.cui = new CustomChatUI(this); addToUserList(cName, clientStatus);
 		try {
-			serverInt = (OERelayServerInterface) Naming.lookup ("rmi://localhost/Telepointer");
-			callback = new OEClientCallbackImpl(this);
-			serverInt.registerCallback(this.clientName, this.clientStatus.toString(), callback);
+			rServerInt = (RelayServerInterface) Naming.lookup ("rmi://localhost/RelayServer");
+			sServerInt = (SessionServerInterface) Naming.lookup ("rmi://localhost/SessionServer");
+			callback = new ClientCallbackImpl(this);
+			rServerInt.registerCallback(this.clientName, this.clientStatus.toString(), callback);
+			sServerInt.registerCallback(this.clientName, this.clientStatus.toString(), callback);
 			data[0] = this.clientStatus.toString();
-			serverInt.handleChatEvent(clientName, data, Constants.CLIENT_JOIN);
+			tempUI = new TemporaryUI();
+			if(mode.equals("relayer")){
+				rServerInt.handleChatEvent(clientName, data, Constants.CLIENT_JOIN);
+			}else{
+				String uList = sServerInt.getUserList();
+				String[] connUserList = uList.split("\n");
+				if(!uList.equals("")){
+					result[0] = uList;
+					this.handleChatEventNotify(result, Constants.CLIENT_JOIN);
+				}
+				if(connUserList.length <= 1){
+					//this.tempUI.showMsgBox("You are the only user connected, please wait until others join");
+				}else{
+					for(int i = 0; i < connUserList.length; i++){
+						String[] splitArr = connUserList[i].split("-");
+						if(splitArr.length != 2){
+							System.out.println("Error! splitArr length < 2, String = "+connUserList[i]);
+							continue;
+						}
+						String connUser = splitArr[0].trim();
+						if(!connUser.equals(this.clientName)){
+							System.out.println("User = "+connUser);
+							ClientCallbackInterface cb = sServerInt.getCallback(connUser);
+							if(!clientMap.containsKey(connUser)){
+								clientMap.put(connUser, cb);
+								System.out.println(connUser+" callback put on top on list");
+								this.issueConnEstablishMsg(connUser);
+								sServerInt.sendMyCallbackToUser(this.clientName, connUser);
+								System.out.println("Sent my call back to user = "+connUser);
+							}
+							this.data[0] = uList;
+							System.out.println("Sent updates to all clients that "+this.clientName+" joined");
+							this.sendChatEventUpdateToAllClients(this.clientName, this.data, Constants.CLIENT_JOIN);
+						}
+					}	
+				}
+			}
 		} catch (MalformedURLException e){
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -77,7 +132,10 @@ public class ChatClient implements PropertyListenerRegisterer {
 		c = circle;
 		this.cui.addCircle(c);
 		try {
-			Point p = this.serverInt.getCurrPoint();
+			Point p = new Point(20, 50);
+			if(mode.equals("relayer")){
+				p = this.rServerInt.getCurrPoint();
+			}
 			this.c.setX(p.x);
 			this.c.setY(p.y);
 		} catch (RemoteException e) {
@@ -86,18 +144,59 @@ public class ChatClient implements PropertyListenerRegisterer {
 		}
 	}
 	
+	public void issueConnEstablishMsg(String connUser){
+		this.setMessage(connUser+" joined the chat session, Connection Established");
+	}
+	
 	public void sendChatEvtToServer(){
 		try {
-			this.serverInt.handleChatEvent(this.clientName, this.data, Constants.CLIENT_NEW_MSG);
+			if(mode.equals("relayer")){
+				this.rServerInt.handleChatEvent(this.clientName, this.data, Constants.CLIENT_NEW_MSG);
+			}else{
+				this.sendChatEventUpdateToAllClients(this.clientName, this.data, Constants.CLIENT_NEW_MSG);
+			}
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	
+	public void sendTelePointerUpdateToAllClients(String cName, Point p, int STATUS_CODE){	    	
+    	for(Map.Entry<String, ClientCallbackInterface> item : clientMap.entrySet()){
+    		String clientName = item.getKey();
+    		ClientCallbackInterface tcCallback = item.getValue();
+			try {
+				tcCallback.handleTelePointerNotify(p, STATUS_CODE);
+			} catch (RemoteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+    	}	    
+	}
+	
+	public void sendChatEventUpdateToAllClients(String cName, String[] data, int STATUS_CODE){	    	
+    	for(Map.Entry<String, ClientCallbackInterface> item : clientMap.entrySet()){
+    		String clientName = item.getKey();
+    		ClientCallbackInterface tcCallback = item.getValue();
+			try {
+				tcCallback.handleChatEventNotify(data, STATUS_CODE);
+				if(STATUS_CODE == Constants.CLIENT_JOIN){
+					tcCallback.handleTelePointerNotify(this.cui.myGlassPane.point, Constants.MOVE_POINTER);
+				}
+			} catch (RemoteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+    	}	    
+	}
+	
 	public void sendTelePointerEvtToServer(Point p){
 		try {
-			this.serverInt.handleTelePointerEvent(this.clientName, p, Constants.MOVE_POINTER);
+			if(mode.equals("relayer")){
+				this.rServerInt.handleTelePointerEvent(this.clientName, p, Constants.MOVE_POINTER);
+			}else{
+				this.sendTelePointerUpdateToAllClients(this.clientName, p, Constants.MOVE_POINTER);
+			}
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -108,7 +207,7 @@ public class ChatClient implements PropertyListenerRegisterer {
 		this.data = newData;
 	}
 	
-	public String[] getCurrentData(){
+	public String[] fetchCurrentData(){
 		return data;
 	}
 	
@@ -126,6 +225,36 @@ public class ChatClient implements PropertyListenerRegisterer {
 		};
 	}
 
+	public void addClientCallback(String cName, ClientCallbackInterface cb){
+		if(!clientMap.containsKey(cName)){
+			clientMap.put(cName, cb);
+			if(cName != this.clientName){
+				this.setMessage(cName+ " joined chat session, Connection Established");
+			}
+		}
+	}
+	
+	public void removeClientCallback(String cName){
+		if(clientMap.containsKey(cName)){
+			clientMap.remove(cName);
+			this.setMessage(cName+ " left the chat session, Connection Ended - removeClientCallback");
+		}
+	}
+	
+	public void sendRemovalOfCallbackEvt(){
+    	for(Map.Entry<String, ClientCallbackInterface> item : clientMap.entrySet()){
+			String clientName = item.getKey();
+			ClientCallbackInterface tcCallback = item.getValue();
+			try {
+				tcCallback.removeClientCallback(this.clientName);
+			} catch (RemoteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+    	}
+	}
+	
+	
 	public void addToUserList(String cName, uStatus cStatus) {
 		String elem = cName + " - " + cStatus.toString();
 		// Send update to CUI
@@ -155,7 +284,11 @@ public class ChatClient implements PropertyListenerRegisterer {
 			data[0] = this.clientStatus.toString();
 			data[1] = this.topic;
 			try {
-				this.serverInt.handleChatEvent(this.clientName, data, Constants.CLIENT_TOPIC_CHANGE);
+				if(mode.equals("relayer")){
+					this.rServerInt.handleChatEvent(this.clientName, data, Constants.CLIENT_TOPIC_CHANGE);
+				}else{
+					this.sendChatEventUpdateToAllClients(this.clientName, data, Constants.CLIENT_TOPIC_CHANGE);
+				}
 			} catch (RemoteException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -169,7 +302,8 @@ public class ChatClient implements PropertyListenerRegisterer {
 		StackTraceElement[] elements = t.getStackTrace(); 
 		String calleeMethod = elements[1].getMethodName(); 
 		String elem = "";
-		if(!calleeMethod.equals("handleChatEventNotify")){
+		if(!calleeMethod.equals("handleChatEventNotify") && !calleeMethod.equals("removeClientCallback") && 
+				!calleeMethod.equals("addClientCallback") && !calleeMethod.equals("issueConnEstablishMsg") ){
 			elem = clientName + " : " + s;
 		}else{
 			elem = s;
@@ -182,11 +316,16 @@ public class ChatClient implements PropertyListenerRegisterer {
 		cui.typedTextUI.setText("");
 		
 		//Send update to everyone
-		if(!calleeMethod.equals("handleChatEventNotify")){
+		if(!calleeMethod.equals("handleChatEventNotify") && !calleeMethod.equals("issueConnEstablishMsg") && 
+		    !calleeMethod.equals("addClientCallback") && !calleeMethod.equals("removeClientCallback")){
 			data[0] = this.clientStatus.toString();
 			data[1] = elem;
 			try {
-				this.serverInt.handleChatEvent(this.clientName, data, Constants.CLIENT_NEW_MSG);
+				if(mode.equals("relayer")){
+					this.rServerInt.handleChatEvent(this.clientName, data, Constants.CLIENT_NEW_MSG);
+				}else{
+					this.sendChatEventUpdateToAllClients(this.clientName, data, Constants.CLIENT_NEW_MSG);
+				}
 			} catch (RemoteException e) {
 				e.printStackTrace();
 			}
@@ -253,7 +392,12 @@ public class ChatClient implements PropertyListenerRegisterer {
 		if(!calleeMethod.equals("handleChatEventNotify")){
 			data[0] = this.clientStatus.toString();
 			try {
-				this.serverInt.handleChatEvent(this.clientName, data, Constants.CLIENT_STATUS_CHANGE);
+				if(mode.equals("relayer")){
+					this.rServerInt.handleChatEvent(this.clientName, data, Constants.CLIENT_STATUS_CHANGE);
+				}else{
+					this.data = this.sServerInt.updateClientStatus(this.clientName, this.clientStatus.toString());
+					this.sendChatEventUpdateToAllClients(this.clientName, this.data, Constants.CLIENT_STATUS_CHANGE);
+				}
 			} catch (RemoteException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -292,7 +436,9 @@ public class ChatClient implements PropertyListenerRegisterer {
 			String []userList = users.split("\\n");
 			for(String s : userList){
 				String []splitData = s.split("-");
-				this.addToUserList(splitData[0].trim(), this.convertToUserStatus(splitData[1].trim()));
+				if(splitData.length == 2){
+					this.addToUserList(splitData[0].trim(), this.convertToUserStatus(splitData[1].trim()));
+				}
 			}
 			this.cui.userListPaneUI.setText(users);
 		}else if(STATUS_CODE == Constants.CLIENT_TOPIC_CHANGE){
@@ -305,7 +451,7 @@ public class ChatClient implements PropertyListenerRegisterer {
 	}
 
 	public static void main(String[] args) {
-		UserLogin ul = new UserLogin();
+		TemporaryUI ul = new TemporaryUI();
 		String cName = ul.getUserName();
 
 		Color col = Color.red;
@@ -313,18 +459,25 @@ public class ChatClient implements PropertyListenerRegisterer {
 		int x = 10, y = 100, width = 20, height = 20;
 		Circle c = new Circle(x, y, width, height, col, filled);
 
-		final ChatClient ch = new ChatClient(cName);
+		//String mode ="relayer";
+		String mode ="p2p";
+		final ChatClient ch = new ChatClient(cName, mode);
 		c.addCH(ch);
 		ch.addCircle(c);
 		OEFrame oeFrame = ObjectEditor.edit(ch);
 		oeFrame.setTelePointerModel(c);
+//		ObjectEditor.edit(TraceableDisplayAndWaitManagerFactory.getTraceableDisplayAndPrintManager());
 		
     	Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
             public void run() {
             	try{
             		ch.data[0] = ch.clientStatus.toString();
             		Constants c = new Constants();
-            		ch.serverInt.handleChatEvent(ch.clientName, ch.data, c.CLIENT_EXIT);
+        			ch.sServerInt.unRegisterCallback(ch.clientName);
+        			if(ch.mode.equals("p2p")){
+        				ch.sendRemovalOfCallbackEvt();
+        			}
+            		ch.rServerInt.handleChatEvent(ch.clientName, ch.data, c.CLIENT_EXIT);
             	}catch(Exception e){
             		System.out.println("chatClientModel exception: "+ e);
             	}

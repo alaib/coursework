@@ -24,7 +24,7 @@ import misc.Constants;
  * We have to provide our own glass pane so that it can paint.
  */
 public class MyGlassPane extends JComponent implements ItemListener {
-	Point point;
+	public Point point;
 
 	// React to change button clicks.
 	public void itemStateChanged(ItemEvent e) {

@@ -1,24 +1,14 @@
 package customUI;
 
 import java.awt.BorderLayout;
-
-import java.awt.Color;
-import java.awt.Component;
 import java.awt.Container;
-import java.awt.Graphics;
+import java.awt.Dimension;
 import java.awt.Point;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.awt.event.MouseEvent;
-import java.rmi.RemoteException;
 
-import javax.swing.AbstractButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -27,13 +17,9 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.RootPaneContainer;
-import javax.swing.SwingUtilities;
-import javax.swing.event.MouseInputAdapter;
 
-import client.*;
-import oeHelper.*;
-import misc.*;
+import oeHelper.Circle;
+import client.ChatClient;
 
 /**
  * Custom (Manual) UI Generator 
@@ -58,7 +44,7 @@ public class CustomChatUI {
 	};
 
 	String prevTopic = "";
-	public static MyGlassPane myGlassPane;
+	public MyGlassPane myGlassPane;
 	Circle c;
 
 	public CustomChatUI(ChatClient cWindow) {
@@ -102,6 +88,7 @@ public class CustomChatUI {
 		// Lower Panel
 		lPanelUI = new JPanel(new BorderLayout());
 		archiveScrollPaneUI = new JScrollPane(archivePaneUI);
+		archiveScrollPaneUI.setPreferredSize(new Dimension(400, 200));
 		userListScrollPaneUI = new JScrollPane(userListPaneUI);
 		lPanelUI.add(archiveScrollPaneUI, BorderLayout.CENTER);
 		lPanelUI.add(userListScrollPaneUI, BorderLayout.EAST);
