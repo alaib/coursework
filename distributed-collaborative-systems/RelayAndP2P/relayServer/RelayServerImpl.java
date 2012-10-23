@@ -38,21 +38,22 @@ public class RelayServerImpl extends UnicastRemoteObject implements RelayServerI
     DateFormat dateFormat;
     Point currPoint;
     Dimension currDim;
+    String currTopic = "";
     
     public RelayServerImpl () throws RemoteException {  
     	model = new OEServerModel(this);
     	view = new OEServerView();
-    	currPoint = new Point(10, 100);    	
+    	currPoint = new Point(20, 50);    	
     }
 	
 	public void handleTelePointerEvent(String cName, Point p, int STATUS_CODE) throws RemoteException {
-		System.out.println("TelePointer request received from client = "+cName+", status_code = "+STATUS_CODE);
+		//System.out.println("TelePointer request received from client = "+cName+", status_code = "+STATUS_CODE);
 		currPoint = p;
 		sendTelePointerUpdateToAllClients(cName, p, STATUS_CODE);		
 	}
 	
 	public void handleChatEvent(String cName, String[] data, int STATUS_CODE) throws RemoteException {
-		System.out.println("ChatEvent request received from client = "+cName+", status_code = "+STATUS_CODE);
+		//System.out.println("ChatEvent request received from client = "+cName+", status_code = "+STATUS_CODE);
 		String result[] = new String[3];
 		result[0] = this.computeUserList();
 		if(STATUS_CODE == Constants.CLIENT_JOIN){
@@ -76,10 +77,15 @@ public class RelayServerImpl extends UnicastRemoteObject implements RelayServerI
 		}else if(STATUS_CODE == Constants.CLIENT_TOPIC_CHANGE_DELETE){
 			result[0] = data[0];
 			result[1] = data[1];
+			String newTopic = data[2];
+			this.currTopic = newTopic;
 		}else if(STATUS_CODE == Constants.CLIENT_TOPIC_CHANGE_INSERT){
 			result[0] = data[0];
 			result[1] = data[1];
+			String newTopic = data[2];
+			this.currTopic = newTopic;
 		}
+		result[2] = cName;
 		sendChatEventUpdateToAllClients(cName, result, STATUS_CODE);
 	}
 	
@@ -120,6 +126,10 @@ public class RelayServerImpl extends UnicastRemoteObject implements RelayServerI
     	}	    
 	}
 	
+	public String getCurrentTopic(){
+		return this.currTopic;
+	}
+	
 	public void registerCallback(String cName, String cStatus, ClientCallbackInterface tCallback){
 		if(!clientMap.containsKey(cName)){
 			clientMap.put(cName, tCallback);
@@ -146,6 +156,7 @@ public class RelayServerImpl extends UnicastRemoteObject implements RelayServerI
 			view.appendArchive(msg);
 			if(clientMap.size() == 0){
 				currPoint = new Point(25, 90);    	
+				currTopic = "";
 			}		
 		}					
 		if(clientStatusMap.containsKey(cName)){

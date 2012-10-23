@@ -21,8 +21,8 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import misc.Constants;
-
 import oeHelper.Circle;
+import tracer.MVCTracerInfo;
 import client.ChatClient;
 
 /**
@@ -126,7 +126,8 @@ public class CustomChatUI {
 		typedTextUI.requestFocusInWindow();
 		frameUI.setVisible(true);
 		changeButton.setSelected(true);
-		myGlassPane.setPoint(new Point(10, 100));
+		Point currP = this.ch.retrieveCurrPoint();
+		myGlassPane.setPoint(currP);
 		myGlassPane.repaint();
 		lPanelUI.remove(changeButton);
 	}
@@ -176,24 +177,6 @@ public class CustomChatUI {
 			}
 		});
 
-		topicTextUI.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				try {
-					if (!topicTextUI.getText().equals(prevTopic)
-							|| !topicTextUI.getText().equals("")) {
-						// chWindow.handleEvent(clientName, clientStatus,
-						// topicTextUI.getText(), EVENT_CHANGE_TOPIC);
-						prevTopic = topicTextUI.getText();
-						ch.setTopic(prevTopic);
-
-					}
-				} catch (Exception e1) {
-					System.out.println("chatClient exception: " + e1);
-				}
-				typedTextUI.requestFocusInWindow();
-			}
-		});
-		
 		topicTextUI.addKeyListener(new KeyListener(){
 			@Override
 			public void keyTyped(KeyEvent e) {
@@ -224,7 +207,7 @@ public class CustomChatUI {
 					//Else figure out what has changed
 					int prevLength = prevTopic.length();
 					int currLength = currStr.length();
-					String[] data = new String[2];
+					String[] data = new String[3];
 					
 					if(prevLength > currLength){
 						//Deletion
@@ -241,11 +224,13 @@ public class CustomChatUI {
 						if(pos > -1 && pos < prevLength){
 							Character c = prevTopic.charAt(pos);
 							updateIssued = 1;
-							ch.lTopic.removeElementAt(pos);
+							ch.topic.removeElementAt(pos);
 							updateIssued = 0;
 							data[0] = Integer.toString(pos);
 							data[1] = String.valueOf(c);
 							ch.sendChatEvtToServer(data, Constants.CLIENT_TOPIC_CHANGE_DELETE);
+							MVCTracerInfo.newInfo("Topic - character deleted at pos = "+pos, this);
+							ch.updateTopic(currStr);
 						}
 					}else if(prevLength < currLength){
 						//Insertion
@@ -262,11 +247,16 @@ public class CustomChatUI {
 						if(pos > -1 && pos < currLength){
 							Character c = currStr.charAt(pos);
 							updateIssued = 1;
-							ch.lTopic.insertElementAt(c, pos);
+							ch.topic.insertElementAt(c, pos);
 							updateIssued = 0;
 							data[0] = Integer.toString(pos);
 							data[1] = String.valueOf(c);
+							data[2] = currStr;
 							ch.sendChatEvtToServer(data, Constants.CLIENT_TOPIC_CHANGE_INSERT);
+							MVCTracerInfo.newInfo("Topic - character '"+c+"' inserted at pos = "+pos, this);
+							if(ch.retrieveMode().equals("p2p")){
+								ch.updateTopic(currStr);
+							}
 						}
 					}
 					prevTopic = currStr;
@@ -285,14 +275,20 @@ public class CustomChatUI {
 			String newStr = new StringBuffer(currStr).deleteCharAt(pos).toString();
 			topicTextUI.setText(newStr);
 			if(otherUpdate == 0){
+				data[2] = newStr;
 				ch.sendChatEvtToServer(data, Constants.CLIENT_TOPIC_CHANGE_DELETE);
+				MVCTracerInfo.newInfo("Topic - character deleted at pos = "+pos, this);
+				ch.updateTopic(newStr);
 			}
 			prevTopic = newStr;
 		}else if(STATUS_CODE == Constants.CLIENT_TOPIC_CHANGE_INSERT){
 			String newStr = new StringBuffer(currStr).insert(pos, c).toString();
 			topicTextUI.setText(newStr);
 			if(otherUpdate == 0){
+				data[2] = newStr;
 				ch.sendChatEvtToServer(data, Constants.CLIENT_TOPIC_CHANGE_INSERT);
+				MVCTracerInfo.newInfo("Topic - character '"+c+"' inserted at pos = "+pos, this);
+				ch.updateTopic(newStr);
 			}
 			prevTopic = newStr;
 		}

@@ -5,14 +5,10 @@ import java.awt.Point;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.rmi.RemoteException;
 
+import tracer.MVCTracerInfo;
 import util.models.PropertyListenerRegisterer;
-import bus.uigen.ObjectEditor;
-
-import client.*;
-
-import misc.*;
+import client.ChatClient;
 /**
  * Telepointer Model 
  * @author ravikirn
@@ -55,6 +51,7 @@ public class Circle implements Oval, PropertyListenerRegisterer {
 						ch.drawPoint(new Point(x,y));
 						if(self.sendEvt == 1){
 							ch.sendTelePointerEvtToServer(new Point(x, y));
+							MVCTracerInfo.newInfo("Move Telepointer to = ("+Integer.toString(x)+","+Integer.toString(y)+")", this);
 						}
 					}
 				}else if(property == "y"){
@@ -62,6 +59,7 @@ public class Circle implements Oval, PropertyListenerRegisterer {
 						ch.drawPoint(new Point(x,y));
 						if(self.sendEvt == 1){
 							ch.sendTelePointerEvtToServer(new Point(x, y));
+							MVCTracerInfo.newInfo("Move Telepointer to = ("+Integer.toString(x)+","+Integer.toString(y)+")", this);
 						}
 					}
 				}

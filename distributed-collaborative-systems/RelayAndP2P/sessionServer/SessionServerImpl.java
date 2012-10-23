@@ -3,6 +3,7 @@ package sessionServer;
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.Point;
 import java.io.IOException;
 import java.io.StringReader;
 import java.rmi.RemoteException;
@@ -20,7 +21,6 @@ import javax.swing.JScrollPane;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.html.HTMLEditorKit;
 
-import relayServer.RelayServerInterface;
 import client.ClientCallbackInterface;
 
 public class SessionServerImpl extends UnicastRemoteObject implements SessionServerInterface {    	
@@ -30,6 +30,8 @@ public class SessionServerImpl extends UnicastRemoteObject implements SessionSer
     OEServerView view;
     OEServerModel model;
     DateFormat dateFormat;
+    String currTopic = "";
+    Point currPoint = new Point(20, 50);
     
     public SessionServerImpl () throws RemoteException {  
     	model = new OEServerModel(this);
@@ -62,11 +64,31 @@ public class SessionServerImpl extends UnicastRemoteObject implements SessionSer
 		return s;
 	}
 	
+	public String getCurrentTopic(){
+		return this.currTopic;
+	}
+	
+	public void setCurrentTopic(String newTopic){
+		this.currTopic = newTopic;
+	}
+	
+	public void setCurrentPoint(Point newPoint){
+		this.currPoint = newPoint;
+	}
+	
+	public Point getCurrentPoint(){
+		return this.currPoint;
+	}
+	
 	public void unRegisterCallback(String cName){		
 		if(clientMap.containsKey(cName)){
 			clientMap.remove(cName);			
 			String msg = "["+dateFormat.format(new Date())+"] <strong>" + cName + "</strong> has left the telepointer session </br>";
 			view.appendArchive(msg);
+			if(clientMap.isEmpty()){
+				this.currTopic = "";
+				this.currPoint = new Point(25, 40);
+			}
 		}					
 		if(clientStatusMap.containsKey(cName)){
 			clientStatusMap.remove(cName);

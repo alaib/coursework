@@ -9,7 +9,6 @@ import java.awt.Toolkit;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
-import java.rmi.RemoteException;
 
 import javax.swing.AbstractButton;
 import javax.swing.JComponent;
@@ -18,7 +17,7 @@ import javax.swing.RootPaneContainer;
 import javax.swing.SwingUtilities;
 import javax.swing.event.MouseInputAdapter;
 
-import misc.Constants;
+import tracer.MVCTracerInfo;
 
 /**
  * We have to provide our own glass pane so that it can paint.
@@ -137,6 +136,7 @@ class CBListener extends MouseInputAdapter {
 			this.cui.c.setX(glassPanePoint.x);
 			this.cui.c.setY(glassPanePoint.y);
 			this.cui.ch.sendTelePointerEvtToServer(glassPanePoint);
+			MVCTracerInfo.newInfo("Move Telepointer to = ("+glassPanePoint.x+","+glassPanePoint.y+")", this);
 		}
 	}
 
