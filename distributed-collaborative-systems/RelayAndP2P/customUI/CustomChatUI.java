@@ -8,6 +8,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.Date;
+import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -43,6 +47,8 @@ public class CustomChatUI {
 	JPanel uPanelUI, lPanelUI;
 	JScrollPane userListScrollPaneUI, archiveScrollPaneUI;
 	public int updateIssued = 0;
+	Random randomGenerator = new Random();
+	Timer timer;
 
 	public enum uStatus {
 		Available, Busy, Invisible, Idle
@@ -56,6 +62,14 @@ public class CustomChatUI {
 		ch = cWindow;
 		genCustomUI();
 		addListeners();
+		
+		// Set Random Number Seed
+        Date date = new Date();
+        long time = date.getTime();
+		randomGenerator.setSeed(time);
+		
+		//Timer
+		timer = new Timer();
 	}
 
 	public void addCircle(Circle circle) {
@@ -191,7 +205,7 @@ public class CustomChatUI {
 			@Override
 			public void keyReleased(KeyEvent e) {
 				// TODO Auto-generated method stub
-				String currStr = topicTextUI.getText();
+				final String currStr = topicTextUI.getText();
 				Character k = e.getKeyChar();
 				/*
 				if(Character.isAlphabetic(k) || Character.isLetterOrDigit(k) || Character.isJavaLetterOrDigit(k)){
@@ -207,7 +221,7 @@ public class CustomChatUI {
 					//Else figure out what has changed
 					int prevLength = prevTopic.length();
 					int currLength = currStr.length();
-					String[] data = new String[3];
+					final String[] data = new String[3];
 					
 					if(prevLength > currLength){
 						//Deletion
@@ -228,9 +242,29 @@ public class CustomChatUI {
 							updateIssued = 0;
 							data[0] = Integer.toString(pos);
 							data[1] = String.valueOf(c);
-							ch.sendChatEvtToServer(data, Constants.CLIENT_TOPIC_CHANGE_DELETE);
-							MVCTracerInfo.newInfo("Topic - character deleted at pos = "+pos, this);
-							ch.updateTopic(currStr);
+							final int posBackup = pos;
+							if(ch.retrieveDelayFlag() == 1){
+								int delay = getRandomNumber(1000, 5000);
+								MVCTracerInfo.newInfo("Delay = "+delay+", (not updated) Topic - character deleted at pos = "+posBackup, this);
+								timer.schedule(new TimerTask(){
+									@Override
+									public void run() {
+										ch.sendChatEvtToServer(data, Constants.CLIENT_TOPIC_CHANGE_DELETE);
+										MVCTracerInfo.newInfo("Topic - character deleted at pos = "+posBackup, this);
+										if(ch.retrieveMode().equals("p2p")){
+											ch.updateTopic(currStr);
+										}
+									}
+									
+								}, delay);
+							}else{
+								ch.sendChatEvtToServer(data, Constants.CLIENT_TOPIC_CHANGE_DELETE);
+								MVCTracerInfo.newInfo("Topic - character deleted at pos = "+pos, this);
+								if(ch.retrieveMode().equals("p2p")){
+									ch.updateTopic(currStr);
+								}
+							}
+							
 						}
 					}else if(prevLength < currLength){
 						//Insertion
@@ -252,11 +286,30 @@ public class CustomChatUI {
 							data[0] = Integer.toString(pos);
 							data[1] = String.valueOf(c);
 							data[2] = currStr;
-							ch.sendChatEvtToServer(data, Constants.CLIENT_TOPIC_CHANGE_INSERT);
-							MVCTracerInfo.newInfo("Topic - character '"+c+"' inserted at pos = "+pos, this);
-							if(ch.retrieveMode().equals("p2p")){
-								ch.updateTopic(currStr);
+							final Character c_backup = c;
+							final int pos_backup = pos;
+							if(ch.retrieveDelayFlag() == 1){
+								int delay = getRandomNumber(1000, 5000);
+								MVCTracerInfo.newInfo("Delay = "+delay+", (not updated) Topic - character '"+c_backup+"' inserted at pos = "+pos_backup, this);
+								timer.schedule(new TimerTask(){
+									@Override
+									public void run() {
+										ch.sendChatEvtToServer(data, Constants.CLIENT_TOPIC_CHANGE_INSERT);
+										MVCTracerInfo.newInfo("Topic - character '"+c_backup+"' inserted at pos = "+pos_backup, this);
+										if(ch.retrieveMode().equals("p2p")){
+											ch.updateTopic(currStr);
+										}
+									}
+									
+								}, delay);
+							}else{
+								ch.sendChatEvtToServer(data, Constants.CLIENT_TOPIC_CHANGE_INSERT);
+								MVCTracerInfo.newInfo("Topic - character '"+c+"' inserted at pos = "+pos, this);
+								if(ch.retrieveMode().equals("p2p")){
+									ch.updateTopic(currStr);
+								}
 							}
+							
 						}
 					}
 					prevTopic = currStr;
@@ -265,30 +318,72 @@ public class CustomChatUI {
 			
 		});
 	}
+	
+	public int getRandomNumber(int START, int END){
+		long range = END - START + 1;
+		long frac = (long)(randomGenerator.nextDouble()*range);
+		int r = (int)(frac + START);
+		return r;
+	}
 
-	public void updateTopic(String[] data, int STATUS_CODE, int otherUpdate){
+	public void updateTopic(final String[] data, int STATUS_CODE, int otherUpdate){
 		String currStr = topicTextUI.getText();
-		int pos = Integer.parseInt(data[0], 10);
-		Character c = data[1].charAt(0);
+		final int pos = Integer.parseInt(data[0], 10);
+		final Character c = data[1].charAt(0);
 		
 		if(STATUS_CODE == Constants.CLIENT_TOPIC_CHANGE_DELETE){
-			String newStr = new StringBuffer(currStr).deleteCharAt(pos).toString();
+			final String newStr = new StringBuffer(currStr).deleteCharAt(pos).toString();
 			topicTextUI.setText(newStr);
 			if(otherUpdate == 0){
 				data[2] = newStr;
-				ch.sendChatEvtToServer(data, Constants.CLIENT_TOPIC_CHANGE_DELETE);
-				MVCTracerInfo.newInfo("Topic - character deleted at pos = "+pos, this);
-				ch.updateTopic(newStr);
+				if(ch.retrieveDelayFlag() == 1){
+					int delay = getRandomNumber(1000, 5000);
+					MVCTracerInfo.newInfo("Delay = "+delay+", (not updated) Topic - character deleted at pos = "+pos, this);
+					timer.schedule(new TimerTask(){
+						@Override
+						public void run() {
+							ch.sendChatEvtToServer(data, Constants.CLIENT_TOPIC_CHANGE_DELETE);
+							MVCTracerInfo.newInfo("Topic - character deleted at pos = "+pos, this);
+							if(ch.retrieveMode().equals("p2p")){
+								ch.updateTopic(newStr);
+							}
+						}
+						
+					}, delay);
+				}else{
+					ch.sendChatEvtToServer(data, Constants.CLIENT_TOPIC_CHANGE_DELETE);
+					MVCTracerInfo.newInfo("Topic - character deleted at pos = "+pos, this);
+					if(ch.retrieveMode().equals("p2p")){
+						ch.updateTopic(newStr);
+					}
+				}
 			}
 			prevTopic = newStr;
 		}else if(STATUS_CODE == Constants.CLIENT_TOPIC_CHANGE_INSERT){
-			String newStr = new StringBuffer(currStr).insert(pos, c).toString();
+			final String newStr = new StringBuffer(currStr).insert(pos, c).toString();
 			topicTextUI.setText(newStr);
 			if(otherUpdate == 0){
 				data[2] = newStr;
-				ch.sendChatEvtToServer(data, Constants.CLIENT_TOPIC_CHANGE_INSERT);
-				MVCTracerInfo.newInfo("Topic - character '"+c+"' inserted at pos = "+pos, this);
-				ch.updateTopic(newStr);
+				if(ch.retrieveDelayFlag() == 1){
+					int delay = getRandomNumber(1000, 5000);
+					timer.schedule(new TimerTask(){
+						@Override
+						public void run() {
+							ch.sendChatEvtToServer(data, Constants.CLIENT_TOPIC_CHANGE_INSERT);
+							MVCTracerInfo.newInfo("Topic - character '"+c+"' inserted at pos = "+pos, this);
+							if(ch.retrieveMode().equals("p2p")){
+								ch.updateTopic(newStr);
+							}
+						}
+						
+					}, delay);
+				}else{
+					ch.sendChatEvtToServer(data, Constants.CLIENT_TOPIC_CHANGE_INSERT);
+					MVCTracerInfo.newInfo("Topic - character '"+c+"' inserted at pos = "+pos, this);
+					if(ch.retrieveMode().equals("p2p")){
+						ch.updateTopic(newStr);
+					}
+				}
 			}
 			prevTopic = newStr;
 		}

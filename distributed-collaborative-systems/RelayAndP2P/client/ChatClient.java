@@ -60,6 +60,7 @@ public class ChatClient implements PropertyListenerRegisterer {
 	String result[] = new String[2];
 	String mode = "";
 	String connUserList[];
+	int delayed = 0;
 	
 	public enum uStatus {
 		Available, Busy, Invisible, Idle
@@ -163,6 +164,10 @@ public class ChatClient implements PropertyListenerRegisterer {
 		for(int i = 0; i < this.tracerMsgs.size(); i++){
 			MVCTracerInfo.newInfo(tracerMsgs.get(i), this);
 		}
+	}
+	
+	public int retrieveDelayFlag(){
+		return this.delayed;
 	}
 	
 	public void addCircle(Circle circle){
