@@ -1,21 +1,19 @@
 \documentclass{article}
 \include{hwdefs}
 \begin{document}
-\author{Wile E. Coyote}
+\author{Ravikiran Janardhana}
 \setcounter{HW}{2}
 \title{COMP  790-124, HW\theHW}
 \maketitle
 
 
-{ Deadline: 10/22/2012 11:59PM EST}
+{ Deadline: 10/24/2012 11:59PM EST}
 
 { Submit \texttt{hw\theHW.pdf} by e-mail to \texttt{vjojic+comp790+hw\theHW@cs.unc.edu}
 
 
 
 \noindent\rule{\textwidth}{3pt}
-
-
 
 
 In the next few problems we will derive and implement an ADMM algorithm for logistic regression with a fused lasso penalty.  You can refer to the ADMM write up available on the course website  \url{http://www.cs.unc.edu/~vjojic/comp790/notes/ADMMFLSA.pdf}, but note that, while there are similarities with the problems below, there are differences as well.
@@ -76,7 +74,6 @@ end
 function value = computeL1Norm(z)
     value = 0;
     for i = 1 : size(z, 2)
-        display(z(i));
         value = value + abs(z(i));
     end
 end
@@ -180,15 +177,20 @@ for it=1:MAX_ITER
     z = z + step*dz;
 end
 \end{verbatim}
-Save this file as \texttt{newtonWolfeBacktrack.m}. In the code above, the while loop is terminated when the Wolfe condition is satisfied. Read the code and explain what the Wolfe condition is trying to accomplish. The Wolfe condition is \answer.
+Save this file as \texttt{newtonWolfeBacktrack.m}. In the code above, the while loop is terminated when the Wolfe condition is satisfied. Read the code and explain what the Wolfe condition is trying to accomplish. 
+
+\textbf{Ans.} The Wolfe condition is trying to reduce the \textbf{step}(step length) by BETA = 0.5 at each iteration such that the objective(z + step*z) is less than (objective(z) + ALPHA * step * dz * d).
+
+This is nothing but the sufficient decrease condition for minimizing the objective function and we break out of the while loop when the above condition is satisfied.
 
 Now we will write a function that computes the objective and its derivatives.
 \begin{verbatim}
-function [val,d,dd] = logRegGaussPrior(z,y,a,gamma)
-val = log(1 + exp(-y*z)) + gamma*(z-a)^2;
-if nargout > 1 % caller asked for derivatives
-    d = ... % first derivative
-    dd = .... % second derivative
+function  [val,d,dd]  =  logRegGaussPrior(z,y,a,gamma)
+    val  =  log(1  +  exp(-y*z))  +  gamma*(z-a)^2;
+    if  nargout  >  1  %  caller  asked  for  derivatives
+        d = (-y ./ (1 + exp(y*z))) + (2 * gamma * (z - a));
+        dd = ((y.^2 * exp(y*z)) ./ ((1 + exp(y*z)).^2)) + (2 * gamma);  
+    end
 end
 \end{verbatim}
 
@@ -202,8 +204,13 @@ Of course you will be plugging in different values of \texttt{y,a,gamma}. Note t
 
 Use the \texttt{newtonWolfeBacktrack} and \texttt{logRegGaussianPrior} to implement
 \begin{verbatim}
-function z0i = updatez0i( ... )
-...
+function z0i = updatez0i(yi, xi, w, u0i, rho)
+    y = yi;    
+    a = (xi*w) - ((1/rho) * u0i);
+    gamma = rho/2;
+    f = @(z) logRegGaussPrior(z,y,a,gamma);
+    z0i = newtonWolfeBacktrack(f,0);    
+end
 \end{verbatim}
 
 \newproblem{1pt} Copy over update for $z^1$ from above
@@ -228,6 +235,7 @@ function  x  =  shrinkThreshold(x,lambda)
 end
 \end{verbatim}
 
+
 \newproblem{1pt} Copy over update for $z_i^2$ from above
 \[
 z_i^{2,k} = \argmin_{z_i^2}   \frac{\mu}{\rho} \nrmo{z_{i}^{2}} + \frac{1}{2} \nrmt{z_{i}^{2} - \DD\ww^{k} + \frac{1}{\rho}u_{i}^{2,k-1}}^{2} 
@@ -241,8 +249,9 @@ z_i^{2,k} = S(\DD\ww^{k} - \frac{1}{\rho}u_{i}^{2, k-1}, \frac{\mu}{\rho})
 \]
 write code to implement this update
 \begin{verbatim}
-function z2i = updatez2i(w, D, u2i, mu, rho)    
-    z2i = shrinkThreshold(Dw - 1/rho*u2i, mu/rho);
+% Dwi = Dw(i), Dw = D*w
+function z2i = updatez2i(Dwi, u2i, mu, rho)    
+    z2i = shrinkThreshold(Dwi - 1/rho*u2i, mu/rho);
 end
 
 function  x  =  shrinkThreshold(x,lambda)
@@ -252,55 +261,79 @@ end
 
 \newproblem{2pt} Putting all of this together
 \begin{verbatim}
-function w = solveLogRegFusedLasso(y,X,D)
-rho = 1;
-N = length(y); assert(N == size(X,1));
-p = size(X,2); assert(p == size(D,2));
-e = size(D,1);
-w = zeros(p,1);
-z0 = zeros(N,1); u0 = zeros(N,1);
-z1 = zeros(p,1); u1 = zeros(p,1);
-z2 = zeros(e,1); u2 = zeros(e,1);
-MAXIT = 100;
-
-for it=1:MAXIT
-    before = computeAL(y,X,D,lambda,mu,rho,w,z0,z1,z2,u0,u1,u2);
-    w = updatew( ... );
-    after = computeAL(y,X,D,lambda,mu,rho,w,z0,z1,z2,u0,u1,u2);
-    assert(after < before + 1e-6);
-
-    before = after;
-    for i=1:length(y)
-        z0(i) = updatez0i( ... );
-    end
-    after = computeAL(y,X,D,lambda,mu,rho,w,z0,z1,z2,u0,u1,u2);
-    assert(after < before + 1e-6);
-
-    before = after;
-    for i=1:length(y)
-        z1(i) = updatez1i( ... );
-    end
-    after = computeAL(y,X,D,lambda,mu,rho,w,z0,z1,z2,u0,u1,u2);
-    assert(after < before + 1e-6);
-
-    before = after;
-    for i=1:size(D,1)
-        z2(i) = updatez2i( ... );
-    end
-    after = computeAL(y,X,D,lambda,mu,rho,w,z0,z1,z2,u0,u1,u2);
-    assert(after < before + 1e-6);
-
-    u0 = ...
-    u1 = ...
-    u2 = ...
+function  w  =  solveLogRegFusedLasso(y,X,D, lambda, mu)
+    rho  =  1;
+    N  =  length(y);  assert(N  ==  size(X,1));
+    p  =  size(X,2);  assert(p  ==  size(D,2));
+    e  =  size(D,1);
+    w  =  zeros(p,1);
+    z0  =  zeros(N,1);  u0  =  zeros(N,1);
+    z1  =  zeros(p,1);  u1  =  zeros(p,1);
+    z2  =  zeros(e,1);  u2  =  zeros(e,1);
+    MAXIT  =  100;
+    n = size(X, 2);
+    
+    for  it=1:MAXIT
+        before  =  computeAL(y,X,D,lambda,mu,rho,w,z0,z1,z2,u0,u1,u2);        
+        w = updatew(X, n, D, z0, z1, z2, u0, u1, u2, rho);
+        after  =  computeAL(y,X,D,lambda,mu,rho,w,z0,z1,z2,u0,u1,u2);
+        assert(after  <  before  +  1e-6);
+        
+        before  =  after;
+        for  i=1:length(y)
+            z0(i)  =  updatez0i(y(i), X(i,:), w, u0(i), rho);
+        end
+        after  =  computeAL(y,X,D,lambda,mu,rho,w,z0,z1,z2,u0,u1,u2);
+        assert(after  <  before  +  1e-6);
+        
+        before  =  after;
+        for  i=1:length(w)            
+            z1(i) = updatez1i(w(i), u1(i), lambda, rho);
+        end
+        after  =  computeAL(y,X,D,lambda,mu,rho,w,z0,z1,z2,u0,u1,u2);
+        assert(after  <  before  +  1e-6);
+        
+        before  =  after;
+        Dw = D*w;
+        for  i=1:size(D,1)            
+            %z2(i) = updatez2i(w, D, u2(i), mu, rho);
+            z2(i) = updatez2i(Dw(i), u2(i), mu, rho);
+        end
+        after  =  computeAL(y,X,D,lambda,mu,rho,w,z0,z1,z2,u0,u1,u2);
+        assert(after  <  before  +  1e-6);
+        
+        u0  =  u0 + rho * (z0 - X*w);
+        u1  =  u1 + rho * (z1 - w);
+        u2  =  u2 + rho * (z2 - D*w);
+    end        
 end
 \end{verbatim}
 If any of the asserts fail, it is most likely that you have a bug in your update. Remember the updates are derived so as to minimize the augmented lagrangian. If your update does not reduce the augmented lagrangian, this is what the asserts check, then there is a bug.
 
 Load \texttt{hw2.mat} and run your code on \texttt{y,X,lambda,mu} in that environment. Report \texttt{w}
 \begin{verbatim}
-w = ...
+w = 0.4591
+    0.4877
+    0.1417
+    0.0923
+    0.1594
+    0.0000
+   -0.0000
+    0.0000
+    0.0000
+    0.0000
+    0.4591
+    0.4877
+    0.1417
+    0.0923
+    0.1594
+    0.0000
+   -0.0000
+    0.0000
+   -0.0000
+    0.0000 
 \end{verbatim}
+
 \newproblem{1pt} Poisson distribution is used to model count data.
 \[
 p(x = k | \lambda) = \frac{\lambda^k\exp{-\lambda}}{k!}.
