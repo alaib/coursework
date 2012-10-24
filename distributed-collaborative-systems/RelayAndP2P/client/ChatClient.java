@@ -19,6 +19,7 @@ import oeHelper.VectorStringHistory;
 import relayServer.RelayServerInterface;
 import sessionServer.SessionServerInterface;
 import tracer.MVCTracerInfo;
+import tracer.TraceableListenerMod;
 import util.annotations.StructurePattern;
 import util.annotations.StructurePatternNames;
 import util.models.AListenableString;
@@ -26,6 +27,7 @@ import util.models.AListenableVector;
 import util.models.PropertyListenerRegisterer;
 import util.models.VectorChangeEvent;
 import util.models.VectorListener;
+import util.trace.TraceableBus;
 import util.trace.Tracer;
 import bus.uigen.OEFrame;
 import bus.uigen.ObjectEditor;
@@ -52,6 +54,7 @@ public class ChatClient implements PropertyListenerRegisterer {
 	RelayServerInterface rServerInt;
 	SessionServerInterface sServerInt;
 	ClientCallbackImpl callback;
+	public boolean relayMode = true;
 	
 	Map <String, ClientCallbackInterface> clientMap;
     Map <String, String> clientStatusMap;
@@ -80,6 +83,11 @@ public class ChatClient implements PropertyListenerRegisterer {
 	ChatClient(String cName, String m) {
 		Tracer.setKeywordDisplayStatus(this, true);
 		mode = m;
+		if(mode.equals("relay")){
+			this.relayMode = true;
+		}else{
+			this.relayMode = false;
+		}
 		self = this;
 		addListeners(self);
 		addPropertyChangeListener(pListener);
@@ -99,7 +107,7 @@ public class ChatClient implements PropertyListenerRegisterer {
 			this.cui = new CustomChatUI(this); 
 			addToUserList(cName, clientStatus);
 			String currTopic = "";
-			if(mode.equals("relayer")){
+			if(mode.equals("relay")){
 				currTopic = this.rServerInt.getCurrentTopic();
 			}else{
 				currTopic = this.sServerInt.getCurrentTopic();
@@ -110,41 +118,42 @@ public class ChatClient implements PropertyListenerRegisterer {
 			
 			data[0] = this.clientStatus.toString();
 			tempUI = new TemporaryUI();
-			if(mode.equals("relayer")){
-				rServerInt.handleChatEvent(clientName, data, Constants.CLIENT_JOIN);
+			
+			//Client Join and exit should be noted to both rServer and sServer
+			//rServer
+			rServerInt.handleChatEvent(clientName, data, Constants.CLIENT_JOIN);
+			//sServer
+			String uList = sServerInt.getUserList();
+			String[] connUserList = uList.split("\n");
+			if(!uList.equals("")){
+				result[0] = uList;
+				this.handleChatEventNotify(result, Constants.CLIENT_JOIN);
+			}
+			if(connUserList.length <= 1){
+				//this.tempUI.showMsgBox("You are the only user connected, please wait until others join");
 			}else{
-				String uList = sServerInt.getUserList();
-				String[] connUserList = uList.split("\n");
-				if(!uList.equals("")){
-					result[0] = uList;
-					this.handleChatEventNotify(result, Constants.CLIENT_JOIN);
-				}
-				if(connUserList.length <= 1){
-					//this.tempUI.showMsgBox("You are the only user connected, please wait until others join");
-				}else{
-					String connUser = "";
-					for(int i = 0; i < connUserList.length; i++){
-						String[] splitArr = connUserList[i].split("-");
-						if(splitArr.length != 2){
-							System.out.println("Error! splitArr length < 2, String = "+connUserList[i]);
-							continue;
+				String connUser = "";
+				for(int i = 0; i < connUserList.length; i++){
+					String[] splitArr = connUserList[i].split("-");
+					if(splitArr.length != 2){
+						System.out.println("Error! splitArr length < 2, String = "+connUserList[i]);
+						continue;
+					}
+					connUser = splitArr[0].trim();
+					if(!connUser.equals(this.clientName)){
+						ClientCallbackInterface cb = sServerInt.getCallback(connUser);
+						if(!clientMap.containsKey(connUser)){
+							clientMap.put(connUser, cb);
+							this.issueConnEstablishMsg(connUser);
+							sServerInt.sendMyCallbackToUser(this.clientName, connUser);
 						}
-						connUser = splitArr[0].trim();
-						if(!connUser.equals(this.clientName)){
-							ClientCallbackInterface cb = sServerInt.getCallback(connUser);
-							if(!clientMap.containsKey(connUser)){
-								clientMap.put(connUser, cb);
-								this.issueConnEstablishMsg(connUser);
-								sServerInt.sendMyCallbackToUser(this.clientName, connUser);
-							}
-						}
-					}	
-					//Update the topic from user
-					tracerMsgs.add("Fetched callbacks of all other clients via Session Server");
-					this.data[0] = uList;
-					this.sendChatEventUpdateToAllClients(this.clientName, this.data, Constants.CLIENT_JOIN);
-					tracerMsgs.add("Sent an update saying "+this.clientName+" joined the session");
-				}
+					}
+				}	
+				//Update the topic from user
+				tracerMsgs.add("Fetched callbacks of all other clients via Session Server");
+				this.data[0] = uList;
+				this.sendChatEventUpdateToAllClients(this.clientName, this.data, Constants.CLIENT_JOIN);
+				tracerMsgs.add("Sent an update saying "+this.clientName+" joined the session");
 			}
 		} catch (MalformedURLException e){
 			// TODO Auto-generated catch block
@@ -170,12 +179,27 @@ public class ChatClient implements PropertyListenerRegisterer {
 		return this.delayed;
 	}
 	
+	public void setRelayMode(boolean value){
+		this.relayMode = value;
+		if(value == true){
+			this.mode = "relay";
+			MVCTracerInfo.newInfo("Changed mode to relay", this);
+		}else{
+			this.mode = "p2p";
+			MVCTracerInfo.newInfo("Changed mode to p2p", this);
+		}
+	}
+	
+	public boolean getRelayMode(){
+		return this.relayMode;
+	}
+	
 	public void addCircle(Circle circle){
 		c = circle;
 		this.cui.addCircle(c);
 		try {
 			Point p = new Point(20, 50);
-			if(mode.equals("relayer")){
+			if(mode.equals("relay")){
 				p = this.rServerInt.getCurrPoint();
 			}else{
 				p = this.sServerInt.getCurrentPoint();
@@ -192,7 +216,7 @@ public class ChatClient implements PropertyListenerRegisterer {
 	
 	public Point retrieveCurrPoint(){
 		Point p = new Point(20, 50);
-		if(mode.equals("relayer")){
+		if(mode.equals("relay")){
 			if(this.rServerInt != null){
 				try {
 					p = this.rServerInt.getCurrPoint();
@@ -220,7 +244,7 @@ public class ChatClient implements PropertyListenerRegisterer {
 	
 	public void sendChatEvtToServer(String[] newData, int STATUS_CODE){
 		try {
-			if(mode.equals("relayer")){
+			if(mode.equals("relay")){
 				this.rServerInt.handleChatEvent(this.clientName, newData, STATUS_CODE);
 			}else{
 				this.sendChatEventUpdateToAllClients(this.clientName, newData, STATUS_CODE);
@@ -262,7 +286,7 @@ public class ChatClient implements PropertyListenerRegisterer {
 	
 	public void sendTelePointerEvtToServer(Point p){
 		try {
-			if(mode.equals("relayer")){
+			if(mode.equals("relay")){
 				this.rServerInt.handleTelePointerEvent(this.clientName, p, Constants.MOVE_POINTER);
 			}else{
 				this.sServerInt.setCurrentPoint(p);
@@ -409,7 +433,7 @@ public class ChatClient implements PropertyListenerRegisterer {
 			try {
 				System.out.println("calleeMethod = "+calleeMethod);
 				MVCTracerInfo.newInfo("New Message = "+elem, this);
-				if(mode.equals("relayer")){
+				if(mode.equals("relay")){
 					this.rServerInt.handleChatEvent(this.clientName, data, Constants.CLIENT_NEW_MSG);
 				}else{
 					this.sendChatEventUpdateToAllClients(this.clientName, data, Constants.CLIENT_NEW_MSG);
@@ -481,7 +505,7 @@ public class ChatClient implements PropertyListenerRegisterer {
 			data[0] = this.clientStatus.toString();
 			try {
 				MVCTracerInfo.newInfo("My New Status = "+data[0], this);
-				if(mode.equals("relayer")){
+				if(mode.equals("relay")){
 					this.rServerInt.handleChatEvent(this.clientName, data, Constants.CLIENT_STATUS_CHANGE);
 				}else{
 					this.data = this.sServerInt.updateClientStatus(this.clientName, this.clientStatus.toString());
@@ -577,8 +601,8 @@ public class ChatClient implements PropertyListenerRegisterer {
 		int x = 10, y = 100, width = 20, height = 20;
 		Circle c = new Circle(x, y, width, height, col, filled);
 
-		//String mode ="relayer";
-		String mode ="p2p";
+		//String mode ="relay";
+		String mode ="relay";
 		final ChatClient ch = new ChatClient(cName, mode);
 		c.addCH(ch);
 		ch.addCircle(c);
@@ -589,6 +613,7 @@ public class ChatClient implements PropertyListenerRegisterer {
 		MVCTracerInfo.newInfo("Connected to Relay Server", ch);
 		MVCTracerInfo.newInfo("Connected to Session Server", ch);
 		MVCTracerInfo.newInfo("Mode = "+mode, ch);
+		
 		ch.activateTracer();
 		
     	Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {

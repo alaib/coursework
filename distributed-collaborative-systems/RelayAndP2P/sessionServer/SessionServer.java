@@ -2,9 +2,11 @@ package sessionServer;
 
 //RMI
 import java.rmi.Naming;
-
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+
+import tracer.TraceableListenerMod;
+import util.trace.TraceableBus;
 
 /**
 * RMI Server 
@@ -14,7 +16,10 @@ import java.rmi.server.UnicastRemoteObject;
 
 public class SessionServer{
 	Registry reg;
+	//public static TraceableListenerMod aListener = new TraceableListenerMod();
+	
 	public SessionServer(){   
+		//TraceableBus.addTraceableListener(aListener);
 		try {
 			reg = java.rmi.registry.LocateRegistry.createRegistry(1100);
 			System.out.println("RMI registry ready.");
