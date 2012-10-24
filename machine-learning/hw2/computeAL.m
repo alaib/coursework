@@ -8,17 +8,17 @@ function val = computeAL(y, X, D, lambda, mu, rho, w, z0, z1, z2, u0, u1, u2)
     
     term21 = 0.0;
     for i = 1 : size(z0, 2)
-        term21 = term21 + (u0(i) * (z0(i) - w * X(:,i)));
+        term21 = term21 + (u0(i) .* (z0(i) - X(i,:) * w));
     end
-    term22 = u1 * (z1 - w);
-    term23 = u2 * (z2 - w * D);
+    term22 = sum(u1 .* (z1 - w));
+    term23 = sum(u2 .* (z2 - D * w));
     
     term31 = 0.0;
-    for i = 1 : size(z, 2)
-        term31 = term21 + ((rho/2) * computeL2Norm(z0(i) - (w * X(:, i))));        
+    for i = 1 : size(z0, 2)
+        term31 = term21 + ((rho/2) * computeL2Norm(z0(i) - (X(i, :) * w)));        
     end
     term32 = (rho/2) * computeL2Norm(z1 - w);
-    term33 = (rho/2) * computeL2Norm(z2 - w * D);
+    term33 = (rho/2) * computeL2Norm(z2 - D * w);
     
     val = term11 + term12 + term13 + ...
           term21 + term22 + term23 + ...
@@ -26,15 +26,14 @@ function val = computeAL(y, X, D, lambda, mu, rho, w, z0, z1, z2, u0, u1, u2)
 end
 
 function value = computeL1Norm(z)
-    value = 0;
-    for i = 1 : size(z, 2)
-        display(z(i));
+    value = 0.0;
+    for i = 1 : size(z, 2)        
         value = value + abs(z(i));
     end
 end
 
 function value = computeL2Norm(z)
-    value = 0;
+    value = 0.0;
     for i = 1 : size(z, 2)
         value = value + abs(z(i)).^2;
     end
