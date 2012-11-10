@@ -1,4 +1,4 @@
-function  m_f  =  fw(s,x,pins,pdel,pcopy)
+function  m_f  =  vit_fw(s,x,pins,pdel,pcopy)
     N  =  length(s);
     L  =  length(x)/2;
     m_f  =  -realmax*ones(N,2*L);
@@ -20,20 +20,26 @@ function  m_f  =  fw(s,x,pins,pdel,pcopy)
                 %  insert
                 vala  =  m_f(prev,i);
                 valb  =  m_f(prev,i-1) +  logmut(s(prev),x(i))  +  logpins;
-                m_f(prev,i)  =  logsum([vala  valb]);
+                %m_f(prev,i)  =  logsum([vala  valb]);
+                %transform logsum to max
+                m_f(prev,i) = max(vala, valb);
 
                 if  prev<=N-2
                     %  delete
                     vala  =  m_f(prev+2,i);
                     valb  =  m_f(prev+2,i-1) + logmut(s(prev+2), x(i)) + logpdel;
-                    m_f(prev+2,i)  =  logsum([vala  valb]);
+                    %transform logsum to max
+                    %m_f(prev+2,i)  =  logsum([vala  valb]);
+                    m_f(prev+2,i) = max(vala, valb);
                 end
 
                 if  prev<=N-1
                     %  copy
                     vala  =  m_f(prev+1,i);
                     valb  =  m_f(prev+1,i-1) + logmut(s(prev+1), x(i)) + logpcopy;
-                    m_f(prev+1,i)  =  logsum([vala  valb]);
+                    %transform logsum to max
+                    %m_f(prev+1,i)  =  logsum([vala  valb]);
+                    m_f(prev+1,i)  =  max(vala  valb]);
                 end
 
 
@@ -44,7 +50,7 @@ function  m_f  =  fw(s,x,pins,pdel,pcopy)
                         %display(prev);
                         %display(next);
                         %display(i);
-                        diff = m_f(next+1, i) - m_f(next, i);
+                        diff = m_f(next, i) - m_f(next-1, i);
                         valb  =  logProbTruncPoiss(diff, 100);
                         
                         %valb = -0.5;

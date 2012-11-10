@@ -1,4 +1,4 @@
-function  m_b  =  bw(s,x,pins,pdel,pcopy)
+function  m_b  =  vit_bw(s,x,pins,pdel,pcopy)
 N  =  length(s);
 L  =  length(x)/2;
 m_b  =  -realmax*ones(N,2*L);
@@ -17,18 +17,24 @@ for  i=2*L-1:-1:1
             %  insert
             vala  =  m_b(next,i);
             valb  =  m_b(next,i+1)+  logmut(s(next),x(i+1))  +  logpins;
-            m_b(next,i)  =  logsum([vala  valb]);
+            %transform logsum to max
+            %m_b(next,i)  =  logsum([vala  valb]);
+            m_b(next,i)  =  max(vala,  valb);
             if  next-2>=1
                 %  delete
                 vala  =  m_b(next-2,i);
                 valb  =  m_b(next-2,i+1) + logmut(s(next-2),x(i+1)) + logpdel;
-                m_b(next-2,i)  =  logsum([vala  valb]);
+                %transform logsum to max
+                %m_b(next-2,i)  =  logsum([vala  valb]);
+                m_b(next-2,i)  =  max(vala, valb);
             end
             if  next-1>=1
                 %  copy
                 vala  =  m_b(next-1,i);
                 valb  =  m_b(next-1,i+1) + logmut(s(next-1),x(i+1)) + logpcopy;
-                m_b(next-1,i)  =  logsum([vala  valb]);
+                %transform logsum to max
+                %m_b(next-1,i)  =  logsum([vala  valb]);
+                m_b(next-1,i)  =  max(vala, valb);
             end
         else
             if  next-90>=1
@@ -36,17 +42,14 @@ for  i=2*L-1:-1:1
                     vala  =  m_b(prev,i);
                     diff = m_b(prev+1,i) - m_b(prev, i);
                     valb  =  logProbTruncPoiss(diff, 100);
-                    m_b(prev,i)  =  logsum([vala  valb]);
+                    %transform logsum to max
+                    %m_b(prev,i)  =  logsum([vala  valb]);
+                    m_b(prev,i)  =  max(vala, valb);
                 end
             end
         end
     end
 end
-end
-
-function  s  =  logsum(vec)
-    m  =  max(vec);
-    s  =  log(sum(exp(vec  -  m)))  +  m;
 end
 
 function  logProb  =  logProbTruncPoiss(i,lambda)
