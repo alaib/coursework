@@ -45,9 +45,7 @@ function  m_f  =  fw(s,x,pins,pdel,pcopy)
                         %display(next);
                         %display(i);
                         diff = m_f(next+1, i) - m_f(next, i);
-                        valb  =  logProbTruncPoiss(diff, 100);
-                        
-                        %valb = -0.5;
+                        valb  =  logProbTruncPoiss(m_f(next+1, i) - m_f(next, i), 100);                                                
                         valCompute = logsum([vala  valb]);
                         m_f(next,i)  =  logsum([vala  valb]);
                     end

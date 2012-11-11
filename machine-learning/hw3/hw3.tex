@@ -129,20 +129,20 @@ for i=2:2*L
             if prev<=N-2
                 % delete
                 vala = m_f(prev+2,i);
-                valb = ...
+                valb  =  m_f(prev+2,i-1) + logmut(s(prev+2), x(i)) + logpdel;
                 m_f(prev+2,i) = logsum([vala valb]);
             end
             if prev<=N-1
                 % copy
                 vala = m_f(prev+1,i);
-                valb = ...
+                valb  =  m_f(prev+1,i-1) + logmut(s(prev+1), x(i)) + logpcopy;
                 m_f(prev+1,i) = logsum([vala valb]);
             end
         else
-            if prev+90<=N
-                for next=prev+90:min(prev+110,N)
+            if prev+90<=N-1
+                for next=prev+90:min(prev+110,N-1)
                     vala = m_f(next,i);
-                    valb = ...;
+                    valb  =  logProbTruncPoiss(m_f(next+1, i) - m_f(next, i), 100);                                                
                     m_f(next,i) = logsum([vala valb]);
                 end
             end
@@ -155,7 +155,7 @@ Run forward pass on inputs stored in {\tt hw\theHW.mat} and run this script
 m_f = fw(seq,x,0.005,0.005,0.99);
 logProb = logsum(m_f(:,end))
 \end{verbatim}
-The resulting {\tt logProb} is \answer
+The resulting {\tt logProb} is $-141.1672$
 
 \newproblem{3pt} Implement a backward pass.
 
@@ -186,20 +186,20 @@ for i=2*L-1:-1:1
             if next-2>=1
                 % delete
                 vala = m_b(next-2,i);
-                valb = ...
+                valb  =  m_b(next-2,i+1) + logmut(s(next-2),x(i+1)) + logpdel;
                 m_b(next-2,i) = logsum([vala valb]);
             end
             if next-1>=1
                 % copy
                 vala = m_b(next-1,i);
-                valb = ...
+                valb  =  m_b(next-1,i+1) + logmut(s(next-1),x(i+1)) + logpcopy;
                 m_b(next-1,i) = logsum([vala valb]);
             end
         else
             if next-90>=1
                 for prev=max(1,next-110):next-90
                     vala = m_b(prev,i);
-                    valb = ...;
+                    valb  =  logProbTruncPoiss(m_b(prev+1,i) - m_b(prev, i), 100);
                     m_b(prev,i) = logsum([vala valb]);
                 end
             end
@@ -207,7 +207,16 @@ for i=2*L-1:-1:1
     end
 end
 \end{verbatim}
+
+\begin{verbatim}
+m_b = bw(seq,x,0.005,0.005,0.99);
+logProb = logsum(m_b(:,end))
+\end{verbatim}
+The resulting {\tt logProb} is $8.2943$.
+
+
 To check your implementation run following code
+
 \begin{verbatim}
 m_f = fw(seq,x,0.005,0.005,0.99);
 m_b = bw(seq,x,0.005,0.005,0.99);
@@ -215,11 +224,150 @@ mm = m_f + m_b;
 logsum(mm(:,1))
 logsum(mm(:,end))
 \end{verbatim}
+
 If the two logsum calls output different values, you have a bug.
+
+\begin{verbatim}
+ans = -144.8799
+ans = -141.1672
+\end{verbatim}
 
 \newproblem{3pt} Implement Viterbi forward and backward pass. To do this transform your forward pass and backward by replacing the {\tt logsum} with {\tt max}
 
-\newproblem{2pt} Use MATLAB commands {\tt tic} and {\tt toc} to measure the time that it takes to run standard forward pass and Viterbi forward pass to complete. The ratio of the these times is \answer. Is one of these functions faster? If so, why?
+\begin{verbatim}
+Viterbi Forward pass
+=======================
+function  m_f  =  vit_fw(s,x,pins,pdel,pcopy)
+    N  =  length(s);
+    L  =  length(x)/2;
+    m_f  =  -realmax*ones(N,2*L);
+    logpins  =  log(pins);
+    logpdel  =  log(pdel);
+    logpcopy  =  log(pcopy);
+
+    for  a=1:4
+        for  b=1:4
+            logmut(a,b)  =  log(0.99)*(a==b)  +  log(0.01)*(a~=b);
+        end
+    end
+
+    m_f(1:N,1)  =  -log(N)  +  logmut(s,x(1));
+    for  i=2:2*L
+        test = 1;
+        for  prev=1:N
+            if  i~=L+1
+                %  insert
+                vala  =  m_f(prev,i);
+                valb  =  m_f(prev,i-1) +  logmut(s(prev),x(i))  +  logpins;
+                %transform logsum to max
+                m_f(prev,i) = max(vala, valb);
+
+                if  prev<=N-2
+                    %  delete
+                    vala  =  m_f(prev+2,i);
+                    valb  =  m_f(prev+2,i-1) + logmut(s(prev+2), x(i)) + logpdel;
+                    %transform logsum to max
+                    m_f(prev+2,i) = max(vala, valb);
+                end
+
+                if  prev<=N-1
+                    %  copy
+                    vala  =  m_f(prev+1,i);
+                    valb  =  m_f(prev+1,i-1) + logmut(s(prev+1), x(i)) + logpcopy;
+                    %transform logsum to max
+                    m_f(prev+1,i)  =  max(vala, valb);
+                end
+            else
+                if  prev+90<=N-1
+                    for  next = prev+90 : min(prev+110,N-1)
+                        vala  =  m_f(next,i);   
+                        diff  = m_f(next+1, i) - m_f(next, i);
+                        valb  =  logProbTruncPoiss(m_f(next+1, i) - m_f(next, i), 100);
+                        
+                        %transform logsum to max
+                        m_f(next,i)  =  max(vala, valb);
+                    end
+                end
+            end
+        end
+    end
+end
+
+function  logProb  =  logProbTruncPoiss(i,lambda)       
+    logProb  =  log(lambda)*i  +  (-lambda)  -  sum(log(1:i));   
+end
+\end{verbatim}
+
+
+\begin{verbatim}
+Viterbi Backward pass
+=======================
+function  m_b  =  vit_bw(s,x,pins,pdel,pcopy)
+    N  =  length(s);
+    L  =  length(x)/2;
+    m_b  =  -realmax*ones(N,2*L);
+    logpins  =  log(pins);
+    logpdel  =  log(pdel);
+    logpcopy  =  log(pcopy);
+    for  a=1:4
+        for  b=1:4
+            logmut(a,b)  =  log(0.99)*(a==b)  +  log(0.01)*(a~=b);
+        end
+    end
+    m_b(:,2*L)  =  0;
+    for  i=2*L-1:-1:1    
+        for  next=1:N
+            if  i~=L
+                %  insert
+                vala  =  m_b(next,i);
+                valb  =  m_b(next,i+1)+  logmut(s(next),x(i+1))  +  logpins;
+                %transform logsum to max
+                m_b(next,i)  =  max(vala,  valb);
+
+                if  next-2>=1
+                    %  delete
+                    vala  =  m_b(next-2,i);
+                    valb  =  m_b(next-2,i+1) + logmut(s(next-2),x(i+1)) + logpdel;
+                    %transform logsum to max
+                    m_b(next-2,i)  =  max(vala, valb);
+                end
+                if  next-1>=1
+                    %  copy
+                    vala  =  m_b(next-1,i);
+                    valb  =  m_b(next-1,i+1) + logmut(s(next-1),x(i+1)) + logpcopy;
+                    %transform logsum to max
+                    m_b(next-1,i)  =  max(vala, valb);
+                end
+            else
+                if  next-90>=1
+                    for  prev=max(1,next-110):next-90
+                        vala  =  m_b(prev,i);
+                        diff = m_b(prev+1,i) - m_b(prev, i);
+                        valb  =  logProbTruncPoiss(m_b(prev+1,i) - m_b(prev, i), 100);
+                        %transform logsum to max
+                        m_b(prev,i)  =  max(vala, valb);
+                    end
+                end
+            end
+        end
+    end
+end
+
+prob3.m
+========
+clear;
+load('hw3.mat');
+m_f  =  vit_fw(seq,x,0.005,0.005,0.99);
+m_b  =  vit_bw(seq,x,0.005,0.005,0.99);
+mm  =  m_f  +  m_b;
+hMAP = zeros(length(x), 1);
+for l = 1 : length(x)  
+    [maxVal,maxIndex] = max(m_b(l,:) + m_f(l,:));
+    hMAP(l) = maxIndex;
+end
+\end{verbatim}
+
+\newproblem{2pt} Use MATLAB commands {\tt tic} and {\tt toc} to measure the time that it takes to run standard forward pass and Viterbi forward pass to complete. The ratio of the these times is $4.6450$. Is one of these functions faster? If so, why?
 
 Hint: One way to answer this question is to use MATLAB's profiler. Before calling a function you want to profile do folowing
 \begin{verbatim}
@@ -232,7 +380,21 @@ profile viewer
 \end{verbatim}
 Rest ought to be self-explanatory.
 
+\vspace{2mm}
 
+\textbf{Ans.} Yes, the Viterbi forward pass is faster than the Standard forward pass. On profiling the standard forward pass, it is observed that most of the time is consumed by the \textit{logsum} function defined as below:-
+\begin{verbatim}
+1 function  s  =  logsum(vec)
+2    m  =  max(vec);
+3    s  =  log(sum(exp(vec  -  m)))  +  m;
+4 end
+\end{verbatim}
+
+Line 3 of the above function $"s  =  log(sum(exp(vec  -  m)))  +  m"$ is the killer time consumer as it involves computing the logarithmic sum of exponentiated values of the vector.
+
+In contrast, the viterbi forward pass replaces the \textbf{logsum} computation with a simple \textbf{max(a, b)} function which is computationally less intensive and hence is a lot faster.
+
+\vspace{2mm}
 
 \newproblem{3pt} Modify your Viterbi forward pass to also record which of the states  $h_{i-1}$ was the most likely to have given rise to the current state $h_{i}$. This is sometimes called trace or backward pointers.
 

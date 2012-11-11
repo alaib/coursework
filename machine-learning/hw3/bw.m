@@ -35,7 +35,7 @@ for  i=2*L-1:-1:1
                 for  prev=max(1,next-110):next-90
                     vala  =  m_b(prev,i);
                     diff = m_b(prev+1,i) - m_b(prev, i);
-                    valb  =  logProbTruncPoiss(diff, 100);
+                    valb  =  logProbTruncPoiss(m_b(prev+1,i) - m_b(prev, i), 100);
                     m_b(prev,i)  =  logsum([vala  valb]);
                 end
             end

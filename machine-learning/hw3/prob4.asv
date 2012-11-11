@@ -1,0 +1,9 @@
+% Clear and load files
+clear
+load('hw3.mat');
+
+% Call standard forward pass
+m_f  =  fw(seq,x,0.005,0.005,0.99);
+
+% C
+m_f  =  vit_fw(seq,x,0.005,0.005,0.99);
