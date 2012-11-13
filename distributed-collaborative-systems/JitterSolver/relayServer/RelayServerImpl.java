@@ -37,6 +37,7 @@ public class RelayServerImpl extends UnicastRemoteObject implements RelayServerI
     OEServerModel model;
     DateFormat dateFormat;
     Point currPoint;
+    Point currPointList[] = new Point[1];
     Dimension currDim;
     String currTopic = "";
     
@@ -44,11 +45,12 @@ public class RelayServerImpl extends UnicastRemoteObject implements RelayServerI
     	model = new OEServerModel(this);
     	view = new OEServerView();
     	currPoint = new Point(20, 50);    	
+    	currPointList[0] = new Point(20, 50);
     }
 	
-	public void handleTelePointerEvent(String cName, Point p, int STATUS_CODE) throws RemoteException {
+	public void handleTelePointerEvent(String cName, Point []p, int STATUS_CODE) throws RemoteException {
 		//System.out.println("TelePointer request received from client = "+cName+", status_code = "+STATUS_CODE);
-		currPoint = p;
+		currPointList = p;
 		sendTelePointerUpdateToAllClients(cName, p, STATUS_CODE);		
 	}
 	
@@ -93,7 +95,7 @@ public class RelayServerImpl extends UnicastRemoteObject implements RelayServerI
 		return currPoint;
 	}
 	
-	public void sendTelePointerUpdateToAllClients(String cName, Point p, int STATUS_CODE){	    	
+	public void sendTelePointerUpdateToAllClients(String cName, Point []p, int STATUS_CODE){	    	
     	for(Map.Entry<String, ClientCallbackInterface> item : clientMap.entrySet()){
     		String clientName = item.getKey();
     		ClientCallbackInterface tcCallback = item.getValue();
@@ -116,7 +118,7 @@ public class RelayServerImpl extends UnicastRemoteObject implements RelayServerI
     			try {
 					tcCallback.handleChatEventNotify(data, STATUS_CODE);
 					if(STATUS_CODE == Constants.CLIENT_JOIN){
-						tcCallback.handleTelePointerNotify(this.currPoint, Constants.MOVE_POINTER);
+						tcCallback.handleTelePointerNotify(this.currPointList, Constants.MOVE_POINTER);
 					}
 				} catch (RemoteException e) {
 					// TODO Auto-generated catch block
@@ -227,5 +229,15 @@ public class RelayServerImpl extends UnicastRemoteObject implements RelayServerI
 	    		System.out.println(ex);
 	    	}
 	    }
+	}
+
+	@Override
+	public Point[] getCurrPointList() throws RemoteException {
+		// TODO Auto-generated method stub
+		return this.currPointList;
+	}
+	
+	public void setCurrPointList(Point[] p) throws RemoteException{
+		this.currPointList = p;
 	}
 }

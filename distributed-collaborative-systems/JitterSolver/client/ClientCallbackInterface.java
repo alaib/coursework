@@ -14,7 +14,7 @@ import java.rmi.RemoteException;
  */
 
 public interface ClientCallbackInterface extends Remote {
-    public void handleTelePointerNotify(Point p, int STATUS_CODE) throws RemoteException;    
+    public void handleTelePointerNotify(Point []p, int STATUS_CODE) throws RemoteException;    
     public void handleChatEventNotify(String[] data, int STATUS_CODE) throws RemoteException;    
     public void addClientCallback(String cName, ClientCallbackInterface cb) throws RemoteException;
     public void removeClientCallback(String cName) throws RemoteException;

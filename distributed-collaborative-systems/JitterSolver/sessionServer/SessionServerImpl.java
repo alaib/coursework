@@ -36,10 +36,12 @@ public class SessionServerImpl extends UnicastRemoteObject implements SessionSer
     DateFormat dateFormat;
     String currTopic = "";
     Point currPoint = new Point(20, 50);
+    Point[] currPointList = new Point[1];
     
     public SessionServerImpl () throws RemoteException {  
     	model = new OEServerModel(this);
     	view = new OEServerView();
+    	currPointList[0] = new Point(20, 50);
     }
 	
 	public void registerCallback(String cName, String cStatus, ClientCallbackInterface tCallback){
@@ -186,6 +188,18 @@ public class SessionServerImpl extends UnicastRemoteObject implements SessionSer
 				e.printStackTrace();
 			}
 		}
+		
+	}
+
+	@Override
+	public Point[] getCurrentPointList() throws RemoteException {
+		// TODO Auto-generated method stub
+		return this.currPointList;
+	}
+
+	@Override
+	public void setCurrentPointList(Point[] newPoint) throws RemoteException {
+		this.currPointList = newPoint;
 		
 	}
 }

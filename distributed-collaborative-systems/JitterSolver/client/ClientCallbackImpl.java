@@ -19,7 +19,7 @@ public class ClientCallbackImpl extends UnicastRemoteObject implements ClientCal
       cm = ccm;      
    }   
    
-   public void handleTelePointerNotify(Point p, int STATUS_CODE){
+   public void handleTelePointerNotify(Point []p, int STATUS_CODE){
 	   cm.handleTelePointerNotify(p, STATUS_CODE);
    }
 

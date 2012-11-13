@@ -16,9 +16,11 @@ import client.*;
  */
 public interface RelayServerInterface extends Remote {
     public Point getCurrPoint() throws RemoteException;
+    public Point[] getCurrPointList() throws RemoteException;
+    public void setCurrPointList(Point[] p) throws RemoteException;
     public void registerCallback(String cName, String cStatus, ClientCallbackInterface cbClient) throws RemoteException;
     public void unRegisterCallback(String cName) throws RemoteException;
-	public void handleTelePointerEvent(String cName, Point p, int STATUS_CODE) throws RemoteException;
+	public void handleTelePointerEvent(String cName, Point []p, int STATUS_CODE) throws RemoteException;
 	public void handleChatEvent(String cName, String[] data, int STATUS_CODE) throws RemoteException;
     public String getCurrentTopic() throws RemoteException;
 }

@@ -20,6 +20,8 @@ public interface SessionServerInterface extends Remote {
     public void setCurrentTopic(String newTopic) throws RemoteException;
     public Point getCurrentPoint() throws RemoteException;
     public void setCurrentPoint(Point newPoint) throws RemoteException;
+    public Point[] getCurrentPointList() throws RemoteException;
+    public void setCurrentPointList(Point[] newPoint) throws RemoteException;
     public void unRegisterCallback(String cName) throws RemoteException;
     public void sendMyCallbackToUser(String source, String dest) throws RemoteException;
     public String getUserList() throws RemoteException;

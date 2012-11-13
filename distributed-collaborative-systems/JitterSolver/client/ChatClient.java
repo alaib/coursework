@@ -72,8 +72,9 @@ public class ChatClient implements PropertyListenerRegisterer {
 	boolean delayed = false;
 	int defaultDelay = 300;
 	int varDelayMax = 200;
-	int tailSize = 20;
+	int tailSize = 10;
 	boolean jitter = false;
+	boolean jitterRecovery = false;
 	
 	List<Point> coords = new ArrayList<Point>();
 	
@@ -237,16 +238,16 @@ public class ChatClient implements PropertyListenerRegisterer {
 		//TotalDelay = defaultDelay + random_variance
 		int delay = this.defaultDelay + getRandomNumber(1, this.varDelayMax); 
 		System.out.println("Jitter Delay = "+delay);
-		/*
 		timer.schedule(new TimerTask(){
 			@Override
 			public void run() {
 				// TODO Auto-generated method stub
 				try {
+					Point p[] = self.retrievePointList();
 					if(commMode.equals("relay")){
 						self.rServerInt.handleTelePointerEvent(self.clientName, p, Constants.MOVE_POINTER);
 					}else{
-						self.sServerInt.setCurrentPoint(p);
+						self.sServerInt.setCurrentPointList(p);
 						self.sendTelePointerUpdateToAllClients(self.clientName, p, Constants.MOVE_POINTER);
 					}
 				} catch (RemoteException e) {
@@ -255,7 +256,6 @@ public class ChatClient implements PropertyListenerRegisterer {
 				}
 			}
 		}, delay);
-		*/
 	}
 	
 	public Point[] retrievePointList(){
@@ -326,23 +326,26 @@ public class ChatClient implements PropertyListenerRegisterer {
 		return this.relayMode;
 	}
 	
+	public void copyPointsToCoords(Point[] p){
+		for(int i = 0; i < p.length; i++){
+			insertToList(p[i]);
+		}
+	}
+	
 	public void addCircle(Circle circle, List cList){
 		c = circle;
 		tList = cList;
 		this.cui.addCircle(c);
 		try {
-			Point p = new Point(20, 50);
+			Point p[] = new Point[1];
+			p[0] = new Point(20, 50);
+			
 			if(mode.equals("relay")){
-				p = this.rServerInt.getCurrPoint();
-				coords.add(p);
+				p = this.rServerInt.getCurrPointList();
 			}else{
-				p = this.sServerInt.getCurrentPoint();
-				coords.add(p);
+				p = this.sServerInt.getCurrentPointList();
 			}
-			this.c.setX(p.x);
-			this.c.setY(p.y);
-			this.cui.myGlassPane.setPoint(p);
-			this.cui.myGlassPane.repaint();
+			copyPointsToCoords(p);
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -390,7 +393,7 @@ public class ChatClient implements PropertyListenerRegisterer {
 		}
 	}
 	
-	public void sendTelePointerUpdateToAllClients(String cName, Point p, int STATUS_CODE){	    	
+	public void sendTelePointerUpdateToAllClients(String cName, Point [] p, int STATUS_CODE){	    	
     	for(Map.Entry<String, ClientCallbackInterface> item : clientMap.entrySet()){
     		String clientName = item.getKey();
     		ClientCallbackInterface tcCallback = item.getValue();
@@ -410,7 +413,7 @@ public class ChatClient implements PropertyListenerRegisterer {
 			try {
 				tcCallback.handleChatEventNotify(data, STATUS_CODE);
 				if(STATUS_CODE == Constants.CLIENT_JOIN){
-					tcCallback.handleTelePointerNotify(this.cui.myGlassPane.point, Constants.MOVE_POINTER);
+					tcCallback.handleTelePointerNotify(retrievePointList(), Constants.MOVE_POINTER);
 				}
 			} catch (RemoteException e) {
 				// TODO Auto-generated catch block
@@ -422,16 +425,19 @@ public class ChatClient implements PropertyListenerRegisterer {
 	public void sendTelePointerEvtToServer(Point p){
 		insertToList(p);
 		try {
+			Point []pList = retrievePointList();
 			if(mode.equals("relay")){
 				if(this.jitter == true){
 					addJitterToTelePointer(p);
 				}else{
-					this.rServerInt.handleTelePointerEvent(this.clientName, p, Constants.MOVE_POINTER);
+					this.rServerInt.handleTelePointerEvent(this.clientName, pList, Constants.MOVE_POINTER);
 				}
 			}else{
 				if(this.jitter == true){
-					this.sServerInt.setCurrentPoint(p);
-					this.sendTelePointerUpdateToAllClients(this.clientName, p, Constants.MOVE_POINTER);
+					addJitterToTelePointer(p);
+				}else{
+					this.sServerInt.setCurrentPointList(pList);
+					this.sendTelePointerUpdateToAllClients(this.clientName, pList, Constants.MOVE_POINTER);
 				}
 			}
 		} catch (RemoteException e) {
@@ -635,6 +641,14 @@ public class ChatClient implements PropertyListenerRegisterer {
 		}
 	}
 	
+	public boolean getJitterRecovery(){
+		return this.jitterRecovery;
+	}
+	
+	public void setJitterRecover(boolean value){
+		this.jitterRecovery = value;
+	}
+	
 	public void setClientStatusFromObj(Object s) {
 		String val = s.toString();
 		uStatus status = uStatus.Available;
@@ -720,13 +734,9 @@ public class ChatClient implements PropertyListenerRegisterer {
 	}
 	
 	//Don't change method name, if yes change setX and setY method in Circle
-	public void handleTelePointerNotify(Point p, int STATUS_CODE){
+	public void handleTelePointerNotify(Point []p, int STATUS_CODE){
 		if(STATUS_CODE == Constants.MOVE_POINTER){
-			if(this.c != null){
-				this.c.setX(p.x);
-				this.c.setY(p.y);
-				MVCTracerInfo.newInfo("Update received - Move Telepointer to = ("+p.x+","+p.y+")", this);
-			}
+			copyPointsToCoords(p);
 		}
 	}
 	
