@@ -70,9 +70,11 @@ public class ChatClient implements PropertyListenerRegisterer {
 	String connUserList[];
 	
 	boolean delayed = false;
-	int defaultDelay = 300;
+	int defaultDelay = 500;
 	int varDelayMax = 200;
-	int tailSize = 10;
+	int tailSize = 30;
+	int displayPeriod = 50;
+	int clearPeriod = 50;
 	boolean jitter = false;
 	boolean jitterRecovery = false;
 	
@@ -236,12 +238,13 @@ public class ChatClient implements PropertyListenerRegisterer {
 	public void addJitterToTelePointer(final Point p){
 		final String commMode = this.mode;
 		//TotalDelay = defaultDelay + random_variance
-		int delay = this.defaultDelay + getRandomNumber(1, this.varDelayMax); 
+		final int delay = this.defaultDelay + getRandomNumber(1, this.varDelayMax); 
 		System.out.println("Jitter Delay = "+delay);
 		timer.schedule(new TimerTask(){
 			@Override
 			public void run() {
 				// TODO Auto-generated method stub
+				System.out.println("Jitter Delay = "+delay);
 				try {
 					Point p[] = self.retrievePointList();
 					if(commMode.equals("relay")){
@@ -278,7 +281,7 @@ public class ChatClient implements PropertyListenerRegisterer {
 				self.cui.myGlassPane.repaint();
 				self.drawPointersInOE(p);
 			}
-		}, 0, 30);
+		}, 0, self.displayPeriod);
 	}
 	
 	public void drawPointersInOE(Point[] p){
@@ -308,7 +311,7 @@ public class ChatClient implements PropertyListenerRegisterer {
 				self.deleteFromList();
 //				System.out.println("Clear Called, Coords Size = "+self.coords.size());
 			}
-		}, 0, 30);
+		}, 0, self.clearPeriod);
 	}
 	
 	public void setRelayMode(boolean value){
@@ -645,8 +648,13 @@ public class ChatClient implements PropertyListenerRegisterer {
 		return this.jitterRecovery;
 	}
 	
-	public void setJitterRecover(boolean value){
+	public void setJitterRecovery(boolean value){
 		this.jitterRecovery = value;
+		if(value == false && this.jitter == true){
+			self.clearPeriod = 10;
+			self.displayPeriod = 10;
+			self.tailSize = 10;
+		}
 	}
 	
 	public void setClientStatusFromObj(Object s) {
@@ -810,6 +818,7 @@ public class ChatClient implements PropertyListenerRegisterer {
 		String mode ="p2p";
 		final ChatClient ch = new ChatClient(cName, mode);
 		ch.setJitter(true);
+		ch.setJitterRecovery(false);
 		c.addCH(ch);
 		ch.addCircle(c, telepointers);
 		//OEFrame oeFrame = ObjectEditor.edit(ch);
