@@ -1,0 +1,2683 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!DOCTYPE dataset
+[
+   <!ELEMENT dataset (header,body)>
+   <!ATTLIST dataset name CDATA #REQUIRED>
+   <!ATTLIST dataset version CDATA "3.5.4">
+
+   <!ELEMENT header (notes?,attributes)>
+   <!ELEMENT body (instances)>
+   <!ELEMENT notes ANY>
+
+   <!ELEMENT attributes (attribute+)>
+   <!ELEMENT attribute (labels?,metadata?,attributes?)>
+   <!ATTLIST attribute name CDATA #REQUIRED>
+   <!ATTLIST attribute type (numeric|date|nominal|string|relational) #REQUIRED>
+   <!ATTLIST attribute format CDATA #IMPLIED>
+   <!ATTLIST attribute class (yes|no) "no">
+   <!ELEMENT labels (label*)>
+   <!ELEMENT label ANY>
+   <!ELEMENT metadata (property*)>
+   <!ELEMENT property ANY>
+   <!ATTLIST property name CDATA #REQUIRED>
+
+   <!ELEMENT instances (instance*)>
+   <!ELEMENT instance (value*)>
+   <!ATTLIST instance type (normal|sparse) "normal">
+   <!ATTLIST instance weight CDATA #IMPLIED>
+   <!ELEMENT value (#PCDATA|instances)*>
+   <!ATTLIST value index CDATA #IMPLIED>
+   <!ATTLIST value missing (yes|no) "no">
+]
+>
+<dataset name="HLA-DRB10101" version="3.5.3">
+   <header>
+     <attributes>
+        <attribute name="Seq" type="string"/>
+        <attribute class="yes" name="class" type="nominal">
+           <labels>
+              <label>0</label>
+              <label>1</label>
+           </labels>
+        </attribute>
+     </attributes>
+   </header>
+
+   <body>
+      <instances>
+         <instance weight="0.002932551319648094">
+            <value>AACACDQKPCSCSKVDVNYA</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>AAYAAQGYKVLVLNPSVAAT</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>ADICKKYKIWMHVDAAWGGG</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>ADLRIISANGCKV</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>AGLLGNVSTVLLGGV</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>AGLLLGNVSTVLLGGV</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>AGSLQPLALEGSLQKRG</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>AIAKLEDAKELLESS</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>AIHESFKGYQPYEFTTLKSL</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>AILEFRAMAQFSRKTD</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>AKKNFDKLKMDVCQKVDLLG</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>ALGAQKEAISPPDAA</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>ALGIGTDSVILIKCDERGKM</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>ALLKNYGLLYCFRKD</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>APPRLICDSRVLERY</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>APRFKHLRKYTYNYEA</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>AQSLVIKLMPNITLL</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>ASDADLDAKLELFHSIQRTC</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>ASHTRLSCDCDDK</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>ASRCNLLSHMLATYQTTLLH</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>ATAAQITAGIALHQS</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>AVCLGGLIGIPALIC</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>AVFEAALTKAITA</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>AVTIYEMLQNIFAIF</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>CAWTIVRVEILRNFY</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>CDCDDKFYDCLKN</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>CDCDDKFYDCLKNSADTI</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>CDDKFYDCLKNSA</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>CFLAMLSLFICGTAGIFLMA</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>CFSSQQRLALRNPLCRFHQE</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>CPDVMSAGESKHGLTNTA</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>CSNLSTCVLGKLSQE</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>DAFVTALTEALRV</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>DAISMRMGYYGDFVFDRVLK</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>DCDDKFYDCLKNS</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>DDKFYDCLKNSAD</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>DDLLLLSEIFNASSLEEGEF</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>DGKSILSALDKGSTHTACSG</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>DGVNYATGNLPGCSA</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>DIEKKIAKMEKASSVFNVVNS</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>DKAVSGLRSLTTLLR</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>DKFKIFEAAFSES</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>DKFYDCLKNSADT</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>DKFYDCLKNSADTISSYF</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>DLLEQRRAAVDTYCRHNYGVGESFT</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>DLMGYIPLVGAPLGA</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>DLQDRYAQDKSVVNKMQQRY</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>DLTAWFSLFADLDPLSNPDA</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>DMDKVETFLRIVQCR</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>DPDLYKQMEKFRKVQTQVRL</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>DPTLDHHWHLWKKTYGKQYK</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>DQILRSMKGLSSTSI</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>DQSVVELYTDTAFSWSVGA</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>DSTPPPGTRFRAMAIYKQS</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>DTFRKDFRVYSNFLR</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>DTFRKLFDVYSNFLR</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>DTFRKLFGVYSNFLR</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>DTFRKLFRDYSNFLR</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>DTFRKLFRGYSNFLR</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>DTFRKLFRRYSNFLR</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>DTFRKLFRVYDNFLR</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>DTFRKLFRVYSDFLR</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>DTFRKLFRVYSNFLR</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>DTWLTVNRMEQCRTEYRGAL</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>DVCQKVDLLGASRCNLLSHM</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>DVFKLWLMWRAKGTTGFEAH</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>DVGEYRAVTELGRPDAEYWN</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>DVMSAGESKHGLTNTASH</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>EAGHQKVVFYILIQRKPLFY</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>EAKQKGFVPFLVSATAGTTV</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>EDPAFYMLKGKLQYEL</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>EEFVAEFDLPGIK</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>EEFVVEFALPGIK</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>EEFVVEFDLPAIK</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>EEFVVEFDLPGAK</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>EEGACLGPVAGTPEPEGADK</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>EEGLMQNCNQMHASYLFQQD</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>EHCSLNENITVPDTK</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>EKKIAKMEKASSVFNVV</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>EKVYLAWVPAHKGIG</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>ELFHSIQRTCLDLSKAIVLY</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>EMLQNIFAIFRQDSS</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>ENELGKFLRSQGFQDKTRAG</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>ENGEWAIQHRPAKMLLDPAAPAQ</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>ENPGRARAWCQVAQKFTGGI</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>EPEASPSLWEIEFAKQLASV</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>EQCCTSICSLYQLEN</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>EREEALTTNVWIEMQWCDYR</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>ERMSRLSKVAPVIKARMMEY</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>ERVRLLERCIYNQE</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>ESSCTFMPEGTVCSQ</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>ETIVENLLANVYHQR</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>EVKEKGMAALPRLIAFTSEH</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>EYKLVVVGAGGVGKS</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>EYKLVVVGARGVGKSALT</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>EYKLVVVGASGVGKSALT</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>EYKLVVVGAVGVGKS</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>EYKLVVVGAVGVGKSALT</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>FFKNIVTPRTPA</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>FFPVIESSKASSSLQL</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>FKNIVTPRTPA</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>FLHATDLLPACDGERPTLAF</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>FLMAHYNRVPALPFPGDPRP</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>FLRIVQCRSVEGSCGF</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>FLRSVFANSLVYGAS</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>FMAVLLTLQTPTGQI</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>FPFDWQNCSLIFQSQTYST</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>FPTIPLSRLFDNASL</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>FRKQNPDIVIQYMDDLYVG</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>FRKVQTQVRLAKKNFDKLKM</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>FRKYTAFTIPSINNE</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>FRSMAAAAA</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>FTRGKRMSSLHLKRY</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>FVNQHLCGSHLVEAL</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>FVNQHLCGSHLVEALYL</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>FWEKTSHTMAAIHESFKGYQ</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>FYDCLKNSADTIS</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>GAFDPLLAVADIA</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>GARSLTTLLRALGAQ</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>GDKVNFFRMVISNPAATHQD</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>GDLLGILESRGIKAR</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>GDNELEERIIYPGTLWCG</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>GDTRPRFLWQLKFECHFFNG</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>GEIYKRWIILGLNKI</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>GELIGILNAAKVPAD</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>GERSLTTLLRALGAQ</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>GFERARSRLLG</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>GFHQLRGGSLG</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>GFKAAAAAAA</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>GFSAIRNRILG</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>GGAPPVTWRRAPAPG</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>GGRSLTDLLRALGAQ</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>GGRSLTTLLRALGAQ</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>GIQTLMGRLEDGSPR</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>GIVEQCCTSICSLYQLE</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>GLALLSEAVLRGQAL</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>GLAYKFVVPGAATPY</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>GLDSLTTLLRALGAQ</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>GLGSLTTLLRALGAQ</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>GLRRLTTLLRALGAQ</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>GLRSDTTLLRALGAQ</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>GLRSLTDLLRALGAQ</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>GLRSLTTLLRALGAQ</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>GLTNTASHTRLSCDCDDK</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>GNKLCALLYGDAEKPAESGG</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>GNRFILSQGNLIANC</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>GNWQYFFPVIFSKAS</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>GNWRALRGALG</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>GPDGRLLRGHDQYAYDGKD</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>GPEYWDRETQKYKRQAQ</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>GPLKAEIAQRLE</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>GPLKAEIAQRLED</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>GPRSLTTLLRALGAQ</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>GPWQAMRGWLG</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>GQVKEPVPTMALGEPDPKAQ</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>GRFTQMGALAG</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>GRFTQMMAVAG</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>GRLEYCLKDRRNFDI</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>GSDWRFLRGYHQYA</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>GSHLVEALYLVCGER</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>GSLFLLLLSTSHGWQIRD</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>GSLQKRGIVEQCCTSIC</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>GSRSLTDLLRALGAQ</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>GSRSLTTLLRALGAQ</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>GSWRHIQTRVG</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>GTIINQDPDKILTYI</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>GTPEPEGADKDDLLLLSEIF</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>GTTMVSYQPLGDKVNFFRMV</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>GTWNSLRGRLG</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>GTYRGMAGFRG</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>GWKGLQGALSG</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>GWQIRDRIGDNELEERII</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>GYAAMRGGQIG</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>GYGKLRGGTLG</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>GYKLLRATQMG</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>GYKPLWGQMTG</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>GYKPMLASVGG</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>GYKVLVLNPSVAAT</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>GYKVLVLNPSVAATLGFGAY</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>GYQALRAYWQG</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>GYQQMGARLMG</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>GYRAMQTTLSG</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>GYRGMSAFRAG</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>GYRHAQAYGVG</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>GYRMQSNHVSG</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>GYRQMSAPTLG</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>GYRQMWVNRAG</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>HASLVIKLMPNITLL</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>HFFKNIVTPRTPA</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>HLKRYYGRILHYLKA</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>HNSWRAMASDFNLPP</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>HNWVNHAVPLAMKLI</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>HPNQPFYILKPQMPWELW</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>HQALVIKLMPNITLL</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>HQSAVIKLMPNITLL</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>HQSDDIKLMPNITLL</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>HQSDVIKLMPNITLL</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>HQSLDIKLMPNITLL</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>HQSLVAKLMPNITLL</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>HQSLVIALMPNITLL</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>HQSLVIDLMPNITLL</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>HQSLVIELMPNITLL</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>HQSLVIFLMPNITLL</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>HQSLVIHLMPNITLL</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>HQSLVIKAMPNITLL</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>HQSLVIKLAPNITLL</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>HQSLVIKLEPNITLL</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>HQSLVIKLMANITLL</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>HQSLVIKLMFNITLL</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>HQSLVIKLMPAITLL</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>HQSLVIKLMPNATLL</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>HQSLVIKLMPNDTLL</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>HQSLVIKLMPNIALL</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>HQSLVIKLMPNITAL</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>HQSLVIKLMPNITEL</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>HQSLVIKLMPNITHL</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>HQSLVIKLMPNITLA</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>HQSLVIKLMPNITLE</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>HQSLVIKLMPNITLK</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>HQSLVIKLMPNITLL</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>HQSLVIKLMPNITTL</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>HQSLVIKLMPRITLL</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>HQSLVIKLMPWITLL</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>HQSLVIKLMWNITLL</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>HQSLVIKLRPNITLL</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>HQSLVIKLYPNITLL</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>HQSLVIKRMPNITLL</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>HQSLVIKSMPNITLL</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>HQSLVIRLMPNITLL</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>HQSLVIYLMPNITLL</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>HRVKRGLTVAVAG</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>HTLNQIDSVKVWP</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>HTNVCFWYIPPSLRTLEDNE</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>HTRLSCDCDDKFY</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>HVDTESYFIVLSIAY</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>HYLKAKEDSHCAWTI</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>ICDSRVLERYLLEAK</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>IDTLTCGFADLMGYA</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>IFAIFRQDSSSTGWN</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>IKGVIVHRLEGVSYN</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>IKLMPNITLLNNCTR</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>IKTGHPRYFNQLSTGLDMVG</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>IKWTKLTSDYLKE</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>IPADLRIISANGCK</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>IPADLRIISANGCKVDNS</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>IPDNLFLKSDGRIKYTLNK</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>IPKEQKYSFLQNPQT</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>IPLVGAPLGGAARA</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>IPSDLERRILEAKQKGFVPF</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>IRSMAAAAA</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>ISLLLIQSWLEPVQF</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>ISSVAILIHFLPAKAGGQKC</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>IVLENNVDGVFEVALYCNVL</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>IVVNAVVVLNVSLRSP</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>IYYRRLYNGLKFI</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>KALENKKKQLGAGGKN</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>KEDSHCAWTIVRVEI</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>KFYDCLKNSADTI</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>KGPELGLSQFCGSLKQAAPA</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>KHKVYACEVTHQGLS</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>KIYSYFPSVISKV</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>KLKLYTGEACRTGDR</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>KLSQELHKLQTYPRT</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>KMMQATGKALCFSSQQRLAL</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>KMRMATPLLMQALPM</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>KPLFYVINIIAPCVLISSVA</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>KRWIILGLNKIVRMY</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>KSKYKLATSVLAGLL</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>KTAVQMAVFIHNFKR</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>KVIDFHYPNELLQEYNWELA</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>KVYLAWVPAHKGIGG</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>KYKIAGGIAGGLAL</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>KYKIAGGIAGGLALL</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>KYVKQNTLKLAT</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>LAADWLTSTANTNMFTYEIA</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>LATWTIQGAANALSGDVW</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>LATYQTTLLHFWEKTSHTMA</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>LDHKFDLMYAKRAFVHWY</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>LDLSKAIVLYQKRICFLSQE</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>LDMVGLAADWLTS</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>LDQNMKDLQASLQEPAKAAS</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>LEFRAMAQFSRKT</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>LFRVYSNFLRGKLKL</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>LGFLQRSSNCQCQKL</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>LGYDRADAGWLAD</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>LHKLQTYPRTNTGSG</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>LIKCDERGKMIPSDLERRIL</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>LKAEIAQRLEDV</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>LKKMREIIGWPGGSGDGIFS</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>LLGILESRGIKARIT</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>LLKDLEEGIQTLMGR</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>LLLLSTSHGWQIRDRIGD</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>LLMSRKHKWKLSGVERANSV</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>LLQEYNWELADQPQNLEEIL</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>LLYCFRKDMDKVETF</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>LPKPPKPVSKMRMATPLLMGALPM</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>LPKPPKPVSKMRMATPLLMQAL</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>LPKPPKPVSKMRMATPLLMQALPM</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>LPKPPKPVSKMRMATPLLMQALPMG</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>LQDVMNILLQYVVKSFDRST</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>LQLHVDKAVSGLRSL</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>LRAHRLHQLAFDTYQ</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>LRDPISAEISIQALS</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>LRSMAAAAA</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>LSCDCDDKFYDCL</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>LSGVERANSVTWNPHKMMGV</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>LSIAYPTLSEIKGVI</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>LSKIFKLGGRDSRSGSPMAR</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>LSQGNLIANCASILC</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>LVAAALEKLEKGPELGLSQF</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>LVNLLIFHINGKIIKNS</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>LVNSSQPWEPLQLHV</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>LVSATAGTTVYGAFDPLLAV</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>LWEIEFAKQL</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>LWQLNGRLEYCLKDR</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>LYNIIKNREGYEMVFDGKPQ</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>MASPGSGFWSFGSEDGSGDS</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>MHCQTTLKYAIKTGHPRYFN</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>MHVDAAWGGGLLMSRKHKWK</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>MILAVQGVQDYINNE</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>MMIARFKMFPEVKEKGMAAL</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>MNYYGKQEENWYSLKK</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>MNYYGKQENWYSLKK</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>MQYIKANSKFIGI</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>MRKLAILSVSSFLFV</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>MRSMAAAAA</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>MSYNLLGFLQRSSNC</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>NAFRNVDGSGLVS</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>NALYPMSPLLQECLR</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>NASSLEEGEFSKEWAAVFGD</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>NFFRLVISNPAAT</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>NFFRMVISNPAAT</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>NFFRMVISQPAAT</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>NHLKTVLEEKLEKED</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>NLGKVIDTLTCGFA</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>NLLANVYHQRNHLKT</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>NNCTRVEIAEYRRLL</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>NPGGYVAYKAATVT</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>NRVPALPFPGDPRPYLPSPD</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>NSLVYGASDSNVYDL</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>NTNMFTYEIAPVFVLLEYVT</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>NVLDHLTGRSSQV</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>NVSLKLTLTNLISLNEREEA</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>NVSLRSPHTHSMARGVRKVF</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>NYAFLHATDLLP</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>PAKMLLDPAAPAQEAGHQKV</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>PDYASLRSLVASS</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>PEEIKQLQQFQKEDA</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>PFKAEIAQRLEDV</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>PGGAISNMYAMMIARFKMFP</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>PGGSGDGIFSPGGAISNMYA</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>PHHTALRQAILCWGELMTLA</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>PIDELLDMKSEEGACLGPVA</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>PIGHLYIFATCLGLS</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>PIKAEIAQRLEDV</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>PKKAEIAQRLEDV</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>PKYVATQGYLISNFD</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>PKYVKQNTLKLAT</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>PKYVQNTLKLAT</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>PLALEGSLQKRGIVEQC</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>PLKAEIAQRL</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>PLKAEIAQRLE</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>PLKAEIAQRLED</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>PLKAEIAQRLEDV</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>PLKAEIGQRLEDV</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>PLKAEISQRLEDV</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>PLQCSALLVREEGLMQNCNQ</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>PLYKKMEAVKLRD</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>PPDAASAAPLRTITA</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>PRLIAFTSEHSHFSLKKGAA</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>PSLRTLEDNEERMSRLSKVA</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>PTLSEIKGVIVHRLE</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>PVIKARMMEYGTTMVSYQPL</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>PVKAEIAQRLEDV</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>PWKAEIAQRLEDV</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>PYEFTTLKSLQDPMKKLVEK</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>PYKAEIAQRLEDV</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>PYYTGEHAKAIGN</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>QAAPAIQACVEACNLIACAR</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>QCQKLLWQLNGRLEY</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>QCRTEYRGALLWMKDVSQEL</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>QGFQDKTRAGKMMQATGKAL</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>QHLCGSHLVEALYLV</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>QIVGGVYLLPRRGPA</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>QKEDAAVTIYEMLQN</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>QKFTGGIGNKLAA</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>QKQITKIQNFRVYYR</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>QKRICFLSQEENELGKFLRS</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>QLISLEEENQRKESSSFKTE</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>QLQQFQKEDAAVTIY</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>QLSTGLDMVGLAADWLTSTA</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>QVAQKFTGGIGNKLCALLYG</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>QYIKANSFIGITE</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>RDRIGDNELEERIIYPGT</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>REETQQKSNLELLRI</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>RFKRGLTVAVAG</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>RGQALLVNSSQPWEP</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>RHNWVNHAVPLAMKLI</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>RIHIGPGRAFYTTKNIIGIT</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>RIHIGPGRAFYTTKNIIGTI</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>RKESSSFKTEDGKSILSALD</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>RLFDNASLRAHRLHQ</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>RLQNGSSGWSITTGEEVALC</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>RLSCDCDDKFYDC</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>RMSSLHLKRYYGRIL</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>RNFDIPEEIKQLQQF</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>RNFYVINRLTGYLRN</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>RNPLCRFHQEVETFRHRAIS</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>RRFAAAAAAAAAR</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>RSSNCQCQKLLWQLN</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>RTGQIFKQTYSKFDT</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>RTITADTFRKLFRVY</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>RVEYHFLSPYVSPKESP</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>RVVINKDTTIII</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>RYKRGLTVAVAG</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>SAAPLRTITADTFRK</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>SAEISIQALSYALGG</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>SCDCDDKFYDCLK</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>SCSKVDVNYAFLHATDLLPA</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>SDWRFLRGYHQYA</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>SEAVLRGQALLVNSS</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>SFLQNPQTSLCFSES</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>SGPLKAEIAQRLE</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>SGPLRREIAQRLE</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>SGPYRAEIAQRLE</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>SGPYRREIAQRLE</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>SHFSLKKGAAALGIGTDSVI</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>SHTRLSCDCDDKF</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>SKAAAATPLLMQA</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>SKEWAAVFGDGQVKEPVPTM</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>SKMAAATPLLMQA</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>SKMRMATPLLMQA</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>SKYFQDPALLLMH</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>SKYLTFLLVVTILIVVNAV</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>SLQEPAKAASDLTAWFSLFA</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>SNFLRGKLKLYTGEA</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>SNLELLRISLLLIQS</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>SPAIFQSSMTKILEP</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>SRYWAIRTRSGGI</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>SSLQLVFGIELMEVD</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>SSVFNVVNSSIGLIM</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>SSVITLNTNVGLYDQSD</value>
+            <value>1</value>
+         </instance>
+         <instance weight="1.0">
+            <value>SSYSSSKSSSSSS</value>
+            <value>1</value>
+         </instance>
+         <instance weight="1.0">
+            <value>STDAAVQEPSQLISLEEENQ</value>
+            <value>1</value>
+         </instance>
+         <instance weight="1.0">
+            <value>STPEFTILNTFHIPSFTI</value>
+            <value>1</value>
+         </instance>
+         <instance weight="1.0">
+            <value>SVVNKMQQRYWETKQAFIKA</value>
+            <value>1</value>
+         </instance>
+         <instance weight="1.0">
+            <value>SWLEPVQFLRSVFAN</value>
+            <value>1</value>
+         </instance>
+         <instance weight="1.0">
+            <value>SYFIVLSIAYPTLSE</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.3333333333333333">
+            <value>TASHTRLSCDCDDKFYDC</value>
+            <value>1</value>
+         </instance>
+         <instance weight="1.0">
+            <value>TCGFADLMGYIPLVA</value>
+            <value>1</value>
+         </instance>
+         <instance weight="1.0">
+            <value>TCVLGKLSQELHKLQ</value>
+            <value>1</value>
+         </instance>
+         <instance weight="1.0">
+            <value>TEILSLFGPSLRDPI</value>
+            <value>1</value>
+         </instance>
+         <instance weight="1.0">
+            <value>TERVRLLERCIYNQEESVRFDS</value>
+            <value>1</value>
+         </instance>
+         <instance weight="1.0">
+            <value>TERVRLVTRHIYNREE</value>
+            <value>1</value>
+         </instance>
+         <instance weight="1.0">
+            <value>TGKENTIKIQEGSGLSKEEI</value>
+            <value>1</value>
+         </instance>
+         <instance weight="1.0">
+            <value>TGSGFLPSQLLDQNMKDLQA</value>
+            <value>1</value>
+         </instance>
+         <instance weight="1.0">
+            <value>THDMCPDVMSAGESKHGL</value>
+            <value>1</value>
+         </instance>
+         <instance weight="1.0">
+            <value>TIYQYLYAQKSPT</value>
+            <value>1</value>
+         </instance>
+         <instance weight="1.0">
+            <value>TLLQAAPALDKLK</value>
+            <value>1</value>
+         </instance>
+         <instance weight="1.0">
+            <value>TPKIQVYSRHPAENG</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.3333333333333333">
+            <value>TRLSCDCDDKFYD</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.3333333333333333">
+            <value>TRLSCDCDDKFYDCLKNS</value>
+            <value>1</value>
+         </instance>
+         <instance weight="1.0">
+            <value>TSLCFSESIPTPSNR</value>
+            <value>1</value>
+         </instance>
+         <instance weight="1.0">
+            <value>TSYVKVLHHMVKISG</value>
+            <value>1</value>
+         </instance>
+         <instance weight="1.0">
+            <value>TTAYFLYQQQGRLDK</value>
+            <value>1</value>
+         </instance>
+         <instance weight="1.0">
+            <value>TTLLRALGAQKEAIS</value>
+            <value>1</value>
+         </instance>
+         <instance weight="1.0">
+            <value>TVFLFLVAKKV</value>
+            <value>1</value>
+         </instance>
+         <instance weight="1.0">
+            <value>TVLTALGAILKKK</value>
+            <value>1</value>
+         </instance>
+         <instance weight="1.0">
+            <value>TVPKYVATQGYLISN</value>
+            <value>1</value>
+         </instance>
+         <instance weight="1.0">
+            <value>TWNPHKMMGVPLQCSALLVR</value>
+            <value>1</value>
+         </instance>
+         <instance weight="1.0">
+            <value>TYSTNEIDLQLSQEDGQTIE</value>
+            <value>1</value>
+         </instance>
+         <instance weight="1.0">
+            <value>VDKCLELAEYLYNIIKNREG</value>
+            <value>1</value>
+         </instance>
+         <instance weight="1.0">
+            <value>VEALYLVCGERGFFY</value>
+            <value>1</value>
+         </instance>
+         <instance weight="1.0">
+            <value>VEIAEYRRLLRTVLE</value>
+            <value>1</value>
+         </instance>
+         <instance weight="1.0">
+            <value>VETFRHRAISDTWLTVNRME</value>
+            <value>1</value>
+         </instance>
+         <instance weight="1.0">
+            <value>VEVWQGLALLSEAVL</value>
+            <value>1</value>
+         </instance>
+         <instance weight="1.0">
+            <value>VEYHFLSPYVSPK</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.3333333333333333">
+            <value>VGQQAVEVWQGLALL</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.3333333333333333">
+            <value>VGSDWRFLRGYHQY</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.3333333333333333">
+            <value>VGSDWRFLRGYHQYA</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.3333333333333333">
+            <value>VGSDWRFLRGYHQYAYDG</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.2">
+            <value>VHFFKNIVT</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.2">
+            <value>VHFFKNIVTPR</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.2">
+            <value>VHFFKNIVTPRT</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.2">
+            <value>VHFFKNIVTPRTP</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.2">
+            <value>VHFFKNIVTPRTPA</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.5">
+            <value>VKNVIGPFMKAVCVE</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.5">
+            <value>VKNVIGPMKAVCVE</value>
+            <value>1</value>
+         </instance>
+         <instance weight="1.0">
+            <value>VKYAVFEAALTKA</value>
+            <value>1</value>
+         </instance>
+         <instance weight="1.0">
+            <value>VLERYLLEAKEAENI</value>
+            <value>1</value>
+         </instance>
+         <instance weight="1.0">
+            <value>VNFFRMVISNPAATHQD</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.3333333333333333">
+            <value>VNFYAWKRMEVGQQA</value>
+            <value>1</value>
+         </instance>
+         <instance weight="1.0">
+            <value>VNYAFLHATDLLP</value>
+            <value>1</value>
+         </instance>
+         <instance weight="1.0">
+            <value>VPDTKVNFYAWKRME</value>
+            <value>1</value>
+         </instance>
+         <instance weight="1.0">
+            <value>VRKVFLRLLPQLLRMHVRPL</value>
+            <value>1</value>
+         </instance>
+         <instance weight="1.0">
+            <value>VRPLAPAAVQDTQSRLQNG</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.00847457627118644">
+            <value>VRSMAAAAA</value>
+            <value>1</value>
+         </instance>
+         <instance weight="1.0">
+            <value>VRVEILRNFYVINRL</value>
+            <value>1</value>
+         </instance>
+         <instance weight="1.0">
+            <value>VWGIKQLQARVLAVERYLKD</value>
+            <value>1</value>
+         </instance>
+         <instance weight="1.0">
+            <value>VYHQRNHLKTVLEEK</value>
+            <value>1</value>
+         </instance>
+         <instance weight="1.0">
+            <value>VYILIAVCLGGLIGI</value>
+            <value>1</value>
+         </instance>
+         <instance weight="1.0">
+            <value>VYLLPRRGPRLGVRA</value>
+            <value>1</value>
+         </instance>
+         <instance weight="1.0">
+            <value>WEFVNTPPLVKLWYQ</value>
+            <value>1</value>
+         </instance>
+         <instance weight="1.0">
+            <value>WEIEFAKQLA</value>
+            <value>1</value>
+         </instance>
+         <instance weight="1.0">
+            <value>WETKQAFIKATGKKEDEHVV</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.3333333333333333">
+            <value>WKRMEVGQQAVEVWQ</value>
+            <value>1</value>
+         </instance>
+         <instance weight="1.0">
+            <value>WRRAPAPGAKAMAPG</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>WRSMAAAAA</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>YAALAAAAL</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>YAALARAAL</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>YAALATAAL</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>YCNVLVSPDGCIYWLPPAIF</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>YDCLKNSADTISS</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>YDPNLRPAERDSDVVNVSLK</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>YGAFDPLLAVADICKKYKIW</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>YGRILHYLKAKEDSH</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>YINNELIPSMNQLSC</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>YKHTLNQIDSVKVWPRRP</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>YKHTLNQIDSVKVWPRRPT</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>YRRLLRTVLEPIRDA</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>YRSMAAAAA</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>YRSMAAEAA</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.002932551319648094">
+            <value>YRSMAAGAA</value>
+            <value>1</value>
+         </instance>
+         <instance weight="1.0">
+            <value>YRSMAALAA</value>
+            <value>1</value>
+         </instance>
+         <instance weight="1.0">
+            <value>YRSMAGAAA</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.5">
+            <value>YRSMEAAAA</value>
+            <value>1</value>
+         </instance>
+         <instance weight="1.0">
+            <value>YRSMGAAAA</value>
+            <value>1</value>
+         </instance>
+         <instance weight="0.5">
+            <value>YRSMLAAAA</value>
+            <value>1</value>
+         </instance>
+         <instance weight="1.0">
+            <value>YSGPLKAEIAQRLEDV</value>
+            <value>1</value>
+         </instance>
+         <instance weight="1.0">
+            <value>YVKQNTLKLAT</value>
+            <value>1</value>
+         </instance>
+         <instance weight="1.0">
+            <value>YVVKSFDRSTKVIDFHYPNE</value>
+            <value>1</value>
+         </instance>
+         <instance weight="1.0">
+            <value>ACCRTHDMCPDVMSAGES</value>
+            <value>0</value>
+         </instance>
+         <instance weight="1.0">
+            <value>AIIHVLHSRHPGD</value>
+            <value>0</value>
+         </instance>
+         <instance weight="1.0">
+            <value>AKGTTGFEAHVDKCLELAEY</value>
+            <value>0</value>
+         </instance>
+         <instance weight="1.0">
+            <value>ALGEPDPKAQTGSGFLPSQL</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>ARSMAAAAA</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>ATHQDIDFLIEEIERLGQDL</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>ATRKTSERSQPRGRA</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>CCTSICSLYQLENYCN</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>CDGERPTLAFLQDVMNILLQ</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>CGHGNKSSGPNELGRFKH</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>CLKDRRNFDIPEEIK</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>DAEKPAESGGSQPPRAAARK</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>DCLKNSADTISSYFVGKM</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>DHLSDNYTLDHDR</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>DKALQCGRHVDVFKLWLMWR</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>DLDPLSNPDAVGKTDKEHEL</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>DQPQNLEEILMHCQTTLKYA</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>DRSMAAAAA</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>DTFRKDFRVYDNFLR</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>EAENITTGCAEHCSL</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>EDLQVGQVELGGGPGAG</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>EEKKKINQQESTDAAVQEPS</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>ERSMAAAAA</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>ESKHGLTNTASHTRLSCD</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>FGSEDGSGDSENPGRARAWC</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>FYTPKTRREAEDLQVGQ</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>GAARALAHGVRVLEA</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>GAPLGGAARALAHGA</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>GERGFFYTPKTRREAED</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>GGGPGAGSLQPLALEGS</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>GIVEQCCTSICSLYQ</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>GMGWAGWLLSPRGSA</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>GNVTLPAKFYRDP</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>GPNELGRFKHTDACCRTH</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>GQVELGGGPGAGSLQPL</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>GRHLIFCHSKRKCDELATKL</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>GRSMAAAAA</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>GTLVKTITDDQIE</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>GTLWCGHGNKSSGPNELG</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>GWLLSPRGSRPSWGA</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>HNWVNHAVPLAMKLI</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>HRSMAAAAA</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>IIYPGTLWCGHGNKSSGP</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>ISNPAATHQDIDFLIEEIER</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>KARQPEGRAWAQPGA</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>KEAISPPDAASAAPL</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>KEFRKTKRNTLRRPA</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>KGSTHTACSGPIDELLDMKS</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>KHTDACCRTHDMCPDVMS</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>KHYDLSYDTGDKALQCGRHV</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>KLQTYPRTNTGSGTP</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>KMYFNLIDTKCYKLEHPV</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>KNIVTPRTPA</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>KRSMAAAAA</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>LAHGVRVLEDGVNYA</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>LCGSHLVEALYLVCGER</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>LEERIIYPGTLWCGHGNK</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>LEKEDFTRGKRMSSL</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>LGRFKHTDACCRTHDMCP</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>LLEAKEAENITTGCA</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>LVEALYLVCGERGFFYT</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>LWMKDVSQELDPDLYKQMEK</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>LYGNEGMGWAGWLLA</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>MHASYLFQQDKHYDLSYDTG</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>MSAGESKHGLTNTASHTR</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>MSGHKCSYPWDLQDRYAQDK</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>MSTNPKEFRKTKRNA</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>NENITVPDTKVNFYA</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>NKSSGPNELGRFKHTDAC</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>NLIDTKCYKLEHPVTGCG</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>NRSMAAAAA</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>NSADTISSYFVGKMYFNL</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>PEGRAWAQPGYPWPA</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>PGGGQIVGGVYLLPA</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>PRSMAAAAA</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>PTDPRRRSRNLGKVA</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>QDPMKKLVEKEEKKKINQQE</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>QDVRFPGGGQIVGGA</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>QEFEEAYIPKEQKYS</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>QLAFDTYQEFEEAYI</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>QPRGRRQPIPKARQA</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>QPWEPLQLHVDKAVS</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>QRSMAAAAA</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>QTYSKFDTNSHNDDA</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>RLEDGSPRTGQIFKQ</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>RLGVRATRKTSERSA</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>RPSWGPTDPRRRSRA</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>RQDSSSTGWNETIVE</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>RQPIPKARQPEGRA</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>RRGPRLGVRATRKTA</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>RRRSRNLGKVIDTLA</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>RRSMAAAAA</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>SDSNVYDLLKDLEEG</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>SERSQPRGRRQPIPA</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>SIPTPSNREETQQKS</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>SKAAAATPAAAQA</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>SPRGSRPSWGPTDPA</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>SQPPRAAARKAACACDQKPC</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>SRSMAAAAA</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>STGWNETIVENLLAN</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>STSHGWQIRDRIGDNELE</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>SVIDCNTCVTQTVDFSLDPT</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>TFLRGFWGNPLRY</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>TGKKEDEHVVASDADLDAKL</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>TISSYFVGKMYFNLIDTK</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>TKRNTLRRPQDVKFA</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>TLRRPQDVRFPGGGA</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>TNSHNDDALLKNYGL</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>TRREAEDLQVGQVELGG</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.009433962264150943">
+            <value>TRSMAAAAA</value>
+            <value>0</value>
+         </instance>
+         <instance weight="1.0">
+            <value>TSICSLYQLENYCN</value>
+            <value>0</value>
+         </instance>
+         <instance weight="1.0">
+            <value>TTGCAEHCSLNENIT</value>
+            <value>0</value>
+         </instance>
+         <instance weight="1.0">
+            <value>TYPRTNTGSGTP</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.5">
+            <value>VCGERGFFYTPKT</value>
+            <value>0</value>
+         </instance>
+         <instance weight="1.0">
+            <value>VEAEQAKVFSHRG</value>
+            <value>0</value>
+         </instance>
+         <instance weight="1.0">
+            <value>VGKTDKEHELTDKEHELLNA</value>
+            <value>0</value>
+         </instance>
+         <instance weight="1.0">
+            <value>VHFFKNIVTP</value>
+            <value>0</value>
+         </instance>
+         <instance weight="1.0">
+            <value>VKQNTLKLAT</value>
+            <value>0</value>
+         </instance>
+         <instance weight="1.0">
+            <value>VLEEKLEKEDFTRGK</value>
+            <value>0</value>
+         </instance>
+         <instance weight="1.0">
+            <value>VRVLEDGVNYATGNA</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.5">
+            <value>WAQPGYPWPLYGNEA</value>
+            <value>0</value>
+         </instance>
+         <instance weight="1.0">
+            <value>YEMVFDGKPQHTNVCFWYIP</value>
+            <value>0</value>
+         </instance>
+         <instance weight="1.0">
+            <value>YFVGKMYFNLIDTKCYKL</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.5">
+            <value>YLVCGERGFFYTPKT</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.5">
+            <value>YPWPLYGNEGMGWA</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.5">
+            <value>YRSMAEAAA</value>
+            <value>0</value>
+         </instance>
+         <instance weight="0.5">
+            <value>YRSMALAAA</value>
+            <value>0</value>
+         </instance>
+      </instances>
+	</body>
+</dataset>
