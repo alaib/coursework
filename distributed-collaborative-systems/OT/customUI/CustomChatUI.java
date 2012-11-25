@@ -28,7 +28,7 @@ import javax.swing.JTextField;
 
 import misc.Constants;
 import oeHelper.Circle;
-import otHelper.EditWithOTTimeStamp;
+import otHelper.EditWithOTTimeStampInterface;
 import tracer.MVCTracerInfo;
 import client.ChatClient;
 
@@ -168,7 +168,7 @@ public class CustomChatUI {
 					newData[0] = ch.clientStatus.toString();
 					newData[1] = msg;
 					if(ch.retrieveDelayFlag() == true){
-						int delay = getRandomNumber(1000, 5000);
+						int delay = getRandomNumber(ch.retrieveMinDelay(), ch.retrieveMaxDelay());
 						MVCTracerInfo.newInfo("Delay = "+delay+", Message = "+msg, this);
 						timer.schedule(new TimerTask(){
 							@Override
@@ -264,7 +264,7 @@ public class CustomChatUI {
 							data[1] = String.valueOf(c);
 							final int posBackup = pos;
 							if(ch.retrieveDelayFlag() == true){
-								int delay = getRandomNumber(1000, 5000);
+								int delay = getRandomNumber(ch.retrieveMinDelay(), ch.retrieveMaxDelay());
 								MVCTracerInfo.newInfo("Delay = "+delay+", (not updated) Topic - character deleted at pos = "+posBackup, this);
 								timer.schedule(new TimerTask(){
 									@Override
@@ -303,7 +303,7 @@ public class CustomChatUI {
 							final Character c_backup = c;
 							final int pos_backup = pos;
 							if(ch.retrieveDelayFlag() == true){
-								int delay = getRandomNumber(1000, 5000);
+								int delay = getRandomNumber(ch.retrieveMinDelay(), ch.retrieveMaxDelay());
 								MVCTracerInfo.newInfo("Delay = "+delay+", (not updated) Topic - character '"+c_backup+"' inserted at pos = "+pos_backup, this);
 								timer.schedule(new TimerTask(){
 									@Override
@@ -334,7 +334,7 @@ public class CustomChatUI {
 		return r;
 	}
 
-	public void updateTopic(final String[] data, final EditWithOTTimeStamp ed, int STATUS_CODE, int otherUpdate){
+	public void updateTopic(final String[] data, final EditWithOTTimeStampInterface ed, int STATUS_CODE, int otherUpdate){
 		String currStr = topicTextUI.getText();
 		final int pos = Integer.parseInt(data[0], 10);
 		final Character c = data[1].charAt(0);
@@ -345,7 +345,7 @@ public class CustomChatUI {
 			if(otherUpdate == 0){
 				data[2] = newStr;
 				if(ch.retrieveDelayFlag() == true){
-					int delay = getRandomNumber(1000, 5000);
+					int delay = getRandomNumber(ch.retrieveMinDelay(), ch.retrieveMaxDelay());
 					MVCTracerInfo.newInfo("Delay = "+delay+", (not updated) Topic - character deleted at pos = "+pos, this);
 					timer.schedule(new TimerTask(){
 						@Override
@@ -367,7 +367,7 @@ public class CustomChatUI {
 			if(otherUpdate == 0){
 				data[2] = newStr;
 				if(ch.retrieveDelayFlag() == true){
-					int delay = getRandomNumber(1000, 5000);
+					int delay = getRandomNumber(ch.retrieveMinDelay(), ch.retrieveMaxDelay());
 					timer.schedule(new TimerTask(){
 						@Override
 						public void run() {
@@ -388,7 +388,7 @@ public class CustomChatUI {
 			if(otherUpdate == 0){
 				data[2] = newStr;
 				if(ch.retrieveDelayFlag() == true){
-					int delay = getRandomNumber(1000, 5000);
+					int delay = getRandomNumber(ch.retrieveMinDelay(), ch.retrieveMaxDelay());
 					timer.schedule(new TimerTask(){
 						@Override
 						public void run() {

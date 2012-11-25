@@ -34,7 +34,7 @@ public class OTTimeStamp implements Serializable{
 		return 0;
 	}
 	
-	public int isGreaterOrEqualTo(OTTimeStamp t2){
+	public int isGreaterThanOrEqualTo(OTTimeStamp t2){
 		if(this.localCount > t2.localCount && this.remoteCount >= t2.remoteCount){
 			return 1;
 		}
@@ -50,5 +50,10 @@ public class OTTimeStamp implements Serializable{
 		newOT.remoteCount = this.remoteCount;
 		return newOT;
 	}
-
+	
+	public String printData(){
+		String s = "lCount = "+this.localCount+", rCount = "+this.remoteCount;
+		return s;
+		
+	}
 }

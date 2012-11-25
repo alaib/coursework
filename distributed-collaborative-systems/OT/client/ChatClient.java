@@ -14,9 +14,12 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import javax.swing.text.html.HTMLDocument.Iterator;
 
 import misc.Constants;
 import oeHelper.Circle;
@@ -63,7 +66,9 @@ public class ChatClient implements PropertyListenerRegisterer {
 	String result[] = new String[2];
 	String connUserList[];
 	
-	boolean delayed = false;
+	boolean delayed = true;
+	int minDelay = 4000;
+	int maxDelay = 5000;
 	Random randomGenerator = new Random();
 	Timer timer;
     DateFormat dateFormat;
@@ -138,6 +143,14 @@ public class ChatClient implements PropertyListenerRegisterer {
 		return this.delayed;
 	}
 	
+	public int retrieveMinDelay(){
+		return this.minDelay;
+	}
+	
+	public int retrieveMaxDelay(){
+		return this.maxDelay;
+	}
+	
 	public void setHistoryBuffer(VectorStringHistory buf){
 		this.historyBuffer = buf;
 	}
@@ -199,11 +212,11 @@ public class ChatClient implements PropertyListenerRegisterer {
 		}
 	}
 	
-	public void sendOTEvtToServer(EditWithOTTimeStamp edit, String newTopic, int STATUS_CODE){
+	public void sendOTEvtToServer(EditWithOTTimeStampInterface edit, String newTopic, int STATUS_CODE){
 		try {
 			System.out.println(this.clientName+ " sent OT Event to Server");
 			MVCTracerInfo.newInfo(this.clientName+ " sent OT Event to Server", this);
-			this.rServerInt.handleOTEvent(this.clientName, (EditWithOTTimeStampInterface)edit, newTopic, STATUS_CODE);
+			this.rServerInt.handleOTEvent(this.clientName, edit, newTopic, STATUS_CODE);
 			System.out.println(this.clientName+ " send OT to Server Finished");
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
@@ -212,12 +225,26 @@ public class ChatClient implements PropertyListenerRegisterer {
 	}
 	
 	public void transformInsertAndExecute(String cName, EditWithOTTimeStampInterface remoteEdit, String newTopic)throws RemoteException{
+		int i;
 		System.out.println("Received OTEvent from "+cName+" through Server at client = "+this.clientName);
+		System.out.println("Remote OTEvent -> Pos = "+remoteEdit.getPos()+", Char = "+remoteEdit.getChar()+
+						   ", lCount = "+remoteEdit.getLocalCount()+", rCount = "+remoteEdit.getRemoteCount());
 		EditWithOTTimeStampInterface rEdit = remoteEdit.copy();
 		
-		//See slide 168 in Lecture Notes
+		printLBuffer(lBuffer, "LBuffer Before");
+		
 		synchronized(lBuffer){
-			for(int i = 0; i < lBuffer.size();i++){
+			//Clean up the local buffer before processing (Remove all lEdit, where lEdit_TS < rEdit_TS)
+			ListIterator<EditWithOTTimeStampInterface> it = lBuffer.listIterator(); 
+			while(it.hasNext()){
+				EditWithOTTimeStampInterface lEdit = (EditWithOTTimeStampInterface) it.next();
+				if(remoteEdit.isGreaterThanOrEqualTo(lEdit) == 1){
+					it.remove();
+				}
+			}
+		
+			//See slide 168 in Lecture Notes
+			for(i = 0; i < lBuffer.size();i++){
 				EditWithOTTimeStampInterface localEdit = lBuffer.get(i);
 				//Apply(Transform (Transform (Transform (R, L1), L2) … LN))
 				EditWithOTTimeStampInterface RT = transformSingle(remoteEdit, localEdit);
@@ -230,6 +257,7 @@ public class ChatClient implements PropertyListenerRegisterer {
 				rEdit = RT.copy();
 			}
 		}
+		printLBuffer(lBuffer, "LBuffer After");
 		//Execute rEdit
 		System.out.println("Executing remote Edit");
 		//MVCTracerInfo.newInfo("Executing remoteEdit = "+rEdit.printStr(), this);
@@ -238,7 +266,14 @@ public class ChatClient implements PropertyListenerRegisterer {
 		int pos = rEdit.getPos();
 		this.otherUpdate = 1;
 		this.topic.insertElementAt(c, pos);
-		MVCTracerInfo.newInfo("Remote Insertion: Topic - character '"+rEdit.getChar()+"' inserted at pos = "+rEdit.getPos(), this);
+		String msg1 = "Transformed Remote Insertion, Character '" +rEdit.getChar()+"' inserted at pos = "+rEdit.getPos();
+		MVCTracerInfo.newInfo(msg1, this);
+		String msg2 = "Transformed Remote OTTimeStamp," + " lCount = "+rEdit.getLocalCount()+", rCount = "+rEdit.getRemoteCount();
+		MVCTracerInfo.newInfo(msg2, this);
+		System.out.println(msg2);
+		//Increment current site remote operation count
+		this.myOTTimeStamp.incrementRemoteCount();
+		MVCTracerInfo.newInfo(this.clientName+" OT = "+myOTTimeStamp.printData(), this);
 	}
 	
 	public EditWithOTTimeStampInterface transformSingle(EditWithOTTimeStampInterface R, EditWithOTTimeStampInterface L) throws RemoteException{
@@ -247,11 +282,30 @@ public class ChatClient implements PropertyListenerRegisterer {
 		int lPos = L.getPos();
 		int remoteId = R.getId();
 		int localId = L.getId();
-		//Lower Id = Greater Priority
-		if((rPos > lPos) || (rPos == lPos && remoteId < localId)){
+		//Lower Id = Greater Priority, if position is same and remoteId priority is less local priority, increment local index
+		if((rPos > lPos) || (rPos == lPos && remoteId > localId)){
 			rEdit.setPos(rPos+1);
 		}
 		return rEdit;
+	}
+	
+	void printLBuffer(List<EditWithOTTimeStampInterface> lBuffer, String ... param){
+		if(String.class.isInstance(param[0])){
+			System.out.println(param[0]);
+			System.out.println("===============");
+		}
+		System.out.println("Size = "+lBuffer.size());
+		for(int i = 0; i < lBuffer.size(); i++){
+			EditWithOTTimeStampInterface lEdit = lBuffer.get(i);
+			try {
+				System.out.println("Pos = "+lEdit.getPos()+", Char = "+lEdit.getChar()+
+								   ", lCount = "+lEdit.getLocalCount()+", rCount = "+lEdit.getRemoteCount());
+			} catch (RemoteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
 	}
 	
 	public void sendTelePointerEvtToServer(Point p){
@@ -299,7 +353,8 @@ public class ChatClient implements PropertyListenerRegisterer {
 						data[2] = "";
 						try {
 							//Dummy Edit
-							EditWithOTTimeStamp edit = new EditWithOTTimeStamp(-1, 'x', "D", -1, new OTTimeStamp());
+							EditWithOTTimeStampInterface edit = (EditWithOTTimeStampInterface)
+																new EditWithOTTimeStamp(-1, 'x', "D", -1, new OTTimeStamp());
 							//Send Chat Event to Server
 							self.cui.updateTopic(data, edit, Constants.CLIENT_TOPIC_CHANGE_DELETE, self.otherUpdate);
 						} catch (RemoteException e) {
@@ -316,15 +371,23 @@ public class ChatClient implements PropertyListenerRegisterer {
 						data[0] = Integer.toString(pos);
 						data[1] = Character.toString(newVal);
 						data[2] = "";
-						//Send OT Event to Server (Insert's ONLY)
-						if(self.otherUpdate != 1){
-							myOTTimeStamp.incrementLocalCount();
-						}
 						try {
-							EditWithOTTimeStamp edit = new EditWithOTTimeStamp(pos, newVal, "I", self.id, myOTTimeStamp);
+							EditWithOTTimeStampInterface edit;
+							//Send OT Event to Server (Insert's ONLY)
+							if(self.otherUpdate != 1){
+								myOTTimeStamp.incrementLocalCount();
+								edit = (EditWithOTTimeStampInterface)
+																new EditWithOTTimeStamp(pos, newVal, "I", self.id, myOTTimeStamp.deepCopy());
+								lBuffer.add(edit);
+							}else{
+								//Dummy Edit
+								edit = (EditWithOTTimeStampInterface)
+																new EditWithOTTimeStamp(-1, 'x', "I", -1, new OTTimeStamp());
+							}
+							self.cui.updateTopic(data, edit, Constants.CLIENT_OT_TOPIC_CHANGE_INSERT, self.otherUpdate);
+							
 							//Send Chat Event to Server
 							//self.cui.updateTopic(data, edit, Constants.CLIENT_TOPIC_CHANGE_INSERT, self.otherUpdate);
-							self.cui.updateTopic(data, edit, Constants.CLIENT_OT_TOPIC_CHANGE_INSERT, self.otherUpdate);
 						} catch (RemoteException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -380,7 +443,7 @@ public class ChatClient implements PropertyListenerRegisterer {
 		if(!calleeMethod.equals("handleChatEventNotify") && !calleeMethod.equals("issueConnEstablishMsg")){ 
 			System.out.println("delay = "+this.delayed+" userMsg = "+userMsg);
             if(this.delayed == true && userMsg == true){
-                int delay = getRandomNumber(1000, 5000);
+                int delay = getRandomNumber(this.minDelay, this.maxDelay);
                 final String dElem = elem;
                 final String dCalleeMethod = calleeMethod;
                 MVCTracerInfo.newInfo("Delay = "+delay+", Msg = "+dElem, this);

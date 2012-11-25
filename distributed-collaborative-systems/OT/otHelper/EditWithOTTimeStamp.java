@@ -72,4 +72,27 @@ public class EditWithOTTimeStamp  extends UnicastRemoteObject implements EditWit
 		// TODO Auto-generated method stub
 		return c;
 	}
+
+	@Override
+	public int getLocalCount() throws RemoteException {
+		// TODO Auto-generated method stub
+		return t.localCount;
+	}
+
+	@Override
+	public int getRemoteCount() throws RemoteException {
+		// TODO Auto-generated method stub
+		return t.remoteCount;
+	}
+
+	@Override
+	public int isGreaterThanOrEqualTo(EditWithOTTimeStampInterface t2) throws RemoteException {
+		if(this.getLocalCount() > t2.getLocalCount() && this.getRemoteCount() >= t2.getRemoteCount()){
+			return 1;
+		}
+		if(this.getLocalCount() >= t2.getLocalCount() && this.getRemoteCount() > t2.getRemoteCount()){
+			return 1;
+		}
+		return 0;
+	}
 }

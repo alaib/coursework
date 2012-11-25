@@ -9,6 +9,9 @@ public interface EditWithOTTimeStampInterface extends Remote{
 	public int getPos() throws RemoteException;
 	public Character getChar() throws RemoteException;
 	public int getId() throws RemoteException;
+	public int getLocalCount() throws RemoteException;
+	public int getRemoteCount() throws RemoteException;
+	public int isGreaterThanOrEqualTo(EditWithOTTimeStampInterface t2) throws RemoteException;
 	public void incrementRemote() throws RemoteException;
 	public void incrementLocal() throws RemoteException;
 	public EditWithOTTimeStampInterface copy() throws RemoteException;
