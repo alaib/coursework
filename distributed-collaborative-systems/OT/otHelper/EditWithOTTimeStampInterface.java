@@ -5,5 +5,12 @@ import java.rmi.RemoteException;
 
 public interface EditWithOTTimeStampInterface extends Remote{
 	public void print() throws RemoteException;
-
+	public String printStr() throws RemoteException;
+	public int getPos() throws RemoteException;
+	public Character getChar() throws RemoteException;
+	public int getId() throws RemoteException;
+	public void incrementRemote() throws RemoteException;
+	public void incrementLocal() throws RemoteException;
+	public EditWithOTTimeStampInterface copy() throws RemoteException;
+	public void setPos(int val) throws RemoteException;
 }

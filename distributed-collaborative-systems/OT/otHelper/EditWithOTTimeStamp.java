@@ -13,16 +13,63 @@ public class EditWithOTTimeStamp  extends UnicastRemoteObject implements EditWit
 	int pos;
 	Character c;
 	String op;
+	int id;
 	public OTTimeStamp t;
 	
-	public EditWithOTTimeStamp(int p, Character ch, String operation, OTTimeStamp ts) throws RemoteException{
+	public EditWithOTTimeStamp(int p, Character ch, String operation, int priority, OTTimeStamp ts) throws RemoteException{
 		pos = p;
 		c = ch;
 		op = operation;
+		id = priority;
 		t = ts;
 	}
 	
 	public void print() throws RemoteException{
-		System.out.format("pos = %d, char = %c, op = %s, localCount = %d, remoteCount = %d\n", pos, c, op, t.localCount, t.remoteCount);
+		System.out.format("pos = %d, char = %c, op = %s, id = %d, localCount = %d, remoteCount = %d\n",
+						   pos, c, op, id, t.localCount, t.remoteCount);
+	}
+	
+	public int getPos() throws RemoteException{
+		return pos;
+	}
+	
+	public void setPos(int val) throws RemoteException{
+		pos = val;
+	}
+	
+	public int getId() throws RemoteException{
+		return id;
+	}
+	
+	public EditWithOTTimeStampInterface copy() throws RemoteException{
+		EditWithOTTimeStampInterface newEdit = (EditWithOTTimeStampInterface) new EditWithOTTimeStamp(this.pos, this.c, this.op, this.id, new OTTimeStamp(t.localCount, t.remoteCount));
+		return newEdit;
+	}
+
+	@Override
+	public void incrementRemote() throws RemoteException {
+		// TODO Auto-generated method stub
+		this.t.incrementRemoteCount();
+		
+	}
+
+	@Override
+	public void incrementLocal() throws RemoteException {
+		// TODO Auto-generated method stub
+		this.t.incrementLocalCount();
+		
+	}
+
+	@Override
+	public String printStr() throws RemoteException {
+		// TODO Auto-generated method stub
+		String res = "pos = "+pos+", char = "+c+", op = "+op+", id = "+id+", localCount = "+t.localCount+", remoteCount = "+t.remoteCount+"\n";
+		return res;
+	}
+
+	@Override
+	public Character getChar() throws RemoteException {
+		// TODO Auto-generated method stub
+		return c;
 	}
 }

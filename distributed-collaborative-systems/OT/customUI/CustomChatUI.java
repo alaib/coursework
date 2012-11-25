@@ -28,6 +28,7 @@ import javax.swing.JTextField;
 
 import misc.Constants;
 import oeHelper.Circle;
+import otHelper.EditWithOTTimeStamp;
 import tracer.MVCTracerInfo;
 import client.ChatClient;
 
@@ -333,7 +334,7 @@ public class CustomChatUI {
 		return r;
 	}
 
-	public void updateTopic(final String[] data, int STATUS_CODE, int otherUpdate){
+	public void updateTopic(final String[] data, final EditWithOTTimeStamp ed, int STATUS_CODE, int otherUpdate){
 		String currStr = topicTextUI.getText();
 		final int pos = Integer.parseInt(data[0], 10);
 		final Character c = data[1].charAt(0);
@@ -377,6 +378,29 @@ public class CustomChatUI {
 					}, delay);
 				}else{
 					ch.sendChatEvtToServer(data, Constants.CLIENT_TOPIC_CHANGE_INSERT);
+					MVCTracerInfo.newInfo("Topic - character '"+c+"' inserted at pos = "+pos, this);
+				}
+			}
+			prevTopic = newStr;
+		}else if(STATUS_CODE == Constants.CLIENT_OT_TOPIC_CHANGE_INSERT){
+			final String newStr = new StringBuffer(currStr).insert(pos, c).toString();
+			topicTextUI.setText(newStr);
+			if(otherUpdate == 0){
+				data[2] = newStr;
+				if(ch.retrieveDelayFlag() == true){
+					int delay = getRandomNumber(1000, 5000);
+					timer.schedule(new TimerTask(){
+						@Override
+						public void run() {
+							ch.sendOTEvtToServer(ed, newStr, Constants.CLIENT_OT_TOPIC_CHANGE_INSERT);
+							//ch.sendChatEvtToServer(data, Constants.CLIENT_TOPIC_CHANGE_INSERT);
+							MVCTracerInfo.newInfo("Topic - character '"+c+"' inserted at pos = "+pos, this);
+						}
+						
+					}, delay);
+				}else{
+					ch.sendOTEvtToServer(ed, newStr, Constants.CLIENT_OT_TOPIC_CHANGE_INSERT);
+					//ch.sendChatEvtToServer(data, Constants.CLIENT_TOPIC_CHANGE_INSERT);
 					MVCTracerInfo.newInfo("Topic - character '"+c+"' inserted at pos = "+pos, this);
 				}
 			}

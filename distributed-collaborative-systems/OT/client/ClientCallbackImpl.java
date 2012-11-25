@@ -1,10 +1,10 @@
 package client;
 
-import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Point;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+
+import otHelper.EditWithOTTimeStampInterface;
 
 
 /**
@@ -26,5 +26,10 @@ public class ClientCallbackImpl extends UnicastRemoteObject implements ClientCal
    @Override
    public void handleChatEventNotify(String[] data,  int STATUS_CODE) throws RemoteException {
 	   cm.handleChatEventNotify(data, STATUS_CODE);
+   }
+   
+   public void transformInsertAndExecute(String clientName, EditWithOTTimeStampInterface edit, String newTopic) throws RemoteException{
+	   cm.transformInsertAndExecute(clientName, edit, newTopic);
+	   
    }
 }

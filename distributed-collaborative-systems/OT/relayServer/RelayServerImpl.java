@@ -44,6 +44,7 @@ public class RelayServerImpl extends UnicastRemoteObject implements RelayServerI
     Point currPoint;
     Dimension currDim;
     String currTopic = "";
+    int priority = 0;
     
     public RelayServerImpl () throws RemoteException {  
     	model = new OEServerModel(this);
@@ -94,9 +95,22 @@ public class RelayServerImpl extends UnicastRemoteObject implements RelayServerI
 		sendChatEventUpdateToAllClients(cName, result, STATUS_CODE);
 	}
 	
-	public void handleOTEvent(String cName, EditWithOTTimeStampInterface ed, int STATUS_CODE) throws RemoteException {
+	public void handleOTEvent(String cName, EditWithOTTimeStampInterface ed, String newTopic, int STATUS_CODE) throws RemoteException {
 		System.out.println("Received OT Event from client = "+cName);
-		ed.print();
+		this.currTopic = newTopic;
+		
+    	for(Map.Entry<String, ClientCallbackInterface> item : clientMap.entrySet()){
+    		String clientName = item.getKey();
+    		ClientCallbackInterface tcCallback = item.getValue();
+    		if(!clientName.equals(cName)){
+    			try {
+    				tcCallback.transformInsertAndExecute(cName, ed, newTopic);
+				} catch (RemoteException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+    		}
+    	}	    
 	}
 	
 	public Point getCurrPoint() throws RemoteException{
@@ -140,13 +154,16 @@ public class RelayServerImpl extends UnicastRemoteObject implements RelayServerI
 		return this.currTopic;
 	}
 	
-	public void registerCallback(String cName, String cStatus, ClientCallbackInterface tCallback){
+	public int registerCallback(String cName, String cStatus, ClientCallbackInterface tCallback){
 		if(!clientMap.containsKey(cName)){
 			clientMap.put(cName, tCallback);
 			clientStatusMap.put(cName, cStatus);
 			String msg = "["+dateFormat.format(new Date())+"] <strong>" + cName + "</strong> has joined the telepointer session </br>";			
 			view.appendArchive(msg);
+			priority += 1;
+			return priority;
 		}		
+		return -1;
 	}
 	
 	public String computeUserList(){
