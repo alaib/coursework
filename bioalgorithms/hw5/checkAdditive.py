@@ -12,7 +12,6 @@ l = [i for i in xrange(D_len)]
 r = list(itertools.combinations(l, 4))
 
 additiveFlag = 1
-c1, c2, c3 = 0, 0, 0
 
 for p in r:
     i = p[0]
@@ -30,13 +29,10 @@ for p in r:
     term3 = D_il + D_jk
     
     if(term1 == term2 and (term3 < term1 and term3 < term2)):
-        c1 += 1
         continue
     elif(term1 == term3 and (term2 < term1 and term2 < term3)):
-        c2 += 1
         continue
     elif(term2 == term3 and (term1 < term2 and term1 < term3)):
-        c3 += 1
         continue
     else:
         #Not additive, 4-point condition failed
@@ -46,10 +42,8 @@ for p in r:
 
 if(additiveFlag):
     print "Matrix D is additive"
-    print "c1 = %d, c2 = %d, c3 = %d" % (c1, c2, c3)
 else:
     print "Matrix D is not additive"
-    print "c1 = %d, c2 = %d, c3 = %d" % (c1, c2, c3)
     
     
     

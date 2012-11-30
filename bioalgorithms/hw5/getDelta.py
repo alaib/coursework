@@ -1,5 +1,6 @@
 import sys
 import itertools
+import math
 
 def display(result, S1, S2):
     print "=================================================="
@@ -16,11 +17,20 @@ def display(result, S1, S2):
         for j in xrange(len(result[i])):
             elem = result[i][j]
             if(i <= j):
-                sys.stdout.write(str(elem)+"\t")
+                sys.stdout.write(str(int(elem))+"\t")
             else:
                 sys.stdout.write("-\t")
         sys.stdout.write("\n")
     print "=================================================="
+
+def nonZeroMin(D):
+    minimum = 9999
+    for l in D:
+        for elem in l:
+            if(elem != 0 and minimum > elem):
+                minimum = elem
+    return minimum
+#end
 
 D = [[0, 18, 15, 21, 6, 16],
      [18, 0, 23, 19, 20, 24],
@@ -30,19 +40,19 @@ D = [[0, 18, 15, 21, 6, 16],
      [16, 24, 19, 27, 18, 0]]
 
 #delta strategy = floor(min(D)/2) to 1 in steps of 1
-
 delta = 1
 alphabet = ['A', 'B', 'C', 'D', 'E', 'F']
 count = 0
 foundCount = 0
-
+iterCount = 0
 display(D, alphabet, alphabet)
 while len(D) > 2 :
-    D_len = len(D)
     count += 1
+    print "Iteration = %d, Delta = %d, Subtracted Value = %d" % (count, delta,  2* delta)
+    D_len = len(D)
     for i in xrange(D_len):
         for j in xrange(len(D[i])):
-            if(D[i][j] > 0 and (D[i][j] - 2 * delta) > 0):
+            if(D[i][j] > 0 and (D[i][j] - 2 * delta) >= 0):
                 D[i][j] = D[i][j] - 2 * delta
         #end inner
     #end outer
@@ -69,7 +79,6 @@ while len(D) > 2 :
                 print "count = %d, delta = %d, tDelta = %d" % (count, delta, 2*count*delta)
                 found = 1
                 foundCount += 1
-                delta = 1
                 break
             
         if(found):
@@ -85,7 +94,12 @@ while len(D) > 2 :
         del D[j]
         del alphabet[j]
         display(D, alphabet, alphabet)
-    
+        
     if(foundCount == 2):
+        break
+    iterCount += 1
+    
+    if(iterCount > 1000):
+        print "No Solution Found"
         break
  #end   
