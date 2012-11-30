@@ -39,6 +39,7 @@ for p in r:
         c3 += 1
         continue
     else:
+        #Not additive, 4-point condition failed
         additiveFlag = 0
         break
 #end
@@ -50,6 +51,5 @@ else:
     print "Matrix D is not additive"
     print "c1 = %d, c2 = %d, c3 = %d" % (c1, c2, c3)
     
-        #Not additive, 4-point condition failed
     
     
