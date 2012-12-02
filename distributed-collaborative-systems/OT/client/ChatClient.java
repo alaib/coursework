@@ -54,7 +54,7 @@ public class ChatClient implements PropertyListenerRegisterer {
 	String message = "";
 	AListenableString topic;
 	
-	VectorStringHistory historyBuffer = new VectorStringHistory();
+	AListenableVector<String> historyBuffer = new AListenableVector<String>();
 	AListenableVector<String> userList = new AListenableVector<String>();
 	PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
 	PropertyChangeListener pListener;
@@ -162,10 +162,10 @@ public class ChatClient implements PropertyListenerRegisterer {
 		return this.maxDelay;
 	}
 	
-	public void setHistoryBuffer(VectorStringHistory buf){
+	public void setHistoryBuffer(AListenableVector<String> buf){
 		this.historyBuffer = buf;
 	}
-	public VectorStringHistory getHistoryBuffer(){
+	public AListenableVector<String> getHistoryBuffer(){
 		return this.historyBuffer;
 	}
 	
@@ -497,7 +497,7 @@ public class ChatClient implements PropertyListenerRegisterer {
 		final long epoch = epochTime;
 		int msgPos = insertToMsgList(epoch, elem);
 		System.out.println("Add to history buffer and cui, pos =  "+msgPos+", elem = "+elem);
-		historyBuffer.addElementAtPos(msgPos, elem, msgList);
+		this.addElemToHistBuffer(msgPos, elem);
 		//historyBuffer.addElement(elem);
 		// Send update to CUI
 		cui.appendTextToArchivePane(msgPos, elem+"\n");
@@ -547,23 +547,33 @@ public class ChatClient implements PropertyListenerRegisterer {
 		int pos = -1;
 		MsgWithEpoch newMsg = new MsgWithEpoch(epoch, elem);
 		//Empty Map
-		if(msgList.size() == 0 || (msgList.size() > 0 && epoch < msgList.get(0).epoch)){
+		if(msgList.size() == 0){ 
 			pos = 0;
 			System.out.println("InsertToMsgList  -> "+", client = "+this.clientName+
 							   ", size = "+msgList.size()+", pos = "+pos+", epoch = "+epoch+", elem = "+elem);
 			msgList.add(newMsg);
+			return pos;
+		}
+		
+		//Find correct position
+		int i = 0;
+		while(i < msgList.size() && msgList.get(i).epoch < epoch) {
+			i += 1;
+		}
+		pos = i;
+		
+		System.out.println("InsertToMsgList -> size = "+msgList.size()+", pos = "+pos);
+		if(pos == msgList.size()){
+			msgList.add(newMsg);
 		}else{
-			int i = 0;
-			while(i < msgList.size() && msgList.get(i).epoch < epoch) {
-				i += 1;
+			for(i = msgList.size(); i > pos; i--){
+				if(i == msgList.size()){
+					msgList.add(msgList.get(i-1));
+				}else{
+					msgList.set(i, msgList.get(i-1));
+				}
 			}
-			pos = i;
-			System.out.println("InsertToMsgList -> size = "+msgList.size()+", pos = "+pos);
-			if(pos == msgList.size()){
-				msgList.add(newMsg);
-			}else{
-				msgList.set(pos, newMsg);
-			}
+			msgList.set(pos, newMsg);
 		}
 		return pos;
 	}
@@ -724,13 +734,13 @@ public class ChatClient implements PropertyListenerRegisterer {
 	}
 	
 	//Fix public variable functions
-	public void addElemToHistBuffer(String msg){
-		this.historyBuffer.addElement(msg);
-		
-	}
-	
 	public void addElemToHistBuffer(int pos, String msg){
-		this.historyBuffer.addElementAtPos(pos, msg, msgList);
+		this.historyBuffer.clear();
+		for(int i = 0; i < this.msgList.size(); i++){
+			MsgWithEpoch m = this.msgList.get(i);
+			System.out.println("i = "+i+", epoch = "+m.epoch+", msg = "+m.msg);
+			this.historyBuffer.add(m.msg);
+		}
 	}
 	
 	public void insertElemAtPosForTopic(Character c, int pos){
