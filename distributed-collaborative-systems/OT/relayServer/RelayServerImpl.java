@@ -103,6 +103,10 @@ public class RelayServerImpl extends UnicastRemoteObject implements RelayServerI
 	}
 	
 	public void handleOTEvent(String cName, EditWithOTTimeStampInterface ed, String newTopic, int STATUS_CODE) throws RemoteException {
+		//Assign priority to this event
+		this.priority += 1;
+		ed.setId(this.priority);
+				
 		System.out.println("Received OT Event from client = "+cName);
 		this.currTopic = newTopic;
 		
@@ -207,6 +211,12 @@ public class RelayServerImpl extends UnicastRemoteObject implements RelayServerI
 		int rId = R.getId();
 		int lId = L.getId();
 		
+		if(rId == 0 || lId == 0){
+			System.out.println("Error !!!!! Id cannot be equal to 0");
+			System.out.println("R = >"+R.printStr());
+			System.out.println("L = >"+L.printStr());
+		}
+		
 		//Lower Id = Greater Priority, if position is same and remoteId priority is less local priority, increment local index
 		if((rPos > lPos) || (rPos == lPos && R.isServer() == 1 && lId < rId)){
 			rEdit.setPos(rPos+1);
@@ -288,8 +298,11 @@ public class RelayServerImpl extends UnicastRemoteObject implements RelayServerI
 			myClientOTTimeStamp.put(cName, myOTTimeStamp);
 			myClientOTBuffer.put(cName,  lBuffer);
 			
+			/*
 			priority += 1;
 			return priority;
+			*/
+			return 0;
 		}		
 		return -1;
 	}

@@ -110,4 +110,9 @@ public class EditWithOTTimeStamp  extends UnicastRemoteObject implements EditWit
 	public int getId() throws RemoteException {
 		return id;
 	}
+
+	@Override
+	public void setId(int priority) throws RemoteException {
+		this.id = priority;
+	}
 }

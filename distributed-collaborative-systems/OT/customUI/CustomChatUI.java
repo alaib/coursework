@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.rmi.RemoteException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -28,7 +29,9 @@ import javax.swing.JTextField;
 
 import misc.Constants;
 import oeHelper.Circle;
+import otHelper.EditWithOTTimeStamp;
 import otHelper.EditWithOTTimeStampInterface;
+import otHelper.OTTimeStamp;
 import tracer.MVCTracerInfo;
 import client.ChatClient;
 
@@ -61,9 +64,11 @@ public class CustomChatUI {
 	String prevTopic = "";
 	public MyGlassPane myGlassPane;
 	Circle c;
+	CustomChatUI self;
 
 	public CustomChatUI(ChatClient cWindow) {
 		ch = cWindow;
+		self = this;
 		genCustomUI();
 		addListeners();
 		
@@ -262,23 +267,20 @@ public class CustomChatUI {
 							updateIssued = 0;
 							data[0] = Integer.toString(pos);
 							data[1] = String.valueOf(c);
-							final int posBackup = pos;
-							if(ch.retrieveDelayFlag() == true){
-								int delay = getRandomNumber(ch.retrieveMinDelay(), ch.retrieveMaxDelay());
-								MVCTracerInfo.newInfo("Delay = "+delay+", (not updated) Topic - character deleted at pos = "+posBackup, this);
-								timer.schedule(new TimerTask(){
-									@Override
-									public void run() {
-										ch.sendChatEvtToServer(data, Constants.CLIENT_TOPIC_CHANGE_DELETE);
-										MVCTracerInfo.newInfo("Topic - character deleted at pos = "+posBackup, this);
-									}
-									
-								}, delay);
-							}else{
-								ch.sendChatEvtToServer(data, Constants.CLIENT_TOPIC_CHANGE_DELETE);
-								MVCTracerInfo.newInfo("Topic - character deleted at pos = "+pos, this);
-							}
+							data[2] = "";
 							
+							try {
+								//Dummy Edit (pos, char, operation, isServer, OTTimeStamp)
+								EditWithOTTimeStampInterface edit = (EditWithOTTimeStampInterface)
+															new EditWithOTTimeStamp(-1, 'x', "D", 0, 0, new OTTimeStamp());
+								//Send Chat Event to Server
+								int otherUpdate = 0;
+								int updateCUITopic = 0;
+								self.updateTopic(data, edit, Constants.CLIENT_TOPIC_CHANGE_DELETE, otherUpdate, updateCUITopic);
+							} catch (RemoteException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
 						}
 					}else if(prevLength < currLength){
 						//Insertion
@@ -300,30 +302,37 @@ public class CustomChatUI {
 							data[0] = Integer.toString(pos);
 							data[1] = String.valueOf(c);
 							data[2] = currStr;
-							final Character c_backup = c;
-							final int pos_backup = pos;
-							if(ch.retrieveDelayFlag() == true){
-								int delay = getRandomNumber(ch.retrieveMinDelay(), ch.retrieveMaxDelay());
-								MVCTracerInfo.newInfo("Delay = "+delay+", (not updated) Topic - character '"+c_backup+"' inserted at pos = "+pos_backup, this);
-								timer.schedule(new TimerTask(){
-									@Override
-									public void run() {
-										ch.sendChatEvtToServer(data, Constants.CLIENT_TOPIC_CHANGE_INSERT);
-										MVCTracerInfo.newInfo("Topic - character '"+c_backup+"' inserted at pos = "+pos_backup, this);
-									}
-									
-								}, delay);
-							}else{
-								ch.sendChatEvtToServer(data, Constants.CLIENT_TOPIC_CHANGE_INSERT);
-								MVCTracerInfo.newInfo("Topic - character '"+c+"' inserted at pos = "+pos, this);
-							}
 							
+							try {
+								int otherUpdate = 0;
+								int updateCUITopic = 0;
+								EditWithOTTimeStampInterface edit;
+								//Send OT Event to Server (Insert's ONLY)
+								if(otherUpdate != 1){
+									self.ch.incrementOTCounter("L");
+									System.out.println("Adding to local buffer, clientName = "+self.ch.getClientName());
+									edit = (EditWithOTTimeStampInterface)
+									new EditWithOTTimeStamp(pos, c, "I", 0, self.ch.retrieveId(), self.ch.retrieveMyOTTimeStamp());
+									
+									self.ch.addToEditLog(self.ch.convertToKey(edit), "0");
+									self.ch.addToLocalBuffer(edit);
+								}else{
+									//Dummy Edit
+									edit = (EditWithOTTimeStampInterface)
+											new EditWithOTTimeStamp(-1, 'x', "I", 0, self.ch.retrieveId(), new OTTimeStamp());
+								}
+								self.updateTopic(data, edit, Constants.CLIENT_OT_TOPIC_CHANGE_INSERT, otherUpdate, updateCUITopic);
+								//Send Chat Event to Server
+								//self.cui.updateTopic(data, edit, Constants.CLIENT_TOPIC_CHANGE_INSERT, self.otherUpdate);
+							} catch (RemoteException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
 						}
 					}
 					prevTopic = currStr;
 				}
 			}
-			
 		});
 	}
 	
@@ -334,14 +343,18 @@ public class CustomChatUI {
 		return r;
 	}
 
-	public void updateTopic(final String[] data, final EditWithOTTimeStampInterface ed, int STATUS_CODE, int otherUpdate){
+	public void updateTopic(final String[] data, final EditWithOTTimeStampInterface ed, int STATUS_CODE, int otherUpdate, int updateCUI){
 		String currStr = topicTextUI.getText();
 		final int pos = Integer.parseInt(data[0], 10);
 		final Character c = data[1].charAt(0);
 		
 		if(STATUS_CODE == Constants.CLIENT_TOPIC_CHANGE_DELETE){
-			final String newStr = new StringBuffer(currStr).deleteCharAt(pos).toString();
-			topicTextUI.setText(newStr);
+			String tempStr = topicTextUI.getText();
+			if(updateCUI == 1){
+				tempStr = new StringBuffer(currStr).deleteCharAt(pos).toString();
+				topicTextUI.setText(tempStr);
+			}
+			final String newStr = tempStr;
 			if(otherUpdate == 0){
 				data[2] = newStr;
 				if(ch.retrieveDelayFlag() == true){
@@ -362,8 +375,12 @@ public class CustomChatUI {
 			}
 			prevTopic = newStr;
 		}else if(STATUS_CODE == Constants.CLIENT_TOPIC_CHANGE_INSERT){
-			final String newStr = new StringBuffer(currStr).insert(pos, c).toString();
-			topicTextUI.setText(newStr);
+			String tempStr = topicTextUI.getText();
+			if(updateCUI == 1){
+				tempStr = new StringBuffer(currStr).insert(pos, c).toString();
+				topicTextUI.setText(tempStr);
+			}
+			final String newStr = tempStr;
 			if(otherUpdate == 0){
 				data[2] = newStr;
 				if(ch.retrieveDelayFlag() == true){
@@ -383,8 +400,12 @@ public class CustomChatUI {
 			}
 			prevTopic = newStr;
 		}else if(STATUS_CODE == Constants.CLIENT_OT_TOPIC_CHANGE_INSERT){
-			final String newStr = new StringBuffer(currStr).insert(pos, c).toString();
-			topicTextUI.setText(newStr);
+			String tempStr = topicTextUI.getText();
+			if(updateCUI == 1){
+				tempStr = new StringBuffer(currStr).insert(pos, c).toString();
+				topicTextUI.setText(tempStr);
+			}
+			final String newStr = tempStr;
 			if(otherUpdate == 0){
 				data[2] = newStr;
 				if(ch.retrieveDelayFlag() == true){

@@ -9,6 +9,7 @@ public interface EditWithOTTimeStampInterface extends Remote{
 	public int getPos() throws RemoteException;
 	public int isServer() throws RemoteException;
 	public int getId() throws RemoteException;
+	public void setId(int priority) throws RemoteException;
 	public void setServer(int server) throws RemoteException;
 	public Character getChar() throws RemoteException;
 	public int getLocalCount() throws RemoteException;

@@ -361,12 +361,13 @@ public class ChatClient implements PropertyListenerRegisterer {
 						data[0] = Integer.toString(pos);
 						data[1] = Character.toString(oldVal);
 						data[2] = "";
+						int updateCUITopic = 1;
 						try {
 							//Dummy Edit (pos, char, operation, isServer, OTTimeStamp)
 							EditWithOTTimeStampInterface edit = (EditWithOTTimeStampInterface)
 																new EditWithOTTimeStamp(-1, 'x', "D", 0, self.id, new OTTimeStamp());
 							//Send Chat Event to Server
-							self.cui.updateTopic(data, edit, Constants.CLIENT_TOPIC_CHANGE_DELETE, self.otherUpdate);
+							self.cui.updateTopic(data, edit, Constants.CLIENT_TOPIC_CHANGE_DELETE, self.otherUpdate, updateCUITopic);
 						} catch (RemoteException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -381,6 +382,7 @@ public class ChatClient implements PropertyListenerRegisterer {
 						data[0] = Integer.toString(pos);
 						data[1] = Character.toString(newVal);
 						data[2] = "";
+						int updateCUITopic = 1;
 						try {
 							EditWithOTTimeStampInterface edit;
 							//Send OT Event to Server (Insert's ONLY)
@@ -388,16 +390,16 @@ public class ChatClient implements PropertyListenerRegisterer {
 								myOTTimeStamp.incrementLocalCount();
 								System.out.println("Adding to local buffer, clientName = "+self.clientName+", id = "+self.id);
 								edit = (EditWithOTTimeStampInterface)
-																new EditWithOTTimeStamp(pos, newVal, "I", 0, self.id, myOTTimeStamp.deepCopy());
+										new EditWithOTTimeStamp(pos, newVal, "I", 0, self.id, myOTTimeStamp.deepCopy());
 								
 								editLog.put(self.convertToKey(edit), "0");
 								lBuffer.add(edit);
 							}else{
 								//Dummy Edit
 								edit = (EditWithOTTimeStampInterface)
-																new EditWithOTTimeStamp(-1, 'x', "I", 0, self.id, new OTTimeStamp());
+										new EditWithOTTimeStamp(-1, 'x', "I", 0, self.id, new OTTimeStamp());
 							}
-							self.cui.updateTopic(data, edit, Constants.CLIENT_OT_TOPIC_CHANGE_INSERT, self.otherUpdate);
+							self.cui.updateTopic(data, edit, Constants.CLIENT_OT_TOPIC_CHANGE_INSERT, self.otherUpdate, updateCUITopic);
 							
 							//Send Chat Event to Server
 							//self.cui.updateTopic(data, edit, Constants.CLIENT_TOPIC_CHANGE_INSERT, self.otherUpdate);
@@ -416,6 +418,30 @@ public class ChatClient implements PropertyListenerRegisterer {
 				}
 			}
 		};
+	}
+	
+	public void addToLocalBuffer(EditWithOTTimeStampInterface ed){
+		lBuffer.add(ed);
+	}
+	
+	public void incrementOTCounter(String counterType){
+		if(counterType == "L"){
+			this.myOTTimeStamp.incrementLocalCount();
+		}else if(counterType == "R"){
+			this.myOTTimeStamp.incrementRemoteCount();
+		}
+	}
+	
+	public void addToEditLog(String key, String value){
+		this.editLog.put(key, value);
+	}
+	
+	public int retrieveId(){
+		return this.id;
+	}
+	
+	public OTTimeStamp retrieveMyOTTimeStamp(){
+		return this.myOTTimeStamp.deepCopy();
 	}
 	
 	public void addToUserList(String cName, uStatus cStatus) {
