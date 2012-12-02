@@ -13,13 +13,13 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Map;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
-
-import javax.swing.text.html.HTMLDocument.Iterator;
 
 import misc.Constants;
 import oeHelper.Circle;
@@ -39,7 +39,6 @@ import util.models.VectorListener;
 import util.trace.Tracer;
 import bus.uigen.OEFrame;
 import bus.uigen.ObjectEditor;
-import bus.uigen.trace.TraceableDisplayAndWaitManagerFactory;
 import customUI.CustomChatUI;
 import customUI.TemporaryUI;
 /**
@@ -67,7 +66,7 @@ public class ChatClient implements PropertyListenerRegisterer {
 	String connUserList[];
 	
 	boolean delayed = true;
-	int minDelay = 4000;
+	int minDelay = 5000;
 	int maxDelay = 5000;
 	Random randomGenerator = new Random();
 	Timer timer;
@@ -91,6 +90,7 @@ public class ChatClient implements PropertyListenerRegisterer {
 	// OT
 	List <EditWithOTTimeStampInterface> lBuffer = new ArrayList<EditWithOTTimeStampInterface>();
 	OTTimeStamp myOTTimeStamp = new OTTimeStamp();
+    Map <String, String> editLog = new HashMap<String, String>();
 	int id = -1;
 	
 	ChatClient(String cName) {
@@ -137,6 +137,11 @@ public class ChatClient implements PropertyListenerRegisterer {
 
 	public boolean getDelayed(){
 		return this.delayed;
+	}
+	
+	public String convertToKey(EditWithOTTimeStampInterface ed) throws RemoteException{
+		String key = ed.getPos()+"-"+ed.getChar()+"-"+ed.getLocalCount()+"-"+ed.getRemoteCount();
+		return key;
 	}
 	
 	public boolean retrieveDelayFlag(){
@@ -214,9 +219,11 @@ public class ChatClient implements PropertyListenerRegisterer {
 	
 	public void sendOTEvtToServer(EditWithOTTimeStampInterface edit, String newTopic, int STATUS_CODE){
 		try {
+			System.out.println(edit.printStr());
 			System.out.println(this.clientName+ " sent OT Event to Server");
 			MVCTracerInfo.newInfo(this.clientName+ " sent OT Event to Server", this);
 			this.rServerInt.handleOTEvent(this.clientName, edit, newTopic, STATUS_CODE);
+			editLog.put(self.convertToKey(edit), "1");
 			System.out.println(this.clientName+ " send OT to Server Finished");
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
@@ -224,7 +231,7 @@ public class ChatClient implements PropertyListenerRegisterer {
 		}
 	}
 	
-	public void transformInsertAndExecute(String cName, EditWithOTTimeStampInterface remoteEdit, String newTopic)throws RemoteException{
+	public void transformInsertAndExecute(String cName, EditWithOTTimeStampInterface remoteEdit)throws RemoteException{
 		int i;
 		System.out.println("Received OTEvent from "+cName+" through Server at client = "+this.clientName);
 		System.out.println("Remote OTEvent -> Pos = "+remoteEdit.getPos()+", Char = "+remoteEdit.getChar()+
@@ -242,48 +249,51 @@ public class ChatClient implements PropertyListenerRegisterer {
 					it.remove();
 				}
 			}
-		
+			/*
 			//See slide 168 in Lecture Notes
 			for(i = 0; i < lBuffer.size();i++){
 				EditWithOTTimeStampInterface localEdit = lBuffer.get(i);
 				//Apply(Transform (Transform (Transform (R, L1), L2) … LN))
-				EditWithOTTimeStampInterface RT = transformSingle(remoteEdit, localEdit);
+				EditWithOTTimeStampInterface RT = transformSingle(rEdit, localEdit);
 				//Apply original remote transform to local
-				localEdit = transformSingle(localEdit, remoteEdit);
+				localEdit = transformSingle(localEdit, rEdit);
 				//Increment remote counter for the edit
 				localEdit.incrementRemote();
 				//Replace the element in the local buffer with new local edit
 				lBuffer.set(i, localEdit);
 				rEdit = RT.copy();
 			}
+			*/
 		}
 		printLBuffer(lBuffer, "LBuffer After");
 		//Execute rEdit
 		System.out.println("Executing remote Edit");
-		//MVCTracerInfo.newInfo("Executing remoteEdit = "+rEdit.printStr(), this);
-		//topic.insert(rEdit.getPos(), rEdit.getChar());
+		String msg = rEdit.printStr();
+		MVCTracerInfo.newInfo(msg, this);
+		System.out.println(msg);
+		
 		Character c = rEdit.getChar();
 		int pos = rEdit.getPos();
+		
+		//Very important to set otherUpdate else will send duplicate events
 		this.otherUpdate = 1;
+		System.out.println("At "+this.clientName+", before insert, char = "+c+", pos = "+pos);
 		this.topic.insertElementAt(c, pos);
-		String msg1 = "Transformed Remote Insertion, Character '" +rEdit.getChar()+"' inserted at pos = "+rEdit.getPos();
-		MVCTracerInfo.newInfo(msg1, this);
-		String msg2 = "Transformed Remote OTTimeStamp," + " lCount = "+rEdit.getLocalCount()+", rCount = "+rEdit.getRemoteCount();
-		MVCTracerInfo.newInfo(msg2, this);
-		System.out.println(msg2);
+		System.out.println("At "+this.clientName+", after insert, char = "+c+", pos = "+pos);
 		//Increment current site remote operation count
 		this.myOTTimeStamp.incrementRemoteCount();
 		MVCTracerInfo.newInfo(this.clientName+" OT = "+myOTTimeStamp.printData(), this);
 	}
 	
+			//If there is a local event in buffer which is not sent to server, transform locally
 	public EditWithOTTimeStampInterface transformSingle(EditWithOTTimeStampInterface R, EditWithOTTimeStampInterface L) throws RemoteException{
 		EditWithOTTimeStampInterface rEdit = R.copy();
 		int rPos = R.getPos();
 		int lPos = L.getPos();
-		int remoteId = R.getId();
-		int localId = L.getId();
+		int rId = R.getId();
+		int lId = L.getId();
 		//Lower Id = Greater Priority, if position is same and remoteId priority is less local priority, increment local index
-		if((rPos > lPos) || (rPos == lPos && remoteId > localId)){
+		if((rPos > lPos) || (rPos == lPos && R.isServer() == 1 && lId < rId)){
 			rEdit.setPos(rPos+1);
 		}
 		return rEdit;
@@ -352,9 +362,9 @@ public class ChatClient implements PropertyListenerRegisterer {
 						data[1] = Character.toString(oldVal);
 						data[2] = "";
 						try {
-							//Dummy Edit
+							//Dummy Edit (pos, char, operation, isServer, OTTimeStamp)
 							EditWithOTTimeStampInterface edit = (EditWithOTTimeStampInterface)
-																new EditWithOTTimeStamp(-1, 'x', "D", -1, new OTTimeStamp());
+																new EditWithOTTimeStamp(-1, 'x', "D", 0, self.id, new OTTimeStamp());
 							//Send Chat Event to Server
 							self.cui.updateTopic(data, edit, Constants.CLIENT_TOPIC_CHANGE_DELETE, self.otherUpdate);
 						} catch (RemoteException e) {
@@ -376,13 +386,16 @@ public class ChatClient implements PropertyListenerRegisterer {
 							//Send OT Event to Server (Insert's ONLY)
 							if(self.otherUpdate != 1){
 								myOTTimeStamp.incrementLocalCount();
+								System.out.println("Adding to local buffer, clientName = "+self.clientName+", id = "+self.id);
 								edit = (EditWithOTTimeStampInterface)
-																new EditWithOTTimeStamp(pos, newVal, "I", self.id, myOTTimeStamp.deepCopy());
+																new EditWithOTTimeStamp(pos, newVal, "I", 0, self.id, myOTTimeStamp.deepCopy());
+								
+								editLog.put(self.convertToKey(edit), "0");
 								lBuffer.add(edit);
 							}else{
 								//Dummy Edit
 								edit = (EditWithOTTimeStampInterface)
-																new EditWithOTTimeStamp(-1, 'x', "I", -1, new OTTimeStamp());
+																new EditWithOTTimeStamp(-1, 'x', "I", 0, self.id, new OTTimeStamp());
 							}
 							self.cui.updateTopic(data, edit, Constants.CLIENT_OT_TOPIC_CHANGE_INSERT, self.otherUpdate);
 							
@@ -661,7 +674,7 @@ public class ChatClient implements PropertyListenerRegisterer {
 		ch.addCircle(c);
 		OEFrame oeFrame = ObjectEditor.edit(ch);
 		oeFrame.setTelePointerModel(c);
-		ObjectEditor.edit(TraceableDisplayAndWaitManagerFactory.getTraceableDisplayAndPrintManager());
+		//ObjectEditor.edit(TraceableDisplayAndWaitManagerFactory.getTraceableDisplayAndPrintManager());
 		
 		MVCTracerInfo.newInfo("Connected to Relay Server", ch);
 		

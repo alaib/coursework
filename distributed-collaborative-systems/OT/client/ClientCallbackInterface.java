@@ -15,5 +15,5 @@ import otHelper.EditWithOTTimeStampInterface;
 public interface ClientCallbackInterface extends Remote {
     public void handleTelePointerNotify(Point p, int STATUS_CODE) throws RemoteException;    
     public void handleChatEventNotify(String[] data, int STATUS_CODE) throws RemoteException;    
-    public void transformInsertAndExecute(String clientName, EditWithOTTimeStampInterface edit, String newTopic) throws RemoteException;
+    public void transformInsertAndExecute(String clientName, EditWithOTTimeStampInterface edit) throws RemoteException;
 }
