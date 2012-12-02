@@ -67,7 +67,7 @@ public class RelayServerImpl extends UnicastRemoteObject implements RelayServerI
 	
 	public void handleChatEvent(String cName, String[] data, int STATUS_CODE) throws RemoteException {
 		//System.out.println("ChatEvent request received from client = "+cName+", status_code = "+STATUS_CODE);
-		String result[] = new String[3];
+		String result[] = new String[4];
 		result[0] = this.computeUserList();
 		if(STATUS_CODE == Constants.CLIENT_JOIN){
 			String clientStatus = data[0];
@@ -84,6 +84,7 @@ public class RelayServerImpl extends UnicastRemoteObject implements RelayServerI
 		}else if(STATUS_CODE == Constants.CLIENT_NEW_MSG){
 			String newMsg = data[1];
 			result[1] = newMsg;
+			result[3] = data[2];
 		}else if(STATUS_CODE == Constants.CLIENT_EXIT){
 			this.unRegisterCallback(cName);
 			result[0] = this.computeUserList();

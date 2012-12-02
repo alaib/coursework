@@ -167,11 +167,19 @@ public class CustomChatUI {
 					// data = chWindow.handleEvent(clientName, clientStatus,
 					// typedTextUI.getText(), EVENT_NEW_MSG);
 					String msg = "["+dateFormat.format(new Date())+"] "+ ch.clientName + " : " + typedTextUI.getText();
-					archivePaneUI.append(msg + "\n");
-					ch.addElemToHistBuffer(msg);
-					final String newData[] = new String[2];
+					final long epoch = System.currentTimeMillis();
+					int msgPos = self.ch.insertToMsgList(epoch, msg);
+					self.ch.addElemToHistBuffer(msgPos, msg);
+					// Send update to CUI
+					self.appendTextToArchivePane(msgPos, msg+"\n");
+					//cui.archivePaneUI.append(elem + "\n");
+					self.typedTextUI.setText("");
+					
+					final String newData[] = new String[3];
 					newData[0] = ch.clientStatus.toString();
 					newData[1] = msg;
+                    newData[2] = Long.toString(epoch);
+                    
 					if(ch.retrieveDelayFlag() == true){
 						int delay = getRandomNumber(ch.retrieveMinDelay(), ch.retrieveMaxDelay());
 						MVCTracerInfo.newInfo("Delay = "+delay+", Message = "+msg, this);
@@ -427,6 +435,27 @@ public class CustomChatUI {
 			}
 			prevTopic = newStr;
 		}
+	}
+	
+	public void appendTextToArchivePane(int pos, String elem){
+		String currText = this.archivePaneUI.getText();
+		if(currText.length() == 0){
+			this.archivePaneUI.append(elem);
+			return;
+		}
+		String []currTextArr = currText.split("\n");
+		String newText = "";
+		if(currTextArr.length == pos){
+			newText = currText + elem;
+		}else{
+			for(int i = 0; i < currTextArr.length; i++){
+				if(i == pos){
+					newText += elem;
+				}
+				newText += currTextArr[i] + "\n";
+			}
+		}
+		this.archivePaneUI.setText(newText);
 	}
 	
 	public void modUserList(String cName, String status) {

@@ -26,6 +26,7 @@ import oeHelper.Circle;
 import oeHelper.VectorStringHistory;
 import otHelper.EditWithOTTimeStamp;
 import otHelper.EditWithOTTimeStampInterface;
+import otHelper.MsgWithEpoch;
 import otHelper.OTTimeStamp;
 import relayServer.RelayServerInterface;
 import tracer.MVCTracerInfo;
@@ -61,13 +62,13 @@ public class ChatClient implements PropertyListenerRegisterer {
 	RelayServerInterface rServerInt;
 	ClientCallbackImpl callback;
 	
-	String data[] = new String[2];
-	String result[] = new String[2];
+	String data[] = new String[3];
+	String result[] = new String[4];
 	String connUserList[];
 	
 	boolean delayed = true;
-	int minDelay = 5000;
-	int maxDelay = 5000;
+	int minDelay = 6000;
+	int maxDelay = 6000;
 	Random randomGenerator = new Random();
 	Timer timer;
     DateFormat dateFormat;
@@ -92,6 +93,11 @@ public class ChatClient implements PropertyListenerRegisterer {
 	OTTimeStamp myOTTimeStamp = new OTTimeStamp();
     Map <String, String> editLog = new HashMap<String, String>();
 	int id = -1;
+	
+	//OT for Messages
+	List <MsgWithEpoch> msgList = new ArrayList<MsgWithEpoch>();
+	long remoteEpoch = -1;
+	int epochSet = 0;
 	
 	ChatClient(String cName) {
 		Tracer.setKeywordDisplayStatus(this, true);
@@ -471,11 +477,31 @@ public class ChatClient implements PropertyListenerRegisterer {
 		}else{
 			elem = s;
 		}
-		propertyChangeSupport.firePropertyChange("message", null, message);
+		//propertyChangeSupport.firePropertyChange("message", null, message);
 		
-		historyBuffer.addElement(elem);
+		if(calleeMethod.equals("handleChatEventNotify")){
+			System.out.println("Client = "+this.clientName+", Handle chat event notify in setMessage");
+			System.out.println("handle Chat NOtify ->RemoteEpoch = "+remoteEpoch+", epochSet = "+epochSet);
+		}else{
+			System.out.println("No handle Chat NOtify -> RemoteEpoch = "+remoteEpoch+", epochSet = "+epochSet);
+		}
+		long epochTime;
+		if(this.epochSet == 1 && this.remoteEpoch != -1){
+			epochTime = this.remoteEpoch;
+			this.remoteEpoch = -1;
+			this.epochSet = 0;
+		}else{
+			epochTime = System.currentTimeMillis();
+		}
+		
+		final long epoch = epochTime;
+		int msgPos = insertToMsgList(epoch, elem);
+		System.out.println("Add to history buffer and cui, pos =  "+msgPos+", elem = "+elem);
+		historyBuffer.addElementAtPos(msgPos, elem, msgList);
+		//historyBuffer.addElement(elem);
 		// Send update to CUI
-		cui.archivePaneUI.append(elem + "\n");
+		cui.appendTextToArchivePane(msgPos, elem+"\n");
+		//cui.archivePaneUI.append(elem + "\n");
 		cui.typedTextUI.setText("");
 		
 		//Send update to everyone
@@ -492,6 +518,7 @@ public class ChatClient implements PropertyListenerRegisterer {
                         // TODO Auto-generated method stub
                         data[0] = self.clientStatus.toString();
                         data[1] = dElem;
+                        data[2] = Long.toString(epoch);
                         try {
                             System.out.println("calleeMethod = "+dCalleeMethod);
                             MVCTracerInfo.newInfo("New Message = "+dElem, self);
@@ -504,6 +531,7 @@ public class ChatClient implements PropertyListenerRegisterer {
             }else{
                 data[0] = this.clientStatus.toString();
                 data[1] = elem;
+                data[2] = Long.toString(epoch);
                 try {
                     System.out.println("calleeMethod = "+calleeMethod);
                     MVCTracerInfo.newInfo("New Message = "+elem, this);
@@ -513,6 +541,31 @@ public class ChatClient implements PropertyListenerRegisterer {
                 }
             }
 		}
+	}
+	
+	public int insertToMsgList(Long epoch, String elem){
+		int pos = -1;
+		MsgWithEpoch newMsg = new MsgWithEpoch(epoch, elem);
+		//Empty Map
+		if(msgList.size() == 0 || (msgList.size() > 0 && epoch < msgList.get(0).epoch)){
+			pos = 0;
+			System.out.println("InsertToMsgList  -> "+", client = "+this.clientName+
+							   ", size = "+msgList.size()+", pos = "+pos+", epoch = "+epoch+", elem = "+elem);
+			msgList.add(newMsg);
+		}else{
+			int i = 0;
+			while(i < msgList.size() && msgList.get(i).epoch < epoch) {
+				i += 1;
+			}
+			pos = i;
+			System.out.println("InsertToMsgList -> size = "+msgList.size()+", pos = "+pos);
+			if(pos == msgList.size()){
+				msgList.add(newMsg);
+			}else{
+				msgList.set(pos, newMsg);
+			}
+		}
+		return pos;
 	}
 
 	public String getMessage() {
@@ -641,7 +694,12 @@ public class ChatClient implements PropertyListenerRegisterer {
 			}
 		}else if(STATUS_CODE == Constants.CLIENT_TOPIC_CHANGE){
 		}else if(STATUS_CODE == Constants.CLIENT_NEW_MSG){
+			System.out.println("At client = "+this.clientName+", result = "+result);
+			System.out.println(result);
 			String newMsg = result[1];
+			long epoch = Long.parseLong(result[3]);
+			this.remoteEpoch = epoch;
+			this.epochSet = 1;
 			this.setMessage(newMsg);
 			MVCTracerInfo.newInfo("New message received = "+newMsg, this);
 		}else if(STATUS_CODE == Constants.CLIENT_TOPIC_CHANGE_DELETE){
@@ -668,6 +726,11 @@ public class ChatClient implements PropertyListenerRegisterer {
 	//Fix public variable functions
 	public void addElemToHistBuffer(String msg){
 		this.historyBuffer.addElement(msg);
+		
+	}
+	
+	public void addElemToHistBuffer(int pos, String msg){
+		this.historyBuffer.addElementAtPos(pos, msg, msgList);
 	}
 	
 	public void insertElemAtPosForTopic(Character c, int pos){
