@@ -39,6 +39,7 @@ import util.models.VectorListener;
 import util.trace.Tracer;
 import bus.uigen.OEFrame;
 import bus.uigen.ObjectEditor;
+import bus.uigen.trace.TraceableDisplayAndWaitManagerFactory;
 import customUI.CustomChatUI;
 import customUI.TemporaryUI;
 /**
@@ -128,6 +129,21 @@ public class ChatClient implements PropertyListenerRegisterer {
 			topic = new AListenableString(currTopic);
 			this.cui.topicTextUI.setText(currTopic);
 			topic.addVectorListener(vListener);
+			
+			//Get latecomer msgs, add it to msgList and update UI
+			String []lMsgs = rServerInt.getLatecomerMsgs();
+			for(int i = 0; i < lMsgs.length; i++){
+				String msg = lMsgs[i];
+				int index = msg.indexOf("-");
+				String epStr = msg.substring(0, index-1);
+				long epoch = Long.parseLong(epStr);
+				String m = msg.substring(index+1, msg.length());
+				MsgWithEpoch me = new MsgWithEpoch(epoch, m);
+				msgList.add(me);
+				int msgPos = i;
+				this.addElemToHistBuffer(msgPos, m);
+				cui.appendTextToArchivePane(msgPos, m+"\n");
+			}
 			
 			data[0] = this.clientStatus.toString();
 			
@@ -468,7 +484,8 @@ public class ChatClient implements PropertyListenerRegisterer {
 		String elem = "";
 		boolean userMsg = false;
 		if(!calleeMethod.equals("handleChatEventNotify") && !calleeMethod.equals("removeClientCallback") && 
-				!calleeMethod.equals("addClientCallback") && !calleeMethod.equals("issueConnEstablishMsg") ){
+				!calleeMethod.equals("addClientCallback") && !calleeMethod.equals("issueConnEstablishMsg") &&
+				!calleeMethod.equals("appendLateComerMsgs")){
 			
 			elem = "["+dateFormat.format(new Date())+"] "+ clientName + " : " + s;
 			userMsg = true;
@@ -503,7 +520,8 @@ public class ChatClient implements PropertyListenerRegisterer {
 		cui.typedTextUI.setText("");
 		
 		//Send update to everyone
-		if(!calleeMethod.equals("handleChatEventNotify") && !calleeMethod.equals("issueConnEstablishMsg")){ 
+		if(!calleeMethod.equals("handleChatEventNotify") && !calleeMethod.equals("issueConnEstablishMsg")
+				&& !calleeMethod.equals("appendLateComerMsgs")){ 
 			System.out.println("delay = "+this.delayed+" userMsg = "+userMsg);
             if(this.delayed == true && userMsg == true){
                 int delay = getRandomNumber(this.minDelay, this.maxDelay);
@@ -771,7 +789,7 @@ public class ChatClient implements PropertyListenerRegisterer {
 		ch.addCircle(c);
 		OEFrame oeFrame = ObjectEditor.edit(ch);
 		oeFrame.setTelePointerModel(c);
-		//ObjectEditor.edit(TraceableDisplayAndWaitManagerFactory.getTraceableDisplayAndPrintManager());
+		ObjectEditor.edit(TraceableDisplayAndWaitManagerFactory.getTraceableDisplayAndPrintManager());
 		
 		MVCTracerInfo.newInfo("Connected to Relay Server", ch);
 		

@@ -4,8 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Point;
-import java.awt.event.AdjustmentEvent;
-import java.awt.event.AdjustmentListener;
 import java.io.IOException;
 import java.io.StringReader;
 import java.rmi.RemoteException;
@@ -29,6 +27,7 @@ import javax.swing.text.html.HTMLEditorKit;
 
 import misc.Constants;
 import otHelper.EditWithOTTimeStampInterface;
+import otHelper.MsgWithEpoch;
 import otHelper.OTTimeStamp;
 import client.ClientCallbackInterface;
 
@@ -54,6 +53,7 @@ public class RelayServerImpl extends UnicastRemoteObject implements RelayServerI
     Dimension currDim;
     String currTopic = "";
     int priority = 0;
+	List <MsgWithEpoch> msgList = new ArrayList<MsgWithEpoch>();
     
     public RelayServerImpl () throws RemoteException {  
     	model = new OEServerModel(this);
@@ -87,6 +87,8 @@ public class RelayServerImpl extends UnicastRemoteObject implements RelayServerI
 			String newMsg = data[1];
 			result[1] = newMsg;
 			result[3] = data[2];
+			long epoch = Long.parseLong(result[3]);
+			msgList.add(new MsgWithEpoch(epoch, newMsg));
 		}else if(STATUS_CODE == Constants.CLIENT_EXIT){
 			this.unRegisterCallback(cName);
 			result[0] = this.computeUserList();
@@ -368,6 +370,7 @@ public class RelayServerImpl extends UnicastRemoteObject implements RelayServerI
 				currPoint = new Point(25, 90);    	
 				currTopic = "";
 				priority = 0;
+				msgList.clear();
 			}		
 		}					
 		if(clientStatusMap.containsKey(cName)){
@@ -482,5 +485,15 @@ public class RelayServerImpl extends UnicastRemoteObject implements RelayServerI
 		public void appendArchive2(String s){    	
 			archivePane2.append(s);
 	    }
+	}
+
+	@Override
+	public String[] getLatecomerMsgs() {
+		String [] lMsgs = new String[msgList.size()];
+		for(int i = 0; i < msgList.size(); i++){
+			MsgWithEpoch m = msgList.get(i);
+			lMsgs[i] = Long.toString(m.epoch) + "-" + m.msg;
+		}
+		return lMsgs;
 	}
 }

@@ -91,10 +91,10 @@ public class CustomChatUI {
 		typedTextUI = new JTextField(32);
 		topicTextUI = new JTextField(20);
 
-		archivePaneUI = new JTextArea(10, 20);
+		archivePaneUI = new JTextArea(10, 16);
 		archivePaneUI.setEditable(false);
 
-		userListPaneUI = new JTextArea(10, 20);
+		userListPaneUI = new JTextArea(10, 12);
 		userListPaneUI.setEditable(false);
 
 		topicLabelUI = new JLabel("Topic:");
@@ -118,7 +118,7 @@ public class CustomChatUI {
 		// Lower Panel
 		lPanelUI = new JPanel(new BorderLayout());
 		archiveScrollPaneUI = new JScrollPane(archivePaneUI);
-		archiveScrollPaneUI.setPreferredSize(new Dimension(400, 200));
+		archiveScrollPaneUI.setPreferredSize(new Dimension(300, 200));
 		userListScrollPaneUI = new JScrollPane(userListPaneUI);
 		lPanelUI.add(archiveScrollPaneUI, BorderLayout.CENTER);
 		lPanelUI.add(userListScrollPaneUI, BorderLayout.EAST);

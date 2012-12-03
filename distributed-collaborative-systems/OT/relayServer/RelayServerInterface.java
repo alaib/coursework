@@ -19,5 +19,6 @@ public interface RelayServerInterface extends Remote {
 	public void handleTelePointerEvent(String cName, Point p, int STATUS_CODE) throws RemoteException;
 	public void handleChatEvent(String cName, String[] data, int STATUS_CODE) throws RemoteException;
 	public void handleOTEvent(String cName, EditWithOTTimeStampInterface ed, String newTopic, int STATUS_CODE) throws RemoteException;
+	public String[] getLatecomerMsgs() throws RemoteException;
     public String getCurrentTopic() throws RemoteException;
 }
