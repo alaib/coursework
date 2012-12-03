@@ -23,7 +23,6 @@ import java.util.TimerTask;
 
 import misc.Constants;
 import oeHelper.Circle;
-import oeHelper.VectorStringHistory;
 import otHelper.EditWithOTTimeStamp;
 import otHelper.EditWithOTTimeStampInterface;
 import otHelper.MsgWithEpoch;
@@ -227,10 +226,9 @@ public class ChatClient implements PropertyListenerRegisterer {
 		try {
 			System.out.println(edit.printStr());
 			System.out.println(this.clientName+ " sent OT Event to Server");
-			MVCTracerInfo.newInfo(this.clientName+ " sent OT Event to Server", this);
+			MVCTracerInfo.newInfo(this.clientName+ " sent OT Event to Server, event desc = "+edit.printStr(), this);
 			this.rServerInt.handleOTEvent(this.clientName, edit, newTopic, STATUS_CODE);
 			editLog.put(self.convertToKey(edit), "1");
-			System.out.println(this.clientName+ " send OT to Server Finished");
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -273,8 +271,8 @@ public class ChatClient implements PropertyListenerRegisterer {
 		}
 		printLBuffer(lBuffer, "LBuffer After");
 		//Execute rEdit
-		System.out.println("Executing remote Edit");
-		String msg = rEdit.printStr();
+		String preMsg = "Executing remote Edit at client = "+this.clientName;
+		String msg = preMsg + " - " + rEdit.printStr();
 		MVCTracerInfo.newInfo(msg, this);
 		System.out.println(msg);
 		

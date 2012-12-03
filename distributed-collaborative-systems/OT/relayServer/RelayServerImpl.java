@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Point;
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
 import java.io.IOException;
 import java.io.StringReader;
 import java.rmi.RemoteException;
@@ -21,13 +23,13 @@ import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.html.HTMLEditorKit;
 
 import misc.Constants;
 import otHelper.EditWithOTTimeStampInterface;
 import otHelper.OTTimeStamp;
-import tracer.MVCTracerInfo;
 import client.ClientCallbackInterface;
 
 /**
@@ -108,7 +110,7 @@ public class RelayServerImpl extends UnicastRemoteObject implements RelayServerI
 		this.priority += 1;
 		ed.setId(this.priority);
 				
-		System.out.println("Received OT Event from client = "+cName);
+		
 		this.currTopic = newTopic;
 		
 		//Transform ed at the server
@@ -153,14 +155,24 @@ public class RelayServerImpl extends UnicastRemoteObject implements RelayServerI
 	
 	public EditWithOTTimeStampInterface transformEditAtServer(String cName, EditWithOTTimeStampInterface remoteEdit) throws RemoteException{
 		int i;
-		System.out.println("At Server -> Received OTEvent from "+cName);
-		System.out.println("At Server -> Remote OTEvent -> "+remoteEdit.printStr());
+		String msg = "\n================= Start Event ===============\n";
+		System.out.println(msg);
+		view.appendArchive2(msg+"\n");
+				
+		msg = "At Server -> Received OTEvent from "+cName;
+		System.out.println(msg);
+		view.appendArchive2(msg+"\n");
+		
+		msg = "At Server -> Remote OTEvent -> "+remoteEdit.printStr();
+		System.out.println(msg);
+		view.appendArchive2(msg);
 		EditWithOTTimeStampInterface rEdit = remoteEdit.copy();
 		EditWithOTTimeStampInterface prevEdit = remoteEdit.copy();
 		
 		//Extract lBuffer, make changes and put it back
 		List <EditWithOTTimeStampInterface> lBuffer = myClientOTBuffer.get(cName);
 		printLBuffer(lBuffer, "LBuffer Before");
+		view.appendArchive2(this.getLBufferString(lBuffer, "LBuffer Before"));
 		
 		synchronized(lBuffer){
 			//Clean up the local buffer before processing (Remove all lEdit, where lEdit_TS < rEdit_TS)
@@ -178,15 +190,13 @@ public class RelayServerImpl extends UnicastRemoteObject implements RelayServerI
 				//Apply(Transform (Transform (Transform (R, L1), L2) … LN))
 				EditWithOTTimeStampInterface RT = transformSingle(rEdit, localEdit);
 				//Apply original remote transform to local
-				System.out.println("Before lEdit = "+localEdit.printStr());
-				System.out.println("rEdit = "+rEdit.printStr());
 				//Temporarily set it to server
 				localEdit.setServer(1);
 				localEdit = transformSingle(localEdit, rEdit);
-				localEdit.setServer(0);
 				//Reset serverFlag
+				localEdit.setServer(0);
+				
 				//Transform
-				System.out.println("After lEdit = "+localEdit.printStr());
 				//Increment remote counter for the edit
 				localEdit.incrementRemote();
 				//Replace the element in the local buffer with new local edit
@@ -198,10 +208,19 @@ public class RelayServerImpl extends UnicastRemoteObject implements RelayServerI
 		myClientOTBuffer.put(cName,  lBuffer);
 		
 		printLBuffer(lBuffer, "LBuffer After");
+		view.appendArchive2(this.getLBufferString(lBuffer, "LBuffer After"));
 		//Execute rEdit
-		System.out.println("At Server -> Dummy Executing remote Edit");
-		String msg1 = "At Server -> " + rEdit.printStr();
-		System.out.println(msg1);
+		msg = "At Server -> Dummy Executing remote Edit";
+		System.out.println(msg);
+		view.appendArchive2(msg+"\n");
+		
+		msg = "At Server, Final transformed OT event from-> "+cName+" - " + rEdit.printStr();
+		System.out.println(msg);
+		view.appendArchive2(msg+"\n");
+		
+		msg = "================= End Event ===============";
+		System.out.println(msg);
+		view.appendArchive2(msg+"\n");
 		return rEdit;
 	}
 	
@@ -228,6 +247,7 @@ public class RelayServerImpl extends UnicastRemoteObject implements RelayServerI
 	
 	void printLBuffer(List<EditWithOTTimeStampInterface> lBuffer, String ... param){
 		if(String.class.isInstance(param[0])){
+			System.out.println("===============");
 			System.out.println(param[0]);
 			System.out.println("===============");
 		}
@@ -242,6 +262,27 @@ public class RelayServerImpl extends UnicastRemoteObject implements RelayServerI
 			}
 			
 		}
+	}
+	
+	public String getLBufferString(List<EditWithOTTimeStampInterface> lBuffer, String ... param){
+		String res = "";
+		if(String.class.isInstance(param[0])){
+			res += "=========================\n";
+			res += param[0].toString() + "\n";
+			res += "=========================\n";
+		}
+		res += "Size = "+Integer.toString(lBuffer.size())+"\n";
+		for(int i = 0; i < lBuffer.size(); i++){
+			EditWithOTTimeStampInterface lEdit = lBuffer.get(i);
+			try {
+				res += lEdit.printStr() + "\n";
+			} catch (RemoteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+		return res;
 	}
 	
 
@@ -359,6 +400,14 @@ public class RelayServerImpl extends UnicastRemoteObject implements RelayServerI
 		public DateFormat dateFormat;
 		public Date date;	
 		
+		public JFrame frame2;
+		public JTextArea archivePane2;
+		public JScrollPane archiveScrollPane2;
+		public Container container2;
+		public JPanel lPanel2;
+		
+		
+		
 		public OEServerView(){
 			frame = new JFrame();
 	    	frame.setSize(400, 200);    	
@@ -387,6 +436,30 @@ public class RelayServerImpl extends UnicastRemoteObject implements RelayServerI
 	        dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 	        String s = "["+dateFormat.format(new Date())+"] Relay Server is online</br>";
 	        appendArchive(s);	          
+	        
+	        //Debug Frame
+			frame2 = new JFrame();
+	    	frame2.setSize(400, 200);    	
+	    	
+	    	container2 = frame2.getContentPane();
+	    	container2.setLayout(new BorderLayout());
+	    	                
+	        archivePane2 = new JTextArea();        
+	        archivePane2.setEditable(false);
+	        //archivePane2.setPreferredSize(new Dimension(680, 400));	        	        	                              	       
+	        	        	        
+	        lPanel2 = new JPanel(new BorderLayout());        
+	        archiveScrollPane2 = new JScrollPane(archivePane2);
+	        archiveScrollPane2.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+	        archiveScrollPane2.setPreferredSize(new Dimension(700, 400));
+	        
+	        lPanel2.add(archiveScrollPane2, BorderLayout.CENTER);
+	        container2.add(lPanel2, BorderLayout.CENTER);
+	        
+	        frame2.setTitle("Relay Server Debug Info");
+	        frame2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	        frame2.pack();      
+	        frame2.setVisible(true);
 		}
 		
 		public void appendArchive(String s){    	
@@ -404,6 +477,10 @@ public class RelayServerImpl extends UnicastRemoteObject implements RelayServerI
 	    	  // I/O error
 	    		System.out.println(ex);
 	    	}
+	    }
+		
+		public void appendArchive2(String s){    	
+			archivePane2.append(s);
 	    }
 	}
 }
