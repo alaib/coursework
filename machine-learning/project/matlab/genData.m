@@ -10,6 +10,7 @@ for i = 1 : size(files, 1)
     pathstr = regexprep(pathstr, 'encoded', 'matfiles');    
     opFileName = strcat(pathstr, '/', opName, '.mat');
     
+    
     % open file handle
     fid = fopen(fName);
     tline = fgets(fid);     
@@ -21,7 +22,7 @@ for i = 1 : size(files, 1)
     lines = splitResult(1);
     lines = str2double(lines);
             
-    X = zeros(lines, 300);
+    X = zeros(lines, 80100);
     y = zeros(lines, 1);
     j = 1;    
     while ischar(tline)
@@ -54,7 +55,16 @@ for i = 1 : size(files, 1)
     fclose(fid);
     
     % save variables to file
-    save(opFileName, 'X', 'y');   
+    k = strfind(opFileName, 'test_encoded');
+    if(isempty(k))
+        trainX = X;
+        trainY = y;
+        save(opFileName, 'trainX', 'trainY');
+    else
+        testX = X;
+        testY = y;
+        save(opFileName, 'testX', 'testY');
+    end    
     disp(strcat('Finished processing and output written to ', opFileName));
 end
 clear;
