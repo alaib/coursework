@@ -1,0 +1,9 @@
+clear; clc;
+load('hw1.mat');
+X = X';
+y = y';
+% alpha = 1.0 means lasso and 0.0 means ridge regression
+alpha = 0.5; 
+
+[B, FitInfo] = lassoglm(X, y);
+disp(B);

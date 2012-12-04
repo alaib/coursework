@@ -1,4 +1,4 @@
-function [beta0, beta, logLikeArray] = elasticNet(y, X, lambda, alpha)
+function [beta0, beta, logLikeArray] = elasticNet(y, X, lambda, alpha, maxIter)
     % assert X and y sizes
     assert(size(X,1) == size(y, 1));
 
@@ -13,7 +13,7 @@ function [beta0, beta, logLikeArray] = elasticNet(y, X, lambda, alpha)
     beta = ones(k, 1);
 
     % max Iterations
-    maxIter = 1000;
+    %maxIter = 100;
 
     % min update required
     epsilon = 1e-5;
@@ -53,6 +53,11 @@ function [beta0, beta, logLikeArray] = elasticNet(y, X, lambda, alpha)
         assert(currLL-prevLL >= 0);
 
         logLikeArray(iter) = currLL;
+        
+        %Debug
+        if(mod(iter, 100) == 0)
+            fprintf('Current iteration = %d, LogLikelihood = %.4f\n', iter, currLL);
+        end
     end
 end
 
