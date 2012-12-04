@@ -1,7 +1,8 @@
+
 clc;
 clear;
 % Load files
-type = 'HLA-DRB10401';
+type = 'HLA-DR1';
 trainMatFile = strcat('/home/ravikirn/mlcode/data/MHCBN-15mers/matfiles/', type, '_train_encoded.mat');
 testMatFile = strcat('/home/ravikirn/mlcode/data/MHCBN-15mers/matfiles/', type, '_test_encoded.mat');
 load(trainMatFile);
@@ -11,10 +12,13 @@ load(testMatFile);
 alpha = 1.0;
 maxIter = 1000;
 
+ % User cross-validation
 [B, FitInfo] = lasso(trainX, trainY, 'Alpha', alpha, 'CV', 10);
-index = FitInfo.Index1SE;
+lassoPlot(B, FitInfo, 'plottype', 'CV');
+index = FitInfo.IndexMinMSE;
 predBeta = B(:, index);
 predBeta0 = FitInfo.Intercept(index);
+
 
 predictY = predBeta0 + testX * predBeta;
 match = 0;
