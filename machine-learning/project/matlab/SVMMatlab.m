@@ -1,8 +1,8 @@
-%clc;
-clear;
+clc;
+%clear;
 
 % Load files
-type = 'HLA-DR1';
+type = 'HLA-DRB10401';
 trainMatFile = strcat('/home/ravikirn/mlcode/data/MHCBN-15mers/matfiles/', type, '_train_encoded.mat');
 testMatFile = strcat('/home/ravikirn/mlcode/data/MHCBN-15mers/matfiles/', type, '_test_encoded.mat');
 load(trainMatFile);
