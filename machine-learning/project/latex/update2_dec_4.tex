@@ -1,0 +1,62 @@
+\documentclass{article}
+\include{hwdefs}
+\usepackage{fullpage}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{mathtools}
+\usepackage{hyperref}
+
+\newcommand*{\matminus}{%
+  \leavevmode
+  \hphantom{0}%
+  \llap{%
+    \settowidth{\dimen0 }{$0$}%
+    \resizebox{1.1\dimen0 }{\height}{$-$}%
+  }%
+}
+
+\title{Prediction of MHC Class I and II binding peptides incorporating bayesian transfer hierarchies}
+\author{Ravikiran Janardhana}
+
+\begin{document}
+\maketitle
+\paragraph{So far...}
+\begin{itemize}
+    \item{Increased feature set for Elastic Net (baseline) by incorporating interaction features, i.e, Protein (a,b) at Pos (x,y). There are 80100 features now compared to 300 earlier}
+    \item{Using Matlab Elastic Net implementation (Lasso) and SVM, the accuracies are now comparable, varies from 70-75\%, the state of the art reports 80\% for real data. The accuracy of Elastic Net earlier was mediocre at 53\% and there is a drastic improvement with the addition of these features.}
+    \item{\textbf{Question:} How many training samples and testing samples needs to be there in each set for acceptable result?}
+
+\end{itemize}
+
+\paragraph{Model: \\}
+The optimization problem for two related MHC-Class II alleles classifier is given by
+
+\BEAS
+\mathop{\textrm{minimize}}_{\ww^{1}, \ww^{2}, \ww} && \frac{1}{2} \nrmt{\yy_{1} - \xx_{1}}^{2} + \frac{1}{2} \nrmt{\yy_{2} - \xx_{2}}^{2} + \\
+&& \lambda_{1} \nrmo{\ww^{1}} + \lambda_{2} \nrmo{\ww^{2}} + \alpha \nrmo{\DD\ww}.
+\EEAS
+
+where, 
+\BEAS
+\DD = \begin{bmatrix*}1 0 0 0 \hspace{2pt}.......... \hspace{2pt}\matminus1 0 0 0 \\ 1 0 0 0 \hspace{2pt}.......... \hspace{2pt}0 \hspace{2pt}\matminus1 0 0 \\ 1 0 0 0 \hspace{2pt}.......... \hspace{2pt}0 0 \hspace{2pt}\matminus1 0 \\ 1 0 0 0 \hspace{2pt}.......... \hspace{2pt}0 0 0 \hspace{2pt}\matminus1 \end{bmatrix*}
+\hspace{10pt} \ww = \begin{bmatrix*} \ww^{1} \\ \ww^{2} \end{bmatrix*}.
+\EEAS
+\\
+
+We are going to introduce new variables $\zz^1, \zz^2, \zz^3, \zz^4, \zz^5$ and reformulate the problem 
+\BEAS
+\mathop{\textrm{minimize}}_{\ww, \zz^1, \zz^2, \zz^3, \zz^4, \zz^5} && \frac{1}{2} \nrmt{\yy_{1} - \zz_{1}}^{2} + \frac{1}{2} \nrmt{\yy_{2} - \zz_{2}}^{2} + \\
+&& \lambda_{1} \nrmo{\zz^{3}} + \lambda_{2} \nrmo{\zz^{4}} + \alpha \nrmo{\zz^{5}}.
+\EEAS
+
+Writing out the augmented lagrangian for the above problem,
+\BEAS
+\textrm{AL}(\ww, \zz^0,\zz^1,\zz^2, \zz^3, \zz^4, \zz^5, \uu^1,\uu^2,\uu^3, \uu^4, \uu^5) &=& \frac{1}{2} \nrmt{\yy_{1} - \zz_{1}}^{2} + \frac{1}{2} \nrmt{\yy_{2} - \zz_{2}}^{2} + \lambda_{1} \nrmo{\zz^{3}} + \lambda_{2} \nrmo{\zz^{4}} + \alpha \nrmo{\zz^{5}} \\ 
+&& + \uu^1 (\zz^1 - \xx^1) + \uu^2 (\zz^2 - \xx^2) \\
+&& + \uu^3 (\zz^3 - \ww^1) + \uu^4 (\zz^4 - \ww^2) + \uu^5 (\zz^5 - \DD\ww) \\ 
+&& + \frac{\rho}{2} \nrmt{\zz^1 - \xx^1}^2 + \frac{\rho}{2} \nrmt{\zz^2 - \xx^2}^2 \\
+&& + \frac{\rho}{2} \nrmt{\zz^3 - \ww^1}^2 + \frac{\rho}{2} \nrmt{\zz^4 - \ww^2}^2 + \frac{\rho}{2} \nrmt{\zz^5 - \DD\ww}^2 
+\EEAS
+
+
+\end{document}
