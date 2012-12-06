@@ -20,19 +20,19 @@ function w = solveLogRegFusedLasso(y1, x1, y2, x2)
     w = vertcat(w1, w2);
     
     % Initialize constants
-    rho = 1;    
-    lambda1 = 3.0;
-    lambda2 = 1.0;
-    mu = 5;
+    rho = 1.00;        
+    lambda1 = 1.00;
+    lambda2 = 1.00;
+    mu = 1.00;
     
     %Compute D
     w1size = size(w1, 1);
     w2size = size(w2, 1);
     
-    % D = [ I;               -I            ]
-    %     [ lambda1/mu * I ; lambda2/mu * I]
-    d1 = horzcat(eye(w1size), -1 * eye(w2size));
-    d2 = horzcat((lambda1/mu) * eye(w1size), (lambda2 / mu) * eye(w2size));
+    % D = [ mu*I;          -mu* I      ] 
+    %     [ lambda1 * I ;  lambda2 * I ] 
+    d1 = horzcat(mu*eye(w1size), -mu * eye(w2size));
+    d2 = horzcat((lambda1) * eye(w1size), (lambda2 / mu) * eye(w2size));
     D = vertcat(d1, d2);
            
     N = length(y); assert(N == size(X,1));        
@@ -44,7 +44,9 @@ function w = solveLogRegFusedLasso(y1, x1, y2, x2)
     z2 = zeros(e,1);
     u2 = zeros(e,1);
         
-    MAXIT = 100;
+    MAXIT = 1000;
+    prevIterAL = -1;
+    currIterAL = 0;
     for it=1:MAXIT
         %% print iteration
         fprintf('\n================ Start Iteration %d ================\n', it);
@@ -70,8 +72,7 @@ function w = solveLogRegFusedLasso(y1, x1, y2, x2)
         fprintf('After z0 update = %.10f\n\n', after);
         
         %assert
-        assert(after < before + 1e-6);
-        
+        assert(after < before + 1e-6);        
         
         
         %% z2 update                       
@@ -92,6 +93,13 @@ function w = solveLogRegFusedLasso(y1, x1, y2, x2)
         u2 = u2 + rho * (z2 - D * w);
         
         %% end iteration
-        fprintf('\n================ End Iteration %d ================\n', it);
+        fprintf('================ End Iteration %d ================\n', it);
+        
+        %% check if value has changed
+        currIterAL = after;
+        if(abs(currIterAL - prevIterAL) < 1e-12)
+            break
+        end
+        prevIterAL = currIterAL;
     end
 end
