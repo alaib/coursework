@@ -3,8 +3,8 @@
 import pprint
 import glob
 
-baseTrainPath = 'data/MHCBN-15mers/'
-baseTestPath = 'data/MHCBN-15mers/'
+baseTrainPath = 'data/MHCBN-15mers/raw/'
+baseTestPath = 'data/MHCBN-15mers/raw/'
 
 
 #train = open(trainFile, 'w')
@@ -81,8 +81,9 @@ for fName in glob.glob('data/MHCBN-Full/UPDS/*.arff'):
         else:
             test.write(s)
 
+    #Change 0 to -1
     for i in xrange(len(zeroSet)):
-        s = type + ", " + zeroSet[i] + ", 0\n"
+        s = type + ", " + zeroSet[i] + ", -1\n"
         if(i < zeroTrain):
             train.write(s)
         else:
@@ -101,4 +102,5 @@ for fName in glob.glob('data/MHCBN-Full/UPDS/*.arff'):
     print "Class Type = ", type
     print "Train Data ====> Total = %d, ZeroLabel = %d, OneLabel = %d" % (tTrain, zTrain, oTrain)
     print "Test Data  ====> Total = %d, ZeroLabel = %d, OneLabel = %d" % (tTest, zTest, oTest)
+    print "Output written to ", trainFile, " and ", testFile, "\n\n"
 #end for
