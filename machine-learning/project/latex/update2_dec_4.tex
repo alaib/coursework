@@ -23,8 +23,8 @@
 \paragraph{So far...}
 \begin{itemize}
     \item{Increased feature set for Elastic Net (baseline) by incorporating interaction features, i.e, Protein (a,b) at Pos (x,y). There are 80100 features now compared to 300 earlier}
-    \item{Using Matlab Elastic Net implementation (Lasso) and SVM, the accuracies are now comparable, varies from 70-75\%, the state of the art reports 80\% for real data. The accuracy of Elastic Net earlier was mediocre at 53\% and there is a drastic improvement with the addition of these features.}
-    \item{\textbf{Question:} How many training samples and testing samples needs to be there in each set for acceptable result?}
+    \item{Using Matlab's Elastic Net implementation (Lasso) and SVM (svmtrain and svmclassify), I classified the binding and non-binding peptides. The accuracies between the two methods are now comparable and it varies from 70-75\%, the state of the art reports 80\% for real data. The accuracy of Elastic Net earlier was mediocre at 53\% and there is a drastic improvement with the addition of these features.}
+    \item{\textbf{Question:} How many training samples and testing samples needs to be there in each set for an acceptable result?}
 
 \end{itemize}
 
@@ -32,7 +32,7 @@
 The optimization problem for two related MHC-Class II alleles classifier is given by
 
 \BEAS
-\mathop{\textrm{minimize}}_{\ww^{1}, \ww^{2}, \ww} && \frac{1}{2} \nrmt{\yy_{1} - \xx_{1}}^{2} + \frac{1}{2} \nrmt{\yy_{2} - \xx_{2}}^{2} + \\
+\mathop{\textrm{minimize}}_{\ww^{1}, \ww^{2}, \ww} && \frac{1}{2} \nrmt{\yy^{1} - \xx^{1}}^{2} + \frac{1}{2} \nrmt{\yy^{2} - \xx^{2}}^{2} + \\
 && \lambda_{1} \nrmo{\ww^{1}} + \lambda_{2} \nrmo{\ww^{2}} + \alpha \nrmo{\DD\ww}.
 \EEAS
 
@@ -45,18 +45,52 @@ where,
 
 We are going to introduce new variables $\zz^1, \zz^2, \zz^3, \zz^4, \zz^5$ and reformulate the problem 
 \BEAS
-\mathop{\textrm{minimize}}_{\ww, \zz^1, \zz^2, \zz^3, \zz^4, \zz^5} && \frac{1}{2} \nrmt{\yy_{1} - \zz_{1}}^{2} + \frac{1}{2} \nrmt{\yy_{2} - \zz_{2}}^{2} + \\
+\mathop{\textrm{minimize}}_{\ww, \zz^1, \zz^2, \zz^3, \zz^4, \zz^5} && \frac{1}{2} \nrmt{\yy^{1} - \zz^{1}}^{2} + \frac{1}{2} \nrmt{\yy^{2} - \zz^{2}}^{2} + \\
 && \lambda_{1} \nrmo{\zz^{3}} + \lambda_{2} \nrmo{\zz^{4}} + \alpha \nrmo{\zz^{5}}.
 \EEAS
 
 Writing out the augmented lagrangian for the above problem,
 \BEAS
-\textrm{AL}(\ww, \zz^0,\zz^1,\zz^2, \zz^3, \zz^4, \zz^5, \uu^1,\uu^2,\uu^3, \uu^4, \uu^5) &=& \frac{1}{2} \nrmt{\yy_{1} - \zz_{1}}^{2} + \frac{1}{2} \nrmt{\yy_{2} - \zz_{2}}^{2} + \lambda_{1} \nrmo{\zz^{3}} + \lambda_{2} \nrmo{\zz^{4}} + \alpha \nrmo{\zz^{5}} \\ 
+\textrm{AL}(\ww, \zz^0,\zz^1,\zz^2, \zz^3, \zz^4, \zz^5, \uu^1,\uu^2,\uu^3, \uu^4, \uu^5) &=& \frac{1}{2} \nrmt{\yy^{1} - \zz^{1}}^{2} + \frac{1}{2} \nrmt{\yy^{2} - \zz^{2}}^{2} + \lambda_{1} \nrmo{\zz^{3}} + \lambda_{2} \nrmo{\zz^{4}} + \alpha \nrmo{\zz^{5}} \\ 
 && + \uu^1 (\zz^1 - \xx^1) + \uu^2 (\zz^2 - \xx^2) \\
 && + \uu^3 (\zz^3 - \ww^1) + \uu^4 (\zz^4 - \ww^2) + \uu^5 (\zz^5 - \DD\ww) \\ 
 && + \frac{\rho}{2} \nrmt{\zz^1 - \xx^1}^2 + \frac{\rho}{2} \nrmt{\zz^2 - \xx^2}^2 \\
 && + \frac{\rho}{2} \nrmt{\zz^3 - \ww^1}^2 + \frac{\rho}{2} \nrmt{\zz^4 - \ww^2}^2 + \frac{\rho}{2} \nrmt{\zz^5 - \DD\ww}^2 
 \EEAS
+
+
+The derived updates are as below :-
+
+\begin{verbatim}
+    w1 = [I] \ [z3 + ( (1 / rho) * u3)]
+    w2 = [I] \ [z4 + ( (1 / rho) * u4)]
+    w  = [D] \ [z5 + ( (1 / rho) * u5)]
+\end{verbatim}
+
+\textbf{Question: } Is the above correct or should I stack all 3 rows to derive update for 'w' as 'w' is made up of 'w1' and 'w2' ?
+
+\begin{verbatim}
+    z1 = [eye(n1); sqrt(rho) * eye(n1)] \ [y1; (sqrt(rho) * x1) - ((1 / sqrt(rho)) * u1)]
+    z2 = [eye(n2); sqrt(rho) * eye(n2)] \ [y2; (sqrt(rho) * x2) - ((1 / sqrt(rho)) * u2)]
+
+    z3 = shrinkThreshold(w1 - 1/rho*u3, lambda1/rho)
+    z4 = shrinkThreshold(w2 - 1/rho*u4, lambda2/rho)
+    z5 = shrinkThreshold(D*w - 1/rho*u5, alpha/rho)
+\end{verbatim}
+
+\begin{verbatim}
+    u1 = u1 + rho * (z1 - x1);
+    u2 = u2 + rho * (z2 - x2);
+    u3 = u3 + rho * (z3 - w1);
+    u4 = u4 + rho * (z4 - w2);
+    u5 = u5 + rho * (z5 - w);
+\end{verbatim}
+
+\textbf{Question: } What is the order in which I should compute updates first ? w1, w2, w, z1-z5 ? Is this order correct ?
+
+\textbf{Question: } How to initialize $\lambda_1$ , $\lambda_2$, $\rho$ and $\alpha$ ?
+
+\textbf{Question: } We say $\zz^1 = \xx^1$, but $\xx^1$ is a matrix of feature vector rows (80100 in length), unable to think of how to initialize $\zz^{i}$
 
 
 \end{document}
