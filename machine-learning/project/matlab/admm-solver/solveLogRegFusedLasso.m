@@ -1,5 +1,7 @@
 % Logistic Regression Fused Lasso
 function w = solveLogRegFusedLasso(y1, x1, y2, x2)
+    DEBUG = 0;
+    
     %Construct Y, X and w
     % y = [y1 y2]'
     y = vertcat(y1, y2);
@@ -49,27 +51,37 @@ function w = solveLogRegFusedLasso(y1, x1, y2, x2)
     currIterAL = 0;
     for it=1:MAXIT
         %% print iteration
-        fprintf('\n================ Start Iteration %d ================\n', it);
+        if DEBUG
+            fprintf('\n================ Start Iteration %d ================\n', it);
+        end
         %% update w
         before = computeAL(y, X, D, mu, rho, w, z0, z2, u0, u2);
-        fprintf('Before w update = %.10f\n', before);
+        if DEBUG
+            fprintf('Before w update = %.10f\n', before);
+        end
         
         w = updatew(X, D, z0, z2, u0, u2, rho);
         after = computeAL(y, X, D, mu, rho, w, z0, z2, u0, u2);
-        fprintf('After w update = %.10f\n\n', after);
+        if DEBUG
+            fprintf('After w update = %.10f\n\n', after);
+        end
         
         %assert
         assert(after < before + 1e-6);        
         
         %% z0 update
         before = after;
-        fprintf('Before z0 update = %.10f\n', before);
+        if DEBUG
+            fprintf('Before z0 update = %.10f\n', before);
+        end
         for i=1:length(y)
             z0(i) = updatez0i(y(i), X(i,:), w, u0(i), rho);
         end
         
         after = computeAL(y, X, D, mu, rho, w, z0, z2, u0, u2);        
-        fprintf('After z0 update = %.10f\n\n', after);
+        if DEBUG
+            fprintf('After z0 update = %.10f\n\n', after);
+        end
         
         %assert
         assert(after < before + 1e-6);        
@@ -78,13 +90,17 @@ function w = solveLogRegFusedLasso(y1, x1, y2, x2)
         %% z2 update                       
         before = after;
         Dw = D * w;
-        fprintf('Before z2 update = %.10f\n', before);        
+        if DEBUG
+            fprintf('Before z2 update = %.10f\n', before);        
+        end
         for i=1:size(D,1)
             z2(i) = updatez2i(Dw(i), u2(i), mu, rho);
         end
         
         after = computeAL(y, X, D, mu, rho, w, z0, z2, u0, u2);        
-        fprintf('After z2 update = %.10f\n\n', after);
+        if DEBUG
+            fprintf('After z2 update = %.10f\n\n', after);
+        end
         %assert
         assert(after < before + 1e-6);
         
@@ -93,7 +109,9 @@ function w = solveLogRegFusedLasso(y1, x1, y2, x2)
         u2 = u2 + rho * (z2 - D * w);
         
         %% end iteration
-        fprintf('================ End Iteration %d ================\n', it);
+        if DEBUG
+            fprintf('================ End Iteration %d ================\n', it);
+        end
         
         %% check if value has changed
         currIterAL = after;
