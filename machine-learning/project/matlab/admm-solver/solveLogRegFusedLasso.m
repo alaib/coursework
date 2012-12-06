@@ -1,25 +1,29 @@
 % Logistic Regression Fused Lasso
 function w = solveLogRegFusedLasso(y1, x1, y2, x2)
-    DEBUG = 0;
+    DEBUG = 1;
     
     %Construct Y, X and w
     % y = [y1 y2]'
     y = vertcat(y1, y2);
     
     % X = [x1 0; 0 x2];
-    X_1 = horzcat(x1, zeros(size(x2)));
-    X_2 = horzcat(zeros(size(x1)), x2);
+    X_1 = horzcat(x1, zeros(size(x1)));
+    X_2 = horzcat(zeros(size(x2)), x2);
     X = vertcat(X_1, X_2);
-    
+    clear X_1 X_2
+            
     % Construct w = [w1 w2]'    
     x1FeatLen = size(x1, 2);
     x2FeatLen = size(x2, 2);
     assert(x1FeatLen == x2FeatLen);
     
+    clear y1 x1 y2 x2
+    
     w1 = zeros(x1FeatLen, 1);
     w2 = zeros(x2FeatLen, 1);
     
     w = vertcat(w1, w2);
+    clear w1 w2
     
     % Initialize constants
     rho = 1.00;        
@@ -28,14 +32,18 @@ function w = solveLogRegFusedLasso(y1, x1, y2, x2)
     mu = 1.00;
     
     %Compute D
-    w1size = size(w1, 1);
-    w2size = size(w2, 1);
+    w1size = x1FeatLen;
+    w2size = x2FeatLen;
     
     % D = [ mu*I;          -mu* I      ] 
     %     [ lambda1 * I ;  lambda2 * I ] 
-    d1 = horzcat(mu*eye(w1size), -mu * eye(w2size));
-    d2 = horzcat((lambda1) * eye(w1size), (lambda2 / mu) * eye(w2size));
+    %d1 = horzcat(mu*eye(w1size), -mu * eye(w2size));
+    %d2 = horzcat((lambda1) * eye(w1size), (lambda2 / mu) * eye(w2size));
+    d1 = horzcat(mu*speye(w1size), -mu * speye(w2size));
+    d2 = horzcat((lambda1) * speye(w1size), (lambda2 / mu) * speye(w2size));
     D = vertcat(d1, d2);
+    
+    clear d1 d2
            
     N = length(y); assert(N == size(X,1));        
     e = size(D,1); % z2 - D*w (D = 40x40, w = 40x1, size(D*w) = 40x1, hence z2 = 40x1)    
@@ -46,7 +54,7 @@ function w = solveLogRegFusedLasso(y1, x1, y2, x2)
     z2 = zeros(e,1);
     u2 = zeros(e,1);
         
-    MAXIT = 1000;
+    MAXIT = 7;
     prevIterAL = -1;
     currIterAL = 0;
     for it=1:MAXIT

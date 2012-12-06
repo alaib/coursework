@@ -1,3 +1,6 @@
+clc;
+clear;
+
 hla1 = 'HLA-DR1';
 trainMatFile1 = strcat('/home/ravikirn/mlcode/data/MHCBN-15mers/matfiles/', hla1, '_train_encoded.mat');
 testMatFile1 = strcat('/home/ravikirn/mlcode/data/MHCBN-15mers/matfiles/', hla1, '_test_encoded.mat');
@@ -13,6 +16,9 @@ load(trainMatFile2);
 load(testMatFile2);
 
 HLA2Data = struct('trainY', trainY, 'trainX', trainX, 'testY', testY, 'testX', testX);
+
+%clear variables
+clear trainMatFile1 trainMatFile2 testMatFile1 testMatFile2 trainY trainX testY testX
 
 %% get ADMM method solution
 fprintf('Started Fused Lasso ADMM Solver\n');
