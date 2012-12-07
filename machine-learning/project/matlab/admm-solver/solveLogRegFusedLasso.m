@@ -27,9 +27,10 @@ function w = solveLogRegFusedLasso(y1, x1, y2, x2)
     
     % Initialize constants
     rho = 1.00;        
+    %best params, 0.9, 0.9, 0.9, 30 (l1, l2, mu, iter)
     lambda1 = 0.9;
     lambda2 = 0.9;
-    mu = 0.90;
+    mu = 0.9;
     
     %Compute D
     w1size = x1FeatLen;
@@ -54,13 +55,14 @@ function w = solveLogRegFusedLasso(y1, x1, y2, x2)
     z2 = zeros(e,1);
     u2 = zeros(e,1);
         
-    MAXIT = 30;
+    MAXIT = 100;
     for it=1:MAXIT
         %% print iteration
         if DEBUG
             fprintf('\n================ Start Iteration %d ================\n', it);
         end
         %% update w
+        w_prev = w;
         before = computeAL(y, X, D, mu, rho, w, z0, z2, u0, u2);
         if DEBUG
             fprintf('Before w update = %.10f\n', before);
@@ -74,7 +76,14 @@ function w = solveLogRegFusedLasso(y1, x1, y2, x2)
         end
         
         %assert
-        assert(after < before + 1e-6);        
+        %assert(after < before + 1e-6);        
+        % restore w and return
+        if(after >= before + 1e-6)
+            w = w_prev;
+            fprintf('Failed assertion, iteration no. = %d\n', it);
+            return;
+        end
+            
         
         %% z0 update
         before = after;
@@ -91,8 +100,14 @@ function w = solveLogRegFusedLasso(y1, x1, y2, x2)
             fprintf('Reduction = %.10f\n\n', before-after);
         end
         
-        %assert
-        assert(after < before + 1e-6);        
+        %assert        
+        %assert(after < before + 1e-6);        
+        % restore w and return
+        if(after >= before + 1e-6)
+            w = w_prev;
+            fprintf('Failed assertion, iteration no. = %d', it);
+            return;
+        end
         
         
         %% z2 update                       
@@ -110,8 +125,14 @@ function w = solveLogRegFusedLasso(y1, x1, y2, x2)
             fprintf('After z2 update = %.10f\n', after);
             fprintf('Reduction = %.10f\n\n', before-after);
         end
-        %assert
-        assert(after < before + 1e-6);
+        %assert        
+        %assert(after < before + 1e-6);        
+        % restore w and return
+        if(after >= before + 1e-6)
+            w = w_prev;
+            fprintf('Failed assertion, iteration no. = %d', it);
+            return;
+        end
         
         %% update dual variables        
         u0 = u0 + rho * (z0 - X * w);

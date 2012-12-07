@@ -1,7 +1,6 @@
-clc;
-clear;
+hla1 = 'HLA-DRB10101';
+hla2 = 'HLA-DRB10301';
 
-hla1 = 'HLA-DR1';
 trainMatFile1 = strcat('/home/ravikirn/mlcode/data/MHCBN-15mers/matfiles/', hla1, '_train_encoded.mat');
 testMatFile1 = strcat('/home/ravikirn/mlcode/data/MHCBN-15mers/matfiles/', hla1, '_test_encoded.mat');
 load(trainMatFile1);
@@ -9,7 +8,6 @@ load(testMatFile1);
 
 HLA1Data = struct('trainY', trainY, 'trainX', trainX, 'testY', testY, 'testX', testX);
 
-hla2 = 'HLA-DR2';
 trainMatFile2 = strcat('/home/ravikirn/mlcode/data/MHCBN-15mers/matfiles/', hla2, '_train_encoded.mat');
 testMatFile2 = strcat('/home/ravikirn/mlcode/data/MHCBN-15mers/matfiles/', hla2, '_test_encoded.mat');
 load(trainMatFile2);
@@ -46,6 +44,8 @@ end
 fprintf('Prediction Success of HLA2 = %s with ADMM = %.2f\n', ... 
         hla2, getPredictionSuccess(predY2_admm, HLA2Data.testY));
 
+
+return;
 %% get lassoglm solution
 %% (X1, y1)
 fprintf('Started LASSO GLM Solver for HLA1 Data\n');
