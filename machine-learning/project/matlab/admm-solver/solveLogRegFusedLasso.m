@@ -27,9 +27,9 @@ function w = solveLogRegFusedLasso(y1, x1, y2, x2)
     
     % Initialize constants
     rho = 1.00;        
-    lambda1 = 1.00;
-    lambda2 = 1.00;
-    mu = 1.00;
+    lambda1 = 0.9;
+    lambda2 = 0.9;
+    mu = 0.90;
     
     %Compute D
     w1size = x1FeatLen;
@@ -54,9 +54,7 @@ function w = solveLogRegFusedLasso(y1, x1, y2, x2)
     z2 = zeros(e,1);
     u2 = zeros(e,1);
         
-    MAXIT = 7;
-    prevIterAL = -1;
-    currIterAL = 0;
+    MAXIT = 30;
     for it=1:MAXIT
         %% print iteration
         if DEBUG
@@ -71,7 +69,8 @@ function w = solveLogRegFusedLasso(y1, x1, y2, x2)
         w = updatew(X, D, z0, z2, u0, u2, rho);
         after = computeAL(y, X, D, mu, rho, w, z0, z2, u0, u2);
         if DEBUG
-            fprintf('After w update = %.10f\n\n', after);
+            fprintf('After w update = %.10f\n', after);
+            fprintf('Reduction = %.10f\n\n', before-after);
         end
         
         %assert
@@ -88,7 +87,8 @@ function w = solveLogRegFusedLasso(y1, x1, y2, x2)
         
         after = computeAL(y, X, D, mu, rho, w, z0, z2, u0, u2);        
         if DEBUG
-            fprintf('After z0 update = %.10f\n\n', after);
+            fprintf('After z0 update = %.10f\n', after);
+            fprintf('Reduction = %.10f\n\n', before-after);
         end
         
         %assert
@@ -107,7 +107,8 @@ function w = solveLogRegFusedLasso(y1, x1, y2, x2)
         
         after = computeAL(y, X, D, mu, rho, w, z0, z2, u0, u2);        
         if DEBUG
-            fprintf('After z2 update = %.10f\n\n', after);
+            fprintf('After z2 update = %.10f\n', after);
+            fprintf('Reduction = %.10f\n\n', before-after);
         end
         %assert
         assert(after < before + 1e-6);
@@ -119,13 +120,6 @@ function w = solveLogRegFusedLasso(y1, x1, y2, x2)
         %% end iteration
         if DEBUG
             fprintf('================ End Iteration %d ================\n', it);
-        end
-        
-        %% check if value has changed
-        currIterAL = after;
-        if(abs(currIterAL - prevIterAL) < 1e-12)
-            break
-        end
-        prevIterAL = currIterAL;
+        end                
     end
 end
