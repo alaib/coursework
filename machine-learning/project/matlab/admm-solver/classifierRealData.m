@@ -17,7 +17,6 @@ HLA2Data = struct('trainY', trainY, 'trainX', trainX, 'testY', testY, 'testX', t
 
 %clear variables
 clear trainMatFile1 trainMatFile2 testMatFile1 testMatFile2 trainY trainX testY testX
-if 0
 %% get ADMM method solution
 fprintf('Started Fused Lasso ADMM Solver\n');
 w = solveLogRegFusedLasso(HLA1Data.trainY, HLA1Data.trainX, HLA2Data.trainY, HLA2Data.trainX);
@@ -43,7 +42,7 @@ for i = 1 : length(HLA2Data.testY)
 end
 fprintf('Prediction Success of HLA2 = %s with ADMM = %.2f\n', ... 
         hla2, getPredictionSuccess(predY2_admm, HLA2Data.testY));
-end
+
 %% get SVM solution
 %% (X1, y1)
 fprintf('Started SVM Solver for HLA1 Data\n');

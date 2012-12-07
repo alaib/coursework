@@ -105,7 +105,7 @@ function w = solveLogRegFusedLasso(y1, x1, y2, x2)
         % restore w and return
         if(after >= before + 1e-6)
             w = w_prev;
-            fprintf('Failed assertion, iteration no. = %d', it);
+            fprintf('Failed assertion, iteration no. = %d\n', it);
             return;
         end
         
@@ -130,7 +130,7 @@ function w = solveLogRegFusedLasso(y1, x1, y2, x2)
         % restore w and return
         if(after >= before + 1e-6)
             w = w_prev;
-            fprintf('Failed assertion, iteration no. = %d', it);
+            fprintf('Failed assertion, iteration no. = %d\n', it);
             return;
         end
         
