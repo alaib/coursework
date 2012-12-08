@@ -1,4 +1,4 @@
-hla1 = 'HLA-DRB1-0401';
+hla1 = 'HLA-DRB1-0404';
 hla2 = 'HLA-DRB1-0405';
 
 trainMatFile1 = strcat('/home/ravikirn/mlcode/data/wang-paper-data/matfiles/', hla1, '_train_encoded.mat');
@@ -17,6 +17,8 @@ HLA2Data = struct('trainY', trainY, 'trainX', trainX, 'testY', testY, 'testX', t
 
 %clear variables
 clear trainMatFile1 trainMatFile2 testMatFile1 testMatFile2 trainY trainX testY testX
+
+fprintf('HLA1 = %s, HLA2 = %s\n', hla1, hla2);
 
 %% get ADMM method solution
 fprintf('Started Fused Lasso ADMM Solver\n');
