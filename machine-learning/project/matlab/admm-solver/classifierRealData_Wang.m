@@ -1,5 +1,5 @@
-hla1 = 'HLA-DRB1-1101';
-hla2 = 'HLA-DRB1-1302';
+hla1 = 'HLA-DRB1-0401';
+hla2 = 'HLA-DRB1-0404';
 
 trainMatFile1 = strcat('/home/ravikirn/mlcode/data/wang-paper-data/matfiles/', hla1, '_train_encoded.mat');
 testMatFile1 = strcat('/home/ravikirn/mlcode/data/wang-paper-data/matfiles/', hla1, '_test_encoded.mat');
@@ -70,13 +70,13 @@ fprintf('Prediction Success of HLA2 = %s with SVM = %.2f\n', ...
 %% lassoglm is slow, so do an intermediate save
 %% Save to file
 saveFile = 1;
-savedFileName = strcat('savedWang/', hla1, '_', hla2, '_admm_svm.mat');
+savedFileName = strcat('savedWang2/', hla1, '_', hla2, '_admm_svm.mat');
 if saveFile == 1 && exist(savedFileName, 'file') == 0
     save(savedFileName);
 end
 
 %% get lassoglm solution
-savedFileName = strcat('savedWang/', hla1, '_', hla2, '.mat');
+savedFileName = strcat('savedWang2/', hla1, '_', hla2, '.mat');
 if exist(savedFileName, 'file') == 0
     %% (X1, y1)
     fprintf('Started LASSO GLM Solver for HLA1 Data\n');
@@ -139,7 +139,7 @@ fprintf('Done\n');
 
 %% Save to file
 saveFile = 1;
-savedFileName = strcat('savedWang/', hla1, '_', hla2, '.mat');
+savedFileName = strcat('savedWang2/', hla1, '_', hla2, '.mat');
 if saveFile == 1 && exist(savedFileName, 'file') == 0
     save(savedFileName);
 end
