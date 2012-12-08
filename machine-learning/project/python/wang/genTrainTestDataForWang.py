@@ -38,7 +38,7 @@ for fName in glob.glob('/home/ravikirn/mlcode/data/wang-paper-data/raw/*.txt'):
     tTrain = 0
     tTest = 0
 
-    trainRatio = 0.80
+    trainRatio = 0.70
 
     while(line):
         total += 1
@@ -63,6 +63,11 @@ for fName in glob.glob('/home/ravikirn/mlcode/data/wang-paper-data/raw/*.txt'):
         line = fh.readline()
     #end while
 
+    #Cut out oneTrain examples
+    maxLen = 320
+    oneSetLen = maxLen - len(zeroSet)
+    oneSet = oneSet[:oneSetLen]
+    
     #Split and write out to training and testing datasets
     oneTrain = int(trainRatio * len(oneSet))
     zeroTrain = int(trainRatio * len(zeroSet))

@@ -1,5 +1,5 @@
-hla1 = 'HLA-DRB10101';
-hla2 = 'HLA-DRB10401';
+hla1 = 'HLA-DRB1-0401';
+hla2 = 'HLA-DRB1-0404';
 
 trainMatFile1 = strcat('/home/ravikirn/mlcode/data/wang-paper-data/matfiles/', hla1, '_train_encoded.mat');
 testMatFile1 = strcat('/home/ravikirn/mlcode/data/wang-paper-data/matfiles/', hla1, '_test_encoded.mat');
@@ -17,9 +17,10 @@ HLA2Data = struct('trainY', trainY, 'trainX', trainX, 'testY', testY, 'testX', t
 
 %clear variables
 clear trainMatFile1 trainMatFile2 testMatFile1 testMatFile2 trainY trainX testY testX
+load('savedWang/HLA-DRB1-0401_HLA-DRB1-0404_admm_svm.mat');
 %% get ADMM method solution
 fprintf('Started Fused Lasso ADMM Solver\n');
-w = solveLogRegFusedLasso(HLA1Data.trainY, HLA1Data.trainX, HLA2Data.trainY, HLA2Data.trainX);
+%w = solveLogRegFusedLasso(HLA1Data.trainY, HLA1Data.trainX, HLA2Data.trainY, HLA2Data.trainX);
 fprintf('Ended Fused Lasso ADMM Solver\n');
 index = length(w)/2;
 
@@ -47,7 +48,7 @@ fprintf('Prediction Success of HLA2 = %s with ADMM = %.2f\n', ...
 %% (X1, y1)
 fprintf('Started SVM Solver for HLA1 Data\n');
 options = optimset('maxiter', 1000);
-kernel_func = 'quadratic';
+kernel_func = 'linear';
 SVMStruct_hla1 = svmtrain(HLA1Data.trainX, HLA1Data.trainY, ... 
                  'kernel_function', kernel_func, 'Method','QP', 'quadprog_opts',options);
 predY1_svm = svmclassify(SVMStruct_hla1, HLA1Data.testX);
@@ -63,6 +64,14 @@ predY2_svm = svmclassify(SVMStruct_hla2, HLA2Data.testX);
 fprintf('Prediction Success of HLA2 = %s with SVM = %.2f\n', ...
         hla2, getPredictionSuccess(predY2_svm, HLA2Data.testY));
 
+
+%% lassoglm is slow, so do an intermediate save also
+%% Save to file
+saveFile = 1;
+savedFileName = strcat('savedWang/', hla1, '_', hla2, '_admm_svm.mat');
+if saveFile == 1 && exist(savedFileName, 'file') == 0
+    save(savedFileName);
+end
 
 %% get lassoglm solution
 savedFileName = strcat('savedWang/', hla1, '_', hla2, '.mat');

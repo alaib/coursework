@@ -9,7 +9,7 @@ function w = solveLogRegFusedLasso(y1, x1, y2, x2)
     % X = [x1 0; 0 x2];
     X_1 = horzcat(x1, zeros(size(x1)));
     X_2 = horzcat(zeros(size(x2)), x2);
-    X = vertcat(X_1, X_2);
+    X = sparse(vertcat(X_1, X_2));
     clear X_1 X_2
             
     % Construct w = [w1 w2]'    
@@ -55,7 +55,7 @@ function w = solveLogRegFusedLasso(y1, x1, y2, x2)
     z2 = zeros(e,1);
     u2 = zeros(e,1);
         
-    MAXIT = 100;
+    MAXIT = 10;
     for it=1:MAXIT
         %% print iteration
         if DEBUG
