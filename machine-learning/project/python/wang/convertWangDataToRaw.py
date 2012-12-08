@@ -48,7 +48,7 @@ for fName in glob.glob('/home/ravikirn/mlcode/data/wang-paper-data/original/HLA-
             opStr = row[2] + ', ' + str(posLabel) + '\n'
         op.write(opStr)
     #end loop
-    print "Neg = %d, Pos = %d" % ( neg, pos )
+    print "Neg = %d, Pos = %d, Total = %d" % ( neg, pos, neg+pos)
     print "Output written to file = %s\n" % (opFileName)
     op.close()
     fh.close()
