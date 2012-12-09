@@ -1,4 +1,4 @@
-hla1 = 'HLA-DRB1-0401';
+hla1 = 'HLA-DRB1-0404';
 hla2 = 'HLA-DRB1-0405';
 
 trainMatFile1 = strcat('/home/ravikirn/mlcode/data/wang-paper-data/matfiles/', hla1, '_train_encoded.mat');
