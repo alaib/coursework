@@ -292,7 +292,10 @@ from computational chemistry, such as QSAR analysis \cite{doytchinova05} and str
 
 Dimitrov et al. \cite{dimitrov10} and Wang et al. \cite{wang08} have published detailed assessment of MHC Class II peptide binding
 predictors. In all of these predictions, it is assumed that each of the peptide binding predictors are independent
-of each other.
+of each other. In this paper, we propose that the prediction of MHC Class II alleles of the same genetic loci (HLA-DR, HLA-DQ and HLA-DP)
+are dependent on each other since these alleles are nothing but an alternative form of a same gene. We tie pairs of MHC Class II alleles together
+and jointly learn the prediction/classifier parameters. These results are then compared to the state of the art support vector machine methods \cite{wan06}
+and we show that our joint classifier either matches or outperforms the SVM method consistently.
 
 \subsection{Subsection Heading Here}
 Subsection text here.
