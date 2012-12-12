@@ -245,20 +245,54 @@ prediction method for MHC class II binding peptides can reduce the number of can
 that need to be synthesized and tested for successful design of peptide and protein based vaccines.
 \end{abstract}
 
-% no keywords
+\begin{IEEEkeywords}
+MHC class II, Peptide prediction, Machine Learning
+\end{IEEEkeywords}
 
 \section{Introduction}
-% no \IEEEPARstart
-This demo file is intended to serve as a ``starter file''
-for IEEE conference papers produced under \LaTeX\ using
-IEEEtran.cls version 1.7 and later.
-% You must have at least 2 lines in the paragraph with the drop letter
-% (should never be an issue)
-I wish you the best of success.
+Vaccines continue to have an enormous and unprecedented positive impact on humanity and its wellbeing. Hundreds
+of millions of human lives have been saved since the first vaccine was discovered: Edward Jenner’s smallpox vaccine in
+1796 \cite{flower081}. Yet the need to develop and deploy new vaccines has never been more urgent. Infectious disease causes about
+25\% of global deaths, particularly in children under five.  The leading annual causes of death are 2.9 millions for
+tuberculosis; 2.5 million for diarrhoeal illnesses, especially rotaviruses; a rapidly escalating 2.3 million for HIV/AIDS;
+and 1.08 million deaths for malaria. There are no effective vaccines for HIV and Malaria, and the only vaccine available
+for tuberculosis is of limited utility. Consider also the 35 new, previously unknown, infectious diseases identified in
+the past 25 years: ebola, SARS, Dengue, West Nile fever, and potentially pandemic H5N1 influenza among them.
 
-\hfill mds
- 
-\hfill January 11, 2007
+Historically, vaccines have been attenuated whole pathogen vaccines such as BCG for TB or Sabin’s Polio
+vaccine. Issues of safety have led to the development of other strategies for vaccine development, separately focusing
+on antigen and epitope vaccines. The epitope is the minimal structure able to evoke an immune response.
+It is the immunological quantum that lies at the heart of immunity. Epitope-based vaccines have the advantage that
+many sequences able to induce autoimmunity or adverse reactions can be eliminated. Such vaccines are intrinsically
+safer: they contain no viable microorganisms and cannot induce microbial disease. However, several significant obstacles
+must be overcome before epitope-based vaccines can reach the market en masse. One such obstacle is MHC
+polymorphism.
+
+Major histocompatibility complex (MHC) proteins, also known as human leukocyte antigens (HLA), are glycoproteins
+ which bind within the cell short peptides, also called epitopes, derived from host and/or pathogen proteins, and
+present them at the cell surface for inspection by T-cells. T cell recognition is a fundamental mechanism of the adaptive
+immune system by which the host identifies and responds to foreign antigens.
+
+ There are two classes of MHC molecules: class I and class II. MHC class I molecules typically present peptides from
+proteins synthesized within the cell (endogenous processing pathway). MHC class II proteins primarily present peptides
+derived from endocytosed extracellular proteins (exogenous processing pathway). Both classes of MHC proteins are
+extremely polymorphic. More than 3500 molecules are listed in IMGT/HLA database \cite{robinson12}. MHC class I proteins are
+encoded by three loci: HLA-A, HLA-B, and HLA-C. MHC class II proteins also are encoded by three loci: HLA-DR,
+HLA-DQ, and HLA-DP. The peptide binding site of class I proteins has a closed cleft, formed by a single protein
+chain ($\alpha$-chain) \cite{janeway01}. Usually, only short peptides of 8 to 11 amino acids bind in an extended conformation. In contrast,
+the cleft of class II proteins is open-ended, allowing much longer peptides to bind, although only 9 amino acids actually
+occupy the site. The class II cleft is formed by two separate protein chains: $\alpha$ and $\beta$ \cite{janeway01}. In this paper,
+we will be dealing only with MHC class II proteins.
+
+Many bioinformatics methods exist to predict peptide MHC binding. Experimentally determined affinities
+data have formed the basis of many peptide-MHC binding prediction methods, able effectively to discriminate binding
+from nonbinding peptides. Such methods include so-called motifs, as well as highly sophisticated computer science
+algorithms—artificial neural networks \cite{gulukota00}, HMMs \cite{noguchi02}, and support vector machines (SVMs) \cite{wan06} and methods derived
+from computational chemistry, such as QSAR analysis \cite{doytchinova05} and structure-based approaches \cite{davies06}.
+
+Dimitrov et al. \cite{dimitrov10} and Wang et al. \cite{wang08} have published detailed assessment of MHC Class II peptide binding
+predictors. In all of these predictions, it is assumed that each of the peptide binding predictors are independent
+of each other.
 
 \subsection{Subsection Heading Here}
 Subsection text here.
@@ -393,16 +427,8 @@ The authors would like to thank...
 % <OR> manually copy in the resultant .bbl file
 % set second argument of \begin to the number of references
 % (used to reserve space for the reference number labels box)
-\begin{thebibliography}{1}
-
-\bibitem{IEEEhowto:kopka}
-H.~Kopka and P.~W. Daly, \emph{A Guide to \LaTeX}, 3rd~ed.\hskip 1em plus
-  0.5em minus 0.4em\relax Harlow, England: Addison-Wesley, 1999.
-
-\end{thebibliography}
-
-
-
+\bibliography{references}{}
+\bibliographystyle{IEEEtran}
 
 % that's all folks
 \end{document}
