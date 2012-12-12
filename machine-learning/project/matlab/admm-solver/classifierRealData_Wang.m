@@ -77,7 +77,8 @@ end
 
 %% get lassoglm solution
 savedFileName = strcat('savedWang2/', hla1, '_', hla2, '.mat');
-if exist(savedFileName, 'file') == 0
+recomputeFlag = 1;
+if recomputeFlag == 1 || exist(savedFileName, 'file') == 0
     %% (X1, y1)
     fprintf('Started LASSO GLM Solver for HLA1 Data\n');
     [B_hla1, FitInfo_hla1] = lassoglm(HLA1Data.trainX, HLA1Data.trainY, 'normal', 'Alpha', 1);
