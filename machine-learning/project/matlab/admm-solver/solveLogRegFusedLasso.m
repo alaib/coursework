@@ -55,7 +55,7 @@ function w = solveLogRegFusedLasso(y1, x1, y2, x2)
     z2 = zeros(e,1);
     u2 = zeros(e,1);
         
-    MAXIT = 20;
+    MAXIT = 10;
     for it=1:MAXIT
         %% print iteration
         if DEBUG
