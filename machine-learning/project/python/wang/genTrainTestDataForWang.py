@@ -64,7 +64,7 @@ for fName in glob.glob('/home/ravikirn/mlcode/data/wang-paper-data/raw/*.txt'):
     #end while
 
     #maxLen
-    maxTrainLen = 310
+    maxTrainLen = 223
     maxTestLen = 200
 
     #For negative cases, send 60% to training and 40% to testing
@@ -77,12 +77,12 @@ for fName in glob.glob('/home/ravikirn/mlcode/data/wang-paper-data/raw/*.txt'):
         else:
             test.write(s)
 
-    #For positive cases, add until 223 is met for training and 100 to testing (or the remaining)
+    #For positive cases, add until maxTrainLen is met for training and 100 to testing (or the remaining)
     oneTrain = 0
     oneTest = 0
     if(len(oneSet) > 200):
         oneTrain = maxTrainLen - zeroTrain
-        #add (223 - zeroTrain) to test
+        #add (maxTrainLen - zeroTrain) to test
         for i in xrange(maxTrainLen - zeroTrain):
             s = type + ", " + oneSet[i] + ", 1\n"
             train.write(s)
