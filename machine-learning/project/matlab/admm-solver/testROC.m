@@ -1,5 +1,5 @@
 clc; clear;
-hla1 = 'HLA-DRB1-0401';
+hla1 = 'HLA-DRB1-0404';
 hla2 = 'HLA-DRB1-0405';
 
 savedFileName = strcat('savedWang/', hla1, '_', hla2, '.mat');

@@ -64,7 +64,7 @@ for fName in glob.glob('/home/ravikirn/mlcode/data/wang-paper-data/raw/*.txt'):
     #end while
 
     #maxLen
-    maxTrainLen = 223
+    maxTrainLen = 310
     maxTestLen = 200
 
     #For negative cases, send 60% to training and 40% to testing
