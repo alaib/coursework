@@ -504,18 +504,59 @@ I use sparse encoding \cite{qian88} for encoding the amino acid sequence. Each a
 Table \ref{tab:resultTable} specifies the precision, recall, f1-score and accuracy for the pairs of HLA-DRB1* MHC Class-II type alleles computed with my method (Fused ADMM method), SVM and GLMNET. My method learns the weights of features on the pair of alleles while SVM and GLMNET work independently on each of the pairs.
 
 \begin{table}[!t]
-\caption{MHC Class II dataset}
+\caption{Results of Binding and Non-binding peptide prediction}
 \label{tab:resultTable}
 \centering
-\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|}
 \hline
-\multirow{2}{*}{MHC Class-II} & \multirow{2}{*}{MHC Class-II} & \multicolumn{4}{c|}{Fused ADMM} & \multicolumn{4}{c|}{SVM} & \multicolumn{4}{c|}{GLMNET}\\
-\cline{3-14}
-Allele Pair& Type & Prec & Recall & F1 & Acc & Prec & Recall & F1 & Acc & Prec & Recall & F1 & Acc\\
+\multirow{2}{*}{MHC Class-II} & \multicolumn{3}{c|}{Precision} & \multicolumn{3}{c|}{Recall} & \multicolumn{3}{c|}{F1 Score} & \multicolumn{3}{c|}{Accuracy}\\ [1pt]
+\cline{2-13}
+Allele Pair & ADMM & SVM & GLM & ADMM & SVM & GLM & ADMM & SVM & GLM & ADMM & SVM & GLM \\ 
 \hline
-\multirow{2}{*}{DRB1-0301 and DRB1-0401} & \multirow{1}{*}{DRB1-0301} & Prec & Recall & F1 & Acc & Prec & Recall & F1 & Acc & Prec & Recall & F1 & Acc\\
-\cline{2-14}
-& DRB1-0401 & Prec & Recall & F1 & Acc & Prec & Recall & F1 & Acc & Prec & Recall & F1 & Acc\\
+
+\multirow{1}{*}{DRB1-0301} & 0.71 & 0.71 & 0.68 & 0.92 & 0.91 & 0.86 & 0.80 & 0.80 & 0.76 & 0.70 & 0.70 & 0.62\\
+\cline{2-13}
+DRB1-0401 & 0.73 & 0.73 & 0.72 & 0.91 & 0.92 & 0.91 & 0.81 & 0.82 & 0.81 & 0.71 & 0.72 & 0.68\\
+\hline
+
+\multirow{1}{*}{DRB1-0301} & Prec & Prec & Prec & Recall & Recall & Recall & F1 & F1 & F1 & Acc & Acc & Acc\\
+\cline{2-13}
+DRB1-0401 & Prec & Prec & Prec & Recall & Recall & Recall & F1 & F1 & F1 & Acc & Acc & Acc\\
+\hline
+
+\multirow{1}{*}{DRB1-0301} & Prec & Prec & Prec & Recall & Recall & Recall & F1 & F1 & F1 & Acc & Acc & Acc\\
+\cline{2-13}
+DRB1-0401 & Prec & Prec & Prec & Recall & Recall & Recall & F1 & F1 & F1 & Acc & Acc & Acc\\
+\hline
+
+\multirow{1}{*}{DRB1-0301} & Prec & Prec & Prec & Recall & Recall & Recall & F1 & F1 & F1 & Acc & Acc & Acc\\
+\cline{2-13}
+DRB1-0401 & Prec & Prec & Prec & Recall & Recall & Recall & F1 & F1 & F1 & Acc & Acc & Acc\\
+\hline
+
+\multirow{1}{*}{DRB1-0301} & Prec & Prec & Prec & Recall & Recall & Recall & F1 & F1 & F1 & Acc & Acc & Acc\\
+\cline{2-13}
+DRB1-0401 & Prec & Prec & Prec & Recall & Recall & Recall & F1 & F1 & F1 & Acc & Acc & Acc\\
+\hline
+
+\multirow{1}{*}{DRB1-0301} & Prec & Prec & Prec & Recall & Recall & Recall & F1 & F1 & F1 & Acc & Acc & Acc\\
+\cline{2-13}
+DRB1-0401 & Prec & Prec & Prec & Recall & Recall & Recall & F1 & F1 & F1 & Acc & Acc & Acc\\
+\hline
+
+\multirow{1}{*}{DRB1-0301} & Prec & Prec & Prec & Recall & Recall & Recall & F1 & F1 & F1 & Acc & Acc & Acc\\
+\cline{2-13}
+DRB1-0401 & Prec & Prec & Prec & Recall & Recall & Recall & F1 & F1 & F1 & Acc & Acc & Acc\\
+\hline
+
+\multirow{1}{*}{DRB1-0301} & Prec & Prec & Prec & Recall & Recall & Recall & F1 & F1 & F1 & Acc & Acc & Acc\\
+\cline{2-13}
+DRB1-0401 & Prec & Prec & Prec & Recall & Recall & Recall & F1 & F1 & F1 & Acc & Acc & Acc\\
+\hline
+
+\multirow{1}{*}{DRB1-0301} & Prec & Prec & Prec & Recall & Recall & Recall & F1 & F1 & F1 & Acc & Acc & Acc\\
+\cline{2-13}
+DRB1-0401 & Prec & Prec & Prec & Recall & Recall & Recall & F1 & F1 & F1 & Acc & Acc & Acc\\
 \hline
 \end{tabular}
 \end{table}

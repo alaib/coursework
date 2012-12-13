@@ -78,26 +78,26 @@ legend('Fused ADMM', 'SVM', 'GLMNET', 'Location', 'NorthEast');
 
 % display results to console
 fprintf('=================================================================\n');
-fprintf('HLA Type\tMethod\t\tAcc\tPrec\tRecall\tF1-Score\n');
+fprintf('HLA Type\tMethod\t\tPrec\tRecall\tF1\tAcc\n');
 fprintf('=================================================================\n');
 
 %HLA1
-fprintf('%s\t%s\t\t%.2f\t%.2f\t%.2f\t%.2f\n', hla1, 'ADMM', hla1_admm_score.acc, hla1_admm_score.prec, ...
-                                                        hla1_admm_score.recall, hla1_admm_score.f1);
+fprintf('%s\t%s\t\t%.2f\t%.2f\t%.2f\t%.2f\n', hla1, 'ADMM', hla1_admm_score.prec, hla1_admm_score.recall, ...
+                                                        hla1_admm_score.f1, hla1_admm_score.acc);
 fprintf('=================================================================\n');                                                    
-fprintf('%s\t%s\t\t%.2f\t%.2f\t%.2f\t%.2f\n', hla1, 'SVM', hla1_svm_score.acc, hla1_svm_score.prec, ...
-                                                        hla1_svm_score.recall, hla1_svm_score.f1);
+fprintf('%s\t%s\t\t%.2f\t%.2f\t%.2f\t%.2f\n', hla1, 'SVM', hla1_svm_score.prec, hla1_svm_score.recall, ...
+                                                        hla1_svm_score.f1, hla1_svm_score.acc);
 fprintf('=================================================================\n');                                                    
-fprintf('%s\t%s\t\t%.2f\t%.2f\t%.2f\t%.2f\n', hla1, 'GLMNET', hla1_glm_score.acc, hla1_glm_score.prec, ...
-                                                        hla1_glm_score.recall, hla1_glm_score.f1);
+fprintf('%s\t%s\t\t%.2f\t%.2f\t%.2f\t%.2f\n', hla1, 'GLMNET', hla1_glm_score.prec, hla1_glm_score.recall, ...
+                                                        hla1_glm_score.f1, hla1_glm_score.acc);
 %HLA2                                                    
 fprintf('=================================================================\n');
-fprintf('%s\t%s\t\t%.2f\t%.2f\t%.2f\t%.2f\n', hla2, 'ADMM', hla2_admm_score.acc, hla2_admm_score.prec, ...
-                                                        hla2_admm_score.recall, hla2_admm_score.f1);
+fprintf('%s\t%s\t\t%.2f\t%.2f\t%.2f\t%.2f\n', hla2, 'ADMM', hla2_admm_score.prec, hla2_admm_score.recall, ...
+                                                        hla2_admm_score.f1, hla2_admm_score.acc);
 fprintf('=================================================================\n');                                                    
-fprintf('%s\t%s\t\t%.2f\t%.2f\t%.2f\t%.2f\n', hla2, 'SVM', hla2_svm_score.acc, hla2_svm_score.prec, ...
-                                                        hla2_svm_score.recall, hla2_svm_score.f1);
+fprintf('%s\t%s\t\t%.2f\t%.2f\t%.2f\t%.2f\n', hla2, 'SVM', hla2_svm_score.prec, hla2_svm_score.recall, ...
+                                                        hla2_svm_score.f1, hla2_svm_score.acc);
 fprintf('=================================================================\n');                                                    
-fprintf('%s\t%s\t\t%.2f\t%.2f\t%.2f\t%.2f\n', hla2, 'GLMNET', hla2_glm_score.acc, hla2_glm_score.prec, ...
-                                                        hla2_glm_score.recall, hla2_glm_score.f1);                                                    
+fprintf('%s\t%s\t\t%.2f\t%.2f\t%.2f\t%.2f\n', hla2, 'GLMNET', hla2_glm_score.prec, hla2_glm_score.recall, ...
+                                                        hla2_glm_score.f1, hla2_glm_score.acc);                                                    
 fprintf('=================================================================\n');                                                    
