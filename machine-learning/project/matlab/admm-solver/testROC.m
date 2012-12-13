@@ -1,6 +1,6 @@
 clc; clear;
-hla1 = 'HLA-DRB1-0401';
-hla2 = 'HLA-DRB1-1501';
+hla1 = 'HLA-DRB1-0301';
+hla2 = 'HLA-DRB1-0401';
 
 savedFileName = strcat('savedWang2/', hla1, '_', hla2, '.mat');
 %savedFileName = strcat('savedWang2/', hla1, '_', hla2, '_admm_svm.mat');
@@ -76,3 +76,28 @@ set(gca,'XTick',(1:4));
 set(gca,'XTickLabel', X_hla2);
 legend('Fused ADMM', 'SVM', 'GLMNET', 'Location', 'NorthEast');
 
+% display results to console
+fprintf('=================================================================\n');
+fprintf('HLA Type\tMethod\t\tAcc\tPrec\tRecall\tF1-Score\n');
+fprintf('=================================================================\n');
+
+%HLA1
+fprintf('%s\t%s\t\t%.2f\t%.2f\t%.2f\t%.2f\n', hla1, 'ADMM', hla1_admm_score.acc, hla1_admm_score.prec, ...
+                                                        hla1_admm_score.recall, hla1_admm_score.f1);
+fprintf('=================================================================\n');                                                    
+fprintf('%s\t%s\t\t%.2f\t%.2f\t%.2f\t%.2f\n', hla1, 'SVM', hla1_svm_score.acc, hla1_svm_score.prec, ...
+                                                        hla1_svm_score.recall, hla1_svm_score.f1);
+fprintf('=================================================================\n');                                                    
+fprintf('%s\t%s\t\t%.2f\t%.2f\t%.2f\t%.2f\n', hla1, 'GLMNET', hla1_glm_score.acc, hla1_glm_score.prec, ...
+                                                        hla1_glm_score.recall, hla1_glm_score.f1);
+%HLA2                                                    
+fprintf('=================================================================\n');
+fprintf('%s\t%s\t\t%.2f\t%.2f\t%.2f\t%.2f\n', hla2, 'ADMM', hla2_admm_score.acc, hla2_admm_score.prec, ...
+                                                        hla2_admm_score.recall, hla2_admm_score.f1);
+fprintf('=================================================================\n');                                                    
+fprintf('%s\t%s\t\t%.2f\t%.2f\t%.2f\t%.2f\n', hla2, 'SVM', hla2_svm_score.acc, hla2_svm_score.prec, ...
+                                                        hla2_svm_score.recall, hla2_svm_score.f1);
+fprintf('=================================================================\n');                                                    
+fprintf('%s\t%s\t\t%.2f\t%.2f\t%.2f\t%.2f\n', hla2, 'GLMNET', hla2_glm_score.acc, hla2_glm_score.prec, ...
+                                                        hla2_glm_score.recall, hla2_glm_score.f1);                                                    
+fprintf('=================================================================\n');                                                    

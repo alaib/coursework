@@ -4,6 +4,7 @@
 
 %\documentclass[conference]{IEEEtran}
 \documentclass[conference,10pt,draftclsnofoot,onecolumn]{IEEEtran}
+\include{hwdefs}
 
 % *** MISC UTILITY PACKAGES ***
 % *** CITATION PACKAGES ***
@@ -46,13 +47,10 @@
 % You can find documentation about the pdfTeX application at:
 % http://www.tug.org/applications/pdftex
 
-
-
-
-
 % *** MATH PACKAGES ***
 %
 \usepackage[cmex10]{amsmath}
+
 % A popular package from the American Mathematical Society that provides
 % many useful and powerful commands for dealing with mathematics. If using
 % it, be sure to load this package with the cmex10 option to ensure that
@@ -134,8 +132,6 @@
 % http://www.ctan.org/tex-archive/obsolete/macros/latex/contrib/subfigure/
 % subfigure.sty has been superceeded by subfig.sty.
 
-
-
 %\usepackage[caption=false]{caption}
 %\usepackage[font=footnotesize]{subfig}
 % subfig.sty, also written by Steven Douglas Cochran, is the modern
@@ -155,8 +151,6 @@
 % http://www.ctan.org/tex-archive/macros/latex/contrib/caption/
 
 
-
-
 % *** FLOAT PACKAGES ***
 %
 %\usepackage{fixltx2e}
@@ -168,8 +162,6 @@
 % single column figure to be placed prior to an earlier double column
 % figure. The latest version and documentation can be found at:
 % http://www.ctan.org/tex-archive/macros/latex/base/
-
-
 
 %\usepackage{stfloats}
 % stfloats.sty was written by Sigitas Tolusis. This package gives LaTeX2e
@@ -191,10 +183,6 @@
 % cuted.sty or midfloat.sty packages (also by Sigitas Tolusis) as IEEE does
 % not format its papers in such ways.
 
-
-
-
-
 % *** PDF, URL AND HYPERLINK PACKAGES ***
 %
 \usepackage{url}
@@ -205,10 +193,6 @@
 % Read the url.sty source comments for usage information. Basically,
 % \url{my_url_here}.
 
-
-
-
-
 % *** Do not adjust lengths that control margins, column widths, etc. ***
 % *** Do not use packages that alter fonts (such as pslatex).         ***
 % There should be no need to do such things with IEEEtran.cls V1.6 and later.
@@ -216,8 +200,7 @@
 % to submit to, of course. )
 
 % custom packages
-%\usepackage{hyperref}
-
+\usepackage{verbatim}
 
 % start document
 \begin{document}
@@ -225,7 +208,6 @@
 % paper title
 % can use linebreaks \\ within to get better formatting as desired
 \title{Prediction of MHC Class II binding peptides incorporating bayesian transfer hierarchies}
-
 
 % author names and affiliations
 % use a multiple column layout for up to three different
@@ -286,7 +268,9 @@ learn the prediction/classifier parameters. This approach allows for transfer le
 My results are then compared to the state of the art support vector machine methods \cite{wan06}, GLMNET \cite{friedman09}
 and I show that our joint classifier either matches or outperforms the SVM and GLMNET methods consistently.
 
-%In the remaining sections, I describe the dataset in \ref{subsec:dataset}, features in \ref{subsec:features}, optimization setup in \ref{subsec:optimization} and the overall algorithm in \ref{subsec:algorithm}. In Section \ref{sec:results}, I discuss the experimental results and conclusion in Section \ref{sec:conclusion}.
+%In the remaining sections, I describe the dataset in \ref{subsec:dataset}, features in \ref{subsec:features},
+%optimization setup in \ref{subsec:optimization} and the overall algorithm in \ref{subsec:algorithm}.
+%In Section \ref{sec:results}, I discuss the experimental results and conclusion in Section \ref{sec:conclusion}.
 
 \section{Method}
 \label{sec:method}
@@ -331,7 +315,45 @@ I use sparse encoding \cite{qian88} for encoding the amino acid sequence. Each a
 
 \subsection{Optimization Setup}
 \label{subsec:optimization}
-SubSection text here.
+The optimization problem for logistic regression with a fused lasso penalty for a single predictor is given as
+\begin{align}
+\label{eqn1}
+\mathop{\textrm{minimize}}_{\ww} & \sum_i \mylog{1 + \myexp{-y_i(\xx_i\ww)}} + \lambda\nrmo{\ww} + \mu\nrmo{\DD\ww}.
+\end{align}
+
+%\BEAS
+%\mathop{\textrm{minimize}}_{\ww} && \sum_i \mylog{1 + \myexp{-y_i(\xx_i\ww)}} + \lambda\nrmo{\ww} + \mu\nrmo{\DD\ww}.
+%\EEAS
+
+where,
+\[
+\ww = \begin{bmatrix} w_{1} & w_{2} & \cdots & w_{n} \end{bmatrix}^\top
+\]
+\[
+\DD = \begin{bmatrix}   1 & 0 & \cdots & 0 \\
+    0 & 1 & \cdots & 0 \\
+    \vdots & \vdots & \ddots & \vdots \\
+    0 & 0 & \cdots & 1 \end{bmatrix}
+\]
+
+Since, we want to build a joint classifier for a pair of predictors and want to impose a constraint on the weights of both of their features,
+the optimization problem in \eqref{eqn1} is modified as below:-
+
+\begin{align}
+\label{eqn}
+\mathop{\textrm{minimize}}_{\ww^{1}, \ww^{2}} & \sum_i \mylog{1 + \myexp{-y^{1}_i(\xx^{1}_i\ww^{1})}} + \lambda_{1}\nrmo{\ww^{1}} \notag \\
+                                              & + \sum_i \mylog{1 + \myexp{-y^{2}_i(\xx^{2}_i\ww^{2})}} + \lambda_{2}\nrmo{\ww^{2}} \\
+                                              & + \mu\nrmo{\DD\ww} \notag.
+\end{align}
+
+where,
+\[
+\ww = \begin{bmatrix} \ww^{1} & \ww^{2}\end{bmatrix}^\top
+\]
+
+Equation \eqref{eqn} can be further simplified by packing variables $\yy^1$ and $\yy^2$ into $\yy$, $\xx^1$ and $\xx^2$ into $\xx$ and suitably modifying $\DD$ as below:-
+
+
 \subsection{Algorithm}
 \label{subsec:algorithm}
 SubSection text here.
@@ -431,26 +453,14 @@ Section text here.
 % footnotes above bottom floats. This can be corrected via the \fnbelowfloat
 % command of the stfloats package.
 
-
-
 \section{Conclusion}
 The conclusion goes here.
-
-
-
-
-% conference papers do not normally have an appendix
-
 
 % use section* for acknowledgement
 \section*{Acknowledgment}
 
 
 The authors would like to thank...
-
-
-
-
 
 % trigger a \newpage just before the given reference
 % number - used to balance the columns on the last page
@@ -479,5 +489,3 @@ The authors would like to thank...
 
 % that's all folks
 \end{document}
-
-
