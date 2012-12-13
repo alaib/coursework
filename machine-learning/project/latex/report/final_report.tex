@@ -215,6 +215,9 @@
 % (Unless specifically asked to do so by the journal or conference you plan
 % to submit to, of course. )
 
+% custom packages
+%\usepackage{hyperref}
+
 
 % start document
 \begin{document}
@@ -277,33 +280,72 @@ such as QSAR analysis \cite{doytchinova05} and structure-based approaches \cite{
 Dimitrov et al. \cite{dimitrov10} and Wang et al. \cite{wang08} have published detailed assessment of MHC Class II peptide binding
 predictors. In the above mentioned assessment, it was clear that each predictor for a specific genetic loci (including its alleles)
 worked independently i.e., no knowledge sharing occured between predictors although they might be predicting alleles of the same genetic loci.
-In this paper, we propose that the prediction of MHC Class II alleles of the same genetic loci (HLA-DR*, HLA-DQ* and HLA-DP*) are dependent
-on each other since these alleles are nothing but an alternative form of the same gene. We tie pairs of MHC Class II alleles together and jointly
+In this paper, I propose that the prediction of MHC Class II alleles of the same genetic loci (HLA-DR*, HLA-DQ* and HLA-DP*) are dependent
+on each other since these alleles are nothing but an alternative form of the same gene. I tie pairs of MHC Class II alleles together and jointly
 learn the prediction/classifier parameters. This approach allows for transfer learning via high dimensional bayesian transfer hierarchies \cite{elidan08}.
-Our results are then compared to the state of the art support vector machine methods \cite{wan06}, GLMNET \cite{friedman09}
-and we show that our joint classifier either matches or outperforms the SVM and GLMNET methods consistently.
+My results are then compared to the state of the art support vector machine methods \cite{wan06}, GLMNET \cite{friedman09}
+and I show that our joint classifier either matches or outperforms the SVM and GLMNET methods consistently.
+
+%In the remaining sections, I describe the dataset in \ref{subsec:dataset}, features in \ref{subsec:features}, optimization setup in \ref{subsec:optimization} and the overall algorithm in \ref{subsec:algorithm}. In Section \ref{sec:results}, I discuss the experimental results and conclusion in Section \ref{sec:conclusion}.
 
 \section{Method}
-Section text here.
+\label{sec:method}
+In the proposed method, pairs of MHC Class II alleles of the same genetic locus are paired together and I train a joint classifier on both to predict the
+binding and non-binding peptides. The following subsections describe the dataset, features, optimization setup and the algorithm of my method.
 \subsection{Dataset}
-SubSection text here.
+\label{subsec:dataset}
+I have used the MHC Class II dataset publicly made available by Wang et al \cite{wang08} at \cite{wangData08}. For the purposes of my experiments, I have considered 15-mers of HLA-DRB1* MHC Class-II type and filtered out the rest. The detailed split of the dataset is shown in Table \ref{tab:dataset}. For each MHC Class-II type, I have used 70\% of the data for training and 30\% for testing. Within each training and testing set, 75\% of the peptides are binding and 25\% are non-binding peptides.
+
+\begin{table}[!t]
+\caption{MHC Class II dataset}
+\label{tab:dataset}
+\centering
+\begin{tabular}{|c||c||c||c|}
+\hline
+MHC Class II type & Total no. of peptides & Binding Peptides & Non-binding Peptides\\
+\hline
+HLA-DRB1*0301 & 502 & 368 & 134\\
+\hline
+HLA-DRB1*0401 & 512 & 389 & 123\\
+\hline
+HLA-DRB1*0404 & 449 & 370 & 79\\
+\hline
+HLA-DRB1*0405 & 457 & 375 & 82\\
+\hline
+HLA-DRB1*0701 & 505 & 402 & 103\\
+\hline
+HLA-DRB1*0901 & 412 & 304 & 108\\
+\hline
+HLA-DRB1*1101 & 520 & 400 & 120\\
+\hline
+HLA-DRB1*1302 & 289 & 202 & 87\\
+\hline
+HLA-DRB1*1501 & 520 & 388 & 132\\
+\hline
+\end{tabular}
+\end{table}
+
 \subsection{Features}
-SubSection text here.
+\label{subsec:features}
+I use sparse encoding \cite{qian88} for encoding the amino acid sequence. Each amino acid of the peptide sequence is mapped in a sparse orthonormal vector space by a 20-bit vector with 19 bits set to zero and one bit set to one. Therefore a peptide, which is a sequence of M consecutive amino acid letters can be represented by the concatenation of M x 20 features. In my experimental setup, I use 15-mers of HLA-DRB1* MHC Class-II type, hence each peptide can be represented by 15 x 20 = 300 feature length vector of 0s and 1s. These features alone were not sufficient to achieve a comparitive performance, hence, in addition to these I use interaction features dependent on pairs of positions. In a 15-mer, there are 210 pairs (15 x 14) of positions (x, y) where $1 \le x \le 15, 1 \le y \le 15$ and $x \ne y$. Each pair of positions can be occupied by any pair of 20 amino acids, thus, the total number of interaction features will be 84000 (15 x 14 x 20 x 20), in which one bit is set for a particular pair presence and 0 for absence. Hence, we have a total of 84300 (300 + 84000) features per peptide represented by a series of 0s and 1s.
+
 \subsection{Optimization Setup}
+\label{subsec:optimization}
 SubSection text here.
 \subsection{Algorithm}
+\label{subsec:algorithm}
 SubSection text here.
 
 \section{Experimental Results}
-Section text here.
-
-\subsection{Dataset}
+\label{sec:results}
 Section text here.
 
 \section{Conclusion}
+\label{sec:conclusion}
 Section text here.
 
 \section{Future Work}
+\label{sec:futureWork}
 Section text here.
 
 

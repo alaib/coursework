@@ -33,12 +33,9 @@ M.~Rudolph, R.~Stanfield, and I.~Wilson, ``How tcrs bind mhcs, peptides, and
   419--466, 2006.
 
 \bibitem{jones06}
-\BIBentryALTinterwordspacing
 E.~Y. Jones, L.~Fugger, J.~L. Strominger, and C.~Siebold, ``Mhc class ii
   proteins and disease: a structural perspective,'' \emph{Nat Rev Immunol},
-  vol.~6, no.~4, pp. 271--282, Apr. 2006. [Online]. Available:
-  \url{http://dx.doi.org/10.1038/nri1805}
-\BIBentrySTDinterwordspacing
+  vol.~6, no.~4, pp. 271--282, Apr. 2006.
 
 \bibitem{gulukota00}
 K.~Gulukota and C.~DeLisi, ``Neural network method for predicting peptides that
@@ -86,5 +83,14 @@ G.~Elidan, B.~Packer, G.~Heitz, and D.~Koller, ``Convex point estimation using
 J.~H. Friedman, T.~Hastie, and R.~Tibshirani, ``Regularization paths for
   generalized linear models via coordinate descent,'' \emph{Journal of
   Statistical Software}, vol.~33, no.~1, pp. 1--22, 2 2010.
+
+\bibitem{wangData08}
+P.~Wang, J.~Sidney, C.~Dow, B.~Mothé, A.~Sette, and B.~Peters, ``Mhc class ii
+  peptide data,'' \url{http://mhcbindingpredictions.immuneepitope.org/MHCII/},
+  2008, online.
+
+\bibitem{qian88}
+N.~Qian and T.~J. Sejnowski, ``Predicting the secondary structure of globular
+  proteins using neural networks models,'' \emph{J. Molecular Biology}, 1988.
 
 \end{thebibliography}
