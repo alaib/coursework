@@ -2,7 +2,8 @@
 %% This is a skeleton file demonstrating the use of IEEEtran.cls
 %% (requires IEEEtran.cls version 1.7 or later) with an IEEE conference paper.
 
-\documentclass[conference]{IEEEtran}
+%\documentclass[conference]{IEEEtran}
+\documentclass[conference,10pt,draftclsnofoot,onecolumn]{IEEEtran}
 
 % *** MISC UTILITY PACKAGES ***
 % *** CITATION PACKAGES ***
@@ -245,64 +246,65 @@ prediction method for MHC class II binding peptides can reduce the number of can
 that need to be synthesized and tested for successful design of peptide and protein based vaccines.
 \end{abstract}
 
-\begin{IEEEkeywords}
-MHC class II, Peptide prediction, Machine Learning
-\end{IEEEkeywords}
+%\begin{IEEEkeywords}
+%MHC class II, peptide prediction, bayesian transfer hierarchy
+%\end{IEEEkeywords}
 
 \section{Introduction}
-Vaccines continue to have an enormous and unprecedented positive impact on humanity and its wellbeing. Hundreds
-of millions of human lives have been saved since the first vaccine was discovered: Edward Jenner’s smallpox vaccine in
-1796 \cite{flower081}. Yet the need to develop and deploy new vaccines has never been more urgent. Infectious disease causes about
-25\% of global deaths, particularly in children under five.  The leading annual causes of death are 2.9 millions for
-tuberculosis; 2.5 million for diarrhoeal illnesses, especially rotaviruses; a rapidly escalating 2.3 million for HIV/AIDS;
-and 1.08 million deaths for malaria. There are no effective vaccines for HIV and Malaria, and the only vaccine available
-for tuberculosis is of limited utility. Consider also the 35 new, previously unknown, infectious diseases identified in
-the past 25 years: ebola, SARS, Dengue, West Nile fever, and potentially pandemic H5N1 influenza among them.
+The activation of CD4+ helper T cells is essential for the development of adaptive immunity against pathogens \cite{jenkins01}. A
+critical step in CD4+ T cell activation is the recognition of epitopes presented by MHC class II molecules \cite{rudolph06}. MHC class II molecules
+are heterodimers expressed on the surface of professional antigen presenting cells that bind peptide fragments derived from protein
+antigens. X-ray crystallographic studies demonstrated that the MHC class II epitope binding site consists of a groove and several
+pockets provided by a $\beta$-sheet and two $\alpha$-helices. Unlike class I, the class II binding groove is open at both ends. As a result,
+peptides binding to class II molecules tend to be of variable length, but typically between 13 and 25 residues.
 
-Historically, vaccines have been attenuated whole pathogen vaccines such as BCG for TB or Sabin’s Polio
-vaccine. Issues of safety have led to the development of other strategies for vaccine development, separately focusing
-on antigen and epitope vaccines. The epitope is the minimal structure able to evoke an immune response.
-It is the immunological quantum that lies at the heart of immunity. Epitope-based vaccines have the advantage that
-many sequences able to induce autoimmunity or adverse reactions can be eliminated. Such vaccines are intrinsically
-safer: they contain no viable microorganisms and cannot induce microbial disease. However, several significant obstacles
-must be overcome before epitope-based vaccines can reach the market en masse. One such obstacle is MHC
-polymorphism.
+A hallmark of the MHC class II binding peptide groove is that there are four major pockets. These pockets accommodate side chains of
+residues 1, 4, 6, and 9 of a 9-mer core region of the binding peptide. This core region interaction largely determines binding affinity
+and specificity \cite{jones06}. In addition, peptide residues immediately flanking the core region have been indicated to make contact with the
+MHC molecule outside of the binding groove, and to contribute to MHC-peptide interaction.  MHC class II molecules are highly polymorphic, and this
+polymorphism largely corresponds with differences along the peptide binding groove. However, the binding motifs derived for
+MHC class II molecules are highly degenerate, and many promiscuous peptides have been identified that can bind multiple
+MHC class II molecules. Promiscuous peptides are a prime target for vaccine and immunotherapy and computational tools
+have been developed to facilitate systematic scanning for promiscuous peptides.
 
-Major histocompatibility complex (MHC) proteins, also known as human leukocyte antigens (HLA), are glycoproteins
- which bind within the cell short peptides, also called epitopes, derived from host and/or pathogen proteins, and
-present them at the cell surface for inspection by T-cells. T cell recognition is a fundamental mechanism of the adaptive
-immune system by which the host identifies and responds to foreign antigens.
-
- There are two classes of MHC molecules: class I and class II. MHC class I molecules typically present peptides from
-proteins synthesized within the cell (endogenous processing pathway). MHC class II proteins primarily present peptides
-derived from endocytosed extracellular proteins (exogenous processing pathway). Both classes of MHC proteins are
-extremely polymorphic. More than 3500 molecules are listed in IMGT/HLA database \cite{robinson12}. MHC class I proteins are
-encoded by three loci: HLA-A, HLA-B, and HLA-C. MHC class II proteins also are encoded by three loci: HLA-DR,
-HLA-DQ, and HLA-DP. The peptide binding site of class I proteins has a closed cleft, formed by a single protein
-chain ($\alpha$-chain) \cite{janeway01}. Usually, only short peptides of 8 to 11 amino acids bind in an extended conformation. In contrast,
-the cleft of class II proteins is open-ended, allowing much longer peptides to bind, although only 9 amino acids actually
-occupy the site. The class II cleft is formed by two separate protein chains: $\alpha$ and $\beta$ \cite{janeway01}. In this paper,
-we will be dealing only with MHC class II proteins.
-
-Many bioinformatics methods exist to predict peptide MHC binding. Experimentally determined affinities
-data have formed the basis of many peptide-MHC binding prediction methods, able effectively to discriminate binding
-from nonbinding peptides. Such methods include so-called motifs, as well as highly sophisticated computer science
-algorithms—artificial neural networks \cite{gulukota00}, HMMs \cite{noguchi02}, and support vector machines (SVMs) \cite{wan06} and methods derived
-from computational chemistry, such as QSAR analysis \cite{doytchinova05} and structure-based approaches \cite{davies06}.
+Computational prediction of MHC class II epitopes is of important theoretical and practical value, as experimental dentification
+is costly and time consuming. Many computational methods exist to predict peptide MHC binding. Experimentally determined affinities
+data have formed the basis of many peptide-MHC binding prediction methods and has enabled classification of binding and
+nonbinding peptides. Highly sophisticated computer science algorithms such as artificial neural networks \cite{gulukota00},
+HMMs \cite{noguchi02}, support vector machines (SVMs) \cite{wan06} and methods derived from computational chemistry,
+such as QSAR analysis \cite{doytchinova05} and structure-based approaches \cite{davies06} have been previous deployed to solve this problem.
 
 Dimitrov et al. \cite{dimitrov10} and Wang et al. \cite{wang08} have published detailed assessment of MHC Class II peptide binding
-predictors. In all of these predictions, it is assumed that each of the peptide binding predictors are independent
-of each other. In this paper, we propose that the prediction of MHC Class II alleles of the same genetic loci (HLA-DR, HLA-DQ and HLA-DP)
-are dependent on each other since these alleles are nothing but an alternative form of a same gene. We tie pairs of MHC Class II alleles together
-and jointly learn the prediction/classifier parameters. These results are then compared to the state of the art support vector machine methods \cite{wan06}
-and we show that our joint classifier either matches or outperforms the SVM method consistently.
+predictors. In the above mentioned assessment, it was clear that each predictor for a specific genetic loci (including its alleles)
+worked independently i.e., no knowledge sharing occured between predictors although they might be predicting alleles of the same genetic loci.
+In this paper, we propose that the prediction of MHC Class II alleles of the same genetic loci (HLA-DR*, HLA-DQ* and HLA-DP*) are dependent
+on each other since these alleles are nothing but an alternative form of the same gene. We tie pairs of MHC Class II alleles together and jointly
+learn the prediction/classifier parameters. This approach allows for transfer learning via high dimensional bayesian transfer hierarchies \cite{elidan08}.
+Our results are then compared to the state of the art support vector machine methods \cite{wan06}, GLMNET \cite{friedman09}
+and we show that our joint classifier either matches or outperforms the SVM and GLMNET methods consistently.
 
-\subsection{Subsection Heading Here}
-Subsection text here.
+\section{Method}
+Section text here.
+\subsection{Dataset}
+SubSection text here.
+\subsection{Features}
+SubSection text here.
+\subsection{Optimization Setup}
+SubSection text here.
+\subsection{Algorithm}
+SubSection text here.
 
+\section{Experimental Results}
+Section text here.
 
-\subsubsection{Subsubsection Heading Here}
-Subsubsection text here.
+\subsection{Dataset}
+Section text here.
+
+\section{Conclusion}
+Section text here.
+
+\section{Future Work}
+Section text here.
 
 
 % An example of a floating figure using the graphicx package.
