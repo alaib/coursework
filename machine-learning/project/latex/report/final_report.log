@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012) (format=pdflatex 2012.9.12)  13 DEC 2012 12:48
+This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012) (format=pdflatex 2012.9.12)  13 DEC 2012 16:32
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -210,38 +210,61 @@ LaTeX Font Info:    Redeclaring font encoding OMS on input line 568.
 LaTeX Info: Redefining \[ on input line 2666.
 LaTeX Info: Redefining \] on input line 2667.
 )
-(/usr/local/texlive/2012/texmf-dist/tex/latex/algorithms/algorithmic.sty
-Package: algorithmic 2009/08/24 v0.1 Document Style `algorithmic'
+(/usr/local/texlive/2012/texmf-dist/tex/latex/algorithmicx/algorithmicx.sty
+Package: algorithmicx 2005/04/27 v1.2 Algorithmicx
 
 (/usr/local/texlive/2012/texmf-dist/tex/latex/base/ifthen.sty
 Package: ifthen 2001/05/26 v1.1c Standard LaTeX ifthen package (DPC)
 )
-\c@ALC@unique=\count113
-\c@ALC@line=\count114
-\c@ALC@rem=\count115
-\c@ALC@depth=\count116
-\ALC@tlm=\skip47
-\algorithmicindent=\skip48
+Document Style algorithmicx 1.2 - a greatly improved `algorithmic' style
+\c@ALG@line=\count113
+\c@ALG@rem=\count114
+\c@ALG@nested=\count115
+\ALG@tlm=\skip47
+\ALG@thistlm=\skip48
+\c@ALG@Lnr=\count116
+\c@ALG@blocknr=\count117
+\c@ALG@storecount=\count118
+\c@ALG@tmpcounter=\count119
+\ALG@tmplength=\skip49
+) (/usr/local/texlive/2012/texmf-dist/tex/latex/algorithms/algorithm.sty
+Package: algorithm 2009/08/24 v0.1 Document Style `algorithm' - floating enviro
+nment
+
+(/usr/local/texlive/2012/texmf-dist/tex/latex/float/float.sty
+Package: float 2001/11/08 v1.3d Float enhancements (AL)
+\c@float@type=\count120
+\float@exts=\toks21
+\float@box=\box29
+\@float@everytoks=\toks22
+\@floatcapt=\box30
 )
-(/usr/local/texlive/2012/texmf-dist/tex/latex/tools/array.sty
+\@float@every@algorithm=\toks23
+\c@algorithm=\count121
+)
+(/usr/local/texlive/2012/texmf-dist/tex/latex/algorithmicx/algpseudocode.sty
+Package: algpseudocode 
+
+Document Style - pseudocode environments for use with the `algorithmicx' style
+) (/usr/local/texlive/2012/texmf-dist/tex/latex/tools/array.sty
 Package: array 2008/09/09 v2.4c Tabular extension package (FMi)
 \col@sep=\dimen128
 \extrarowheight=\dimen129
-\NC@list=\toks21
-\extratabsurround=\skip49
-\backup@length=\skip50
+\NC@list=\toks24
+\extratabsurround=\skip50
+\backup@length=\skip51
 )
 (/usr/local/texlive/2012/texmf-dist/tex/latex/mdwtools/mdwmath.sty
 Package: mdwmath 1996/04/11 1.1 Nice mathematical things
-\sq@sqrt=\count117
+\sq@sqrt=\count122
 LaTeX Info: Redefining \sqrt on input line 84.
 )
 (/usr/local/texlive/2012/texmf-dist/tex/latex/mdwtools/mdwtab.sty
 Package: mdwtab 1998/04/28 1.9 Table typesetting with style
-\tab@state=\count118
-\tab@columns=\count119
-\tab@preamble=\toks22
-\tab@shortline=\toks23
+\tab@state=\count123
+\tab@columns=\count124
+\tab@preamble=\toks25
+\tab@shortline=\toks26
 \extrarowheight=\dimen130
 \tabextrasep=\dimen131
 \arrayextrasep=\dimen132
@@ -250,30 +273,30 @@ Package: mdwtab 1998/04/28 1.9 Table typesetting with style
 \tab@width=\dimen135
 \col@sep=\dimen136
 \tab@endheight=\dimen137
-\tab@leftskip=\skip51
-\tab@rightskip=\skip52
-\fn@notes=\box29
+\tab@leftskip=\skip52
+\tab@rightskip=\skip53
+\fn@notes=\box31
 \fn@width=\dimen138
 )
 (/usr/local/texlive/2012/texmf-dist/tex/latex/subfigure/subfigure.sty
 Package: subfigure 2002/03/15 v2.1.5 subfigure package
-\subfigtopskip=\skip53
-\subfigcapskip=\skip54
+\subfigtopskip=\skip54
+\subfigcapskip=\skip55
 \subfigcaptopadj=\dimen139
-\subfigbottomskip=\skip55
+\subfigbottomskip=\skip56
 \subfigcapmargin=\dimen140
-\subfiglabelskip=\skip56
-\c@subfigure=\count120
-\c@lofdepth=\count121
-\c@subtable=\count122
-\c@lotdepth=\count123
+\subfiglabelskip=\skip57
+\c@subfigure=\count125
+\c@lofdepth=\count126
+\c@subtable=\count127
+\c@lotdepth=\count128
 
 ****************************************
 * Local config file subfigure.cfg used *
 ****************************************
 (/usr/local/texlive/2012/texmf-dist/tex/latex/subfigure/subfigure.cfg)
-\subfig@top=\skip57
-\subfig@bottom=\skip58
+\subfig@top=\skip58
+\subfig@bottom=\skip59
 )
 (/usr/local/texlive/2012/texmf-dist/tex/latex/url/url.sty
 \Urlmuskip=\muskip11
@@ -281,39 +304,39 @@ Package: url 2006/04/12  ver 3.3  Verb mode for urls, etc.
 )
 (/usr/local/texlive/2012/texmf-dist/tex/latex/tools/verbatim.sty
 Package: verbatim 2003/08/22 v1.5q LaTeX2e package for verbatim enhancements
-\every@verbatim=\toks24
-\verbatim@line=\toks25
+\every@verbatim=\toks27
+\verbatim@line=\toks28
 \verbatim@in@stream=\read1
 )
 (./final_report.aux)
 \openout1 = `final_report.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 206.
-LaTeX Font Info:    ... okay on input line 206.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 206.
-LaTeX Font Info:    ... okay on input line 206.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 206.
-LaTeX Font Info:    ... okay on input line 206.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 206.
-LaTeX Font Info:    ... okay on input line 206.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 206.
-LaTeX Font Info:    ... okay on input line 206.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 206.
-LaTeX Font Info:    ... okay on input line 206.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 207.
+LaTeX Font Info:    ... okay on input line 207.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 207.
+LaTeX Font Info:    ... okay on input line 207.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 207.
+LaTeX Font Info:    ... okay on input line 207.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 207.
+LaTeX Font Info:    ... okay on input line 207.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 207.
+LaTeX Font Info:    ... okay on input line 207.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 207.
+LaTeX Font Info:    ... okay on input line 207.
 
 (/usr/local/texlive/2012/texmf-dist/tex/context/base/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count124
+\scratchcounter=\count129
 \scratchdimen=\dimen141
-\scratchbox=\box30
-\nofMPsegments=\count125
-\nofMParguments=\count126
-\everyMPshowfont=\toks26
-\MPscratchCnt=\count127
+\scratchbox=\box32
+\nofMPsegments=\count130
+\nofMParguments=\count131
+\everyMPshowfont=\toks29
+\MPscratchCnt=\count132
 \MPscratchDim=\dimen142
-\MPnumerator=\count128
-\makeMPintoPDFobject=\count129
-\everyMPtoPDFconversion=\toks27
+\MPnumerator=\count133
+\makeMPintoPDFobject=\count134
+\everyMPtoPDFconversion=\toks30
 ) (/usr/local/texlive/2012/texmf-dist/tex/generic/oberdiek/pdftexcmds.sty
 Package: pdftexcmds 2011/11/29 v0.20 Utility functions of pdfTeX for LuaTeX (HO
 )
@@ -363,20 +386,24 @@ File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <7> on input line 243.
+(Font)              <7> on input line 244.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <5> on input line 243.
+(Font)              <5> on input line 244.
 
 [1{/usr/local/texlive/2012/texmf-var/fonts/map/pdftex/updmap/pdftex.map}
 
 
 ]
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <8> on input line 287.
+(Font)              <8> on input line 288.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <6> on input line 287.
+(Font)              <6> on input line 288.
 
-[2] [3] (./final_report.bbl
+[2] [3] [4]
+
+LaTeX Warning: Float too large for page by 8.83977pt on input line 495.
+
+(./final_report.bbl [5] [6]
 Missing character: There is no â in font ptmr7t!
 Missing character: There is no € in font ptmr7t!
 Missing character: There is no “ in font ptmr7t!
@@ -387,7 +414,7 @@ Missing character: There is no Ã in font ptmr7t!
 Missing character: There is no © in font ptmr7t!
 Missing character: There is no Ã in font ptmr7t!
 Missing character: There is no © in font ptmr7t!
- [4])
+)
 
 ** Conference Paper **
 Before submitting the final camera ready copy, remember to:
@@ -399,33 +426,36 @@ Before submitting the final camera ready copy, remember to:
  uses only Type 1 fonts and that every step in the generation
  process uses the appropriate paper size.
 
-[5] (./final_report.aux) ) 
+[7] (./final_report.aux) ) 
 Here is how much of TeX's memory you used:
- 3778 strings out of 493488
- 53302 string characters out of 3141347
- 121445 words of memory out of 3000000
- 7027 multiletter control sequences out of 15000+200000
- 40298 words of font info for 77 fonts, out of 3000000 for 9000
+ 4259 strings out of 493488
+ 60453 string characters out of 3141347
+ 136583 words of memory out of 3000000
+ 7495 multiletter control sequences out of 15000+200000
+ 42501 words of font info for 79 fonts, out of 3000000 for 9000
  957 hyphenation exceptions out of 8191
- 38i,11n,24p,1178b,330s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 38i,17n,24p,1178b,330s stack positions out of 5000i,500n,10000p,200000b,50000s
 {/usr/local/texlive/2012/texmf-dist/fonts/enc/dvips/b
 ase/8r.enc}</usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/c
 mbx10.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cm
 bx7.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmex
 10.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi1
-0.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.
-pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pf
-b></usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb><
-/usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></us
-r/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr
-/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/l
-ocal/texlive/2012/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texli
-ve/2012/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2012/te
-xmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on final_report.pdf (5 pages, 132890 bytes).
+0.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.
+pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pf
+b></usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb>
+</usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></u
+sr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/
+local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/l
+ocal/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/loc
+al/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local
+/texlive/2012/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2
+012/texmf-dist/fonts/type1/urw/times/utmbi8a.pfb></usr/local/texlive/2012/texmf
+-dist/fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2012/texmf-dist/font
+s/type1/urw/times/utmri8a.pfb>
+Output written on final_report.pdf (7 pages, 177135 bytes).
 PDF statistics:
- 73 PDF objects out of 1000 (max. 8388607)
- 52 compressed objects within 1 object stream
+ 93 PDF objects out of 1000 (max. 8388607)
+ 67 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)
 

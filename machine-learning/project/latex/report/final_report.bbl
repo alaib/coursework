@@ -93,4 +93,13 @@ P.~Wang, J.~Sidney, C.~Dow, B.~Mothé, A.~Sette, and B.~Peters, ``Mhc class ii
 N.~Qian and T.~J. Sejnowski, ``Predicting the secondary structure of globular
   proteins using neural networks models,'' \emph{J. Molecular Biology}, 1988.
 
+\bibitem{jojic12}
+V.~Jojic, ``Admm fused lasso signal approximator,''
+  \url{http://www.cs.unc.edu/~vjojic/comp790/notes/ADMMFLSA.pdf}, 2012, online.
+
+\bibitem{burke12}
+J.~Burke, ``Line search methods,''
+  \url{http://www.math.washington.edu/~burke/crs/408/notes/nlp/line.pdf}, 2012,
+  online.
+
 \end{thebibliography}

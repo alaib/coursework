@@ -69,7 +69,8 @@
 
 % *** SPECIALIZED LIST PACKAGES ***
 %
-\usepackage{algorithmic}
+\usepackage{algorithmicx, algorithm, algpseudocode}
+\usepackage{algpseudocode}
 % algorithmic.sty was written by Peter Williams and Rogerio Brito.
 % This package provides an algorithmic environment fo describing algorithms.
 % You can use the algorithmic environment in-text or within a figure
@@ -327,23 +328,24 @@ The optimization problem for logistic regression with a fused lasso penalty for 
 
 where,
 \[
-\ww = \begin{bmatrix} w_{1} & w_{2} & \cdots & w_{n} \end{bmatrix}^\top
-\]
-\[
-\DD = \begin{bmatrix}   1 & 0 & \cdots & 0 \\
-    0 & 1 & \cdots & 0 \\
-    \vdots & \vdots & \ddots & \vdots \\
-    0 & 0 & \cdots & 1 \end{bmatrix}
+%\ww = \begin{bmatrix} w_{1} & w_{2} & \cdots & w_{n} \end{bmatrix}^\top 
+%\textrm{and }
+\xx, \yy, \ww \in \RR^n, 
+\textrm{ and }
+\DD = \begin{bmatrix}   1 & 0 & \cdots & 0 & -1 & 0 & \cdots & 0\\
+                        0 & 1 & \cdots & 0 & 0 & -1 & \cdots & 0\\
+                        \vdots & \vdots & \ddots & \vdots & \vdots & \vdots & \ddots & \vdots\\
+                        0 & 0 & \cdots & 1 & 0 & 0 & \cdots & -1 
+      \end{bmatrix}
 \]
 
 Since, we want to build a joint classifier for a pair of predictors and want to impose a constraint on the weights of both of their features,
 the optimization problem in \eqref{eqn1} is modified as below:-
 
 \begin{align}
-\label{eqn}
-\mathop{\textrm{minimize}}_{\ww^{1}, \ww^{2}} & \sum_i \mylog{1 + \myexp{-y^{1}_i(\xx^{1}_i\ww^{1})}} + \lambda_{1}\nrmo{\ww^{1}} \notag \\
-                                              & + \sum_i \mylog{1 + \myexp{-y^{2}_i(\xx^{2}_i\ww^{2})}} + \lambda_{2}\nrmo{\ww^{2}} \\
-                                              & + \mu\nrmo{\DD\ww} \notag.
+\label{eqn2}
+\mathop{\textrm{minimize}}_{\ww^{1}, \ww^{2}} & \sum_i \mylog{1 + \myexp{-y^{1}_i(\xx^{1}_i\ww^{1})}} + \sum_i \mylog{1 + \myexp{-y^{2}_i(\xx^{2}_i\ww^{2})}} \\
+                                              & + \lambda_{1}\nrmo{\ww^{1}} + \lambda_{2}\nrmo{\ww^{2}} + \mu\nrmo{\DD\ww} \notag.
 \end{align}
 
 where,
@@ -351,12 +353,146 @@ where,
 \ww = \begin{bmatrix} \ww^{1} & \ww^{2}\end{bmatrix}^\top
 \]
 
-Equation \eqref{eqn} can be further simplified by packing variables $\yy^1$ and $\yy^2$ into $\yy$, $\xx^1$ and $\xx^2$ into $\xx$ and suitably modifying $\DD$ as below:-
 
+Equation \eqref{eqn2} can be further simplified by packing variables $\yy^1$ and $\yy^2$ into $\yy$, $\xx^1$ and $\xx^2$ into $\xx$ and suitably modifying $\DD$ as below:-
+\begin{align}
+\label{eqn3}
+\mathop{\textrm{minimize}}_{\ww} & \sum_i \mylog{1 + \myexp{-y_i(\xx_i\ww)}} + \mu\nrmo{\DD\ww}.
+\end{align}
+
+where,
+\[
+    \DD = \begin{bmatrix}   \mu & 0 & \cdots & 0 & -\mu & 0 & \cdots & 0\\
+    0 & \mu & \cdots & 0 & 0 & -\mu & \cdots & 0\\
+    \vdots & \vdots & \ddots & \vdots & \vdots & \vdots & \ddots & \vdots\\
+    0 & 0 & \cdots & \mu & 0 & 0 & \cdots & -\mu \\
+    \lambda_1 & 0 & \cdots & 0 & \lambda_2 & 0 & \cdots & 0\\
+    0 & \lambda_1 & \cdots & 0 & 0 & \lambda_2 & \cdots & 0\\
+    \vdots & \vdots & \ddots & \vdots & \vdots & \vdots & \ddots & \vdots\\
+    0 & 0 & \cdots & \lambda_1 & 0 & 0 & \cdots & \lambda_2
+    \end{bmatrix}\\
+    \textrm{ ,  }\\
+    \yy = \begin{bmatrix} \yy^{1} \\ \yy^{2}\end{bmatrix}\\
+    \textrm{ ,  }\\
+    \xx = \begin{bmatrix} \xx^{1} & 0 \\ 0 & \xx^{2}\end{bmatrix}\\
+    \textrm{ and  }\\
+    \ww = \begin{bmatrix} \ww^{1} \\ \ww^{2}\end{bmatrix}
+\]
+
+Writing out the augmented lagrangian for \eqref{eqn3},
+\begin{align}
+\label{eqn4}
+AL(\ww, \zz^0, \zz^1, \uu^0, \uu^1) = & \sum_i \log\{1+\exp\{-y_{i}z_{i}^{0}\}\} + \mu\nrmo{\zz^1} + \notag \\
+& \sum_{i} u_{i}^{0} (z_{i}^{0} - \xx_{i}\ww) + \uu^{1} (\zz^{1} - \DD\ww) + \\
+& \sum_{i} \frac{\rho}{2} \nrmt{z_{i}^{0} - \xx_{i}\ww}^{2} + \frac{\rho}{2} \nrmt{\zz^{1} - \DD\ww}^{2} \notag
+\end{align}
+
+We can solve the above augmented lagrangian using alternating direction method of multipliers (ADMM) \cite{jojic12}. The ADMM algorithm
+iterates following updates,
+\begin{align}
+    \label{eqn5}
+    \ww^k = & \mathop{\textrm{ argmin}}_\ww AL(\ww, \zz^{0, k-1}, \zz^{1, k-1}, \uu^{0, k-1}, \uu^{1, k-1}) \notag\\
+    \zz^{0, k} = & \mathop{\textrm{ argmin}}_\ww AL(\ww^k, \zz^{0}, \zz^{1, k-1}, \uu^{0, k-1}, \uu^{1, k-1})\notag\\
+    \zz^{1, k} = & \mathop{\textrm{ argmin}}_\ww AL(\ww^k, \zz^{0, k}, \zz^{1}, \uu^{0, k-1}, \uu^{1, k-1}) \\
+    \uu^{0, k} = & \uu^{0, k-1} + \rho (\zz^{0, k} - \ww^k) \notag\\
+    \uu^{1, k} = & \uu^{1, k-1} + \rho (\zz^{0, k} - \DD\ww^k)\notag
+\end{align}
+where $k - 1$ and $k$ denote previous and current iteration respectively.
+
+Now, we derive the updates for $\ww^k, \zz^{0, k}, \zz^{1, k}$
+
+\subsubsection{Deriving update for \textbf{w}$^k$}
+\label{subsubsec:wupdate}
+Eliminating terms that are constants with respect to $\ww$ and completing the squares we obtain,
+\begin{align}
+\label{eqn6}
+\ww^k =& \argmin_\ww \frac{\rho}{2} \nrmt{\begin{bmatrix} \xx \\ \DD \end{bmatrix}\ww - \begin{bmatrix} \zz^{0,k-1} + \frac{1}{\rho} \uu^{0, k-1} \\ \zz^{1,k-1} + \frac{1}{\rho} \uu^{1, k-1} \end{bmatrix} }^{2} 
+\end{align}
+
+Thus, an update for $\ww$ requires solving the above system of linear equations.
+
+\subsubsection{Deriving update for \textbf{z}$^{0, k}$}
+\label{subsubsec:z0update}
+
+\begin{align}
+\label{eqn7}
+z_i^{0,k} = & \argmin_{z_i^0}   \log{\{1+exp\{-y_{i}z_{i}^{0}\}\}} + \frac{\rho}{2}\nrmt{z_{i}^{0} - (\xx_{i}\ww^{k}-\frac{1}{\rho}u_{i}^{0,k-1})}^{2} 
+\end{align}
+
+Since $\zz^{0}$ is scalar, the objective is univariate. We can solve the above unconstrained optimization using Newton algorithm
+with backtracking and the weak Wolfe condition for backtracking termination \cite{burke12}.
+
+\subsubsection{Deriving update for \textbf{z}$^{1, k}$}
+\label{subsubsec:z1update}
+
+\begin{align}
+\label{eqn8}
+z_i^{1,k} = & \argmin_{z_i^1} \frac{\mu}{\rho} \nrmo{z_{i}^{1}} + \frac{1}{2} \nrmt{z_{i}^{1} - \DD\ww^{k} + \frac{1}{\rho}u_{i}^{1,k-1}}^{2} 
+\end{align}
+
+The above optimization can be solved in a closed form 
+\begin{align}
+\label{eqn9}
+z_i^{1,k} = & S(\DD\ww^{k} - \frac{1}{\rho}u_{i}^{1, k-1}, \frac{\mu}{\rho}) 
+\end{align}
+
+where \textbf{S} is the Shrink Threshold operator defined as below,
+\begin{align}
+\label{eqn10}
+S(x, \lambda) = & sign(x) \textrm{  } max (|x| - \lambda, 0)
+\end{align}
+
+The updates for the dual variables $\uu^{0,k}$ and $\uu^{1,k}$ are already listed in equation \eqref{eqn5}.
 
 \subsection{Algorithm}
-\label{subsec:algorithm}
-SubSection text here.
+Putting all of the updates listed in Section \ref{subsec:optimization} together, we can compute '$\ww$' using the steps listed in algorithm \ref{algo:fusedADMM}. In this
+algorithm, due to the vast feature space, we will iterate only for a maximum of 100 iterations instead of convergence.
+
+\begin{algorithm}                      
+\caption{Fused ADMM Optimization Solver}
+\label{algo:fusedADMM}
+\begin{algorithmic}
+\Statex
+\Statex {\textbf{INPUT:} $\yy$, $\XX$, $\DD$, $\lambda_1$ (lambda1), $\lambda_2$ (lambda2), $\mu$ (mu)} 
+\State {rho $\gets$ 1}
+\State {N $\gets$ length(y); p $\gets$ size(X,2)}
+\State {e $\gets$ size(D,1); w $\gets$ zeros(p,1)}
+\State {z0 $\gets$ zeros(N,1); u0 $\gets$ zeros(N,1);}
+\State {z1 $\gets$ zeros(e,1); u1 $\gets$ zeros(e,1);}
+\State {MAXIT $\gets$ 100;}
+\State {n $\gets$ size(X, 2);}
+\For{$it \gets 1 \to MAXIT$}
+    \State {\% computeAL method computes the augmented lagrangian value listed in equation \eqref{eqn4}}
+    \State {$before \gets computeAL(y,X,D,rho,w,z0,z1,u0,u1);$}
+    \State {$w \gets updatew(X, D, z0, z1, u0, u1, rho);$}
+    \State {$after \gets computeAL(y,X,D,rho,w,z0,z1,u0,u1);$}
+    \State {$assert(after < before + 1e-6);$}
+    \Statex
+
+    \State {$before \gets after;$}
+    \For{$i \gets 1 \to length(y)$}
+        \State {\% updatez0i calls a function which uses newton method with weak wolfe condition}
+        \State {$z0(i) \gets updatez0i(y(i), X(i,:), w, u0(i), rho);$}
+    \EndFor
+    \State {$after \gets computeAL(y,X,D,rho,w,z0,z1,u0,u1);$}
+    \State {$assert(after < before + 1e-6);$}
+    \Statex
+
+    \State {$before \gets after;$}
+    \State {$Dw \gets D*w;$}
+    \For {$i \gets 1 \to size(D,1)$}
+        \State {$z1(i) \gets updatez1i(Dw(i), u1(i), mu, rho);$}
+    \EndFor
+    \State {$after \gets computeAL(y,X,D,rho,w,z0,z1,u0,u1);$}
+    \State {$assert(after < before + 1e-6);$}
+    \Statex
+
+    \State {$u0  \gets  u0 + rho * (z0 - X*w);$}
+    \State {$u1  \gets  u1 + rho * (z1 - D*w);$}
+\EndFor
+\Statex {\bf OUTPUT:} $\ww$
+\end{algorithmic}
+\end{algorithm}
 
 \section{Experimental Results}
 \label{sec:results}

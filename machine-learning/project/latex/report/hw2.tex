@@ -1,21 +1,19 @@
 \documentclass{article}
 \include{hwdefs}
 \begin{document}
-\author{Wile E. Coyote}
+\author{Ravikiran Janardhana}
 \setcounter{HW}{2}
 \title{COMP  790-124, HW\theHW}
 \maketitle
 
 
-{ Deadline: 10/22/2012 11:59PM EST}
+{ Deadline: 10/24/2012 11:59PM EST}
 
 { Submit \texttt{hw\theHW.pdf} by e-mail to \texttt{vjojic+comp790+hw\theHW@cs.unc.edu}
 
 
 
 \noindent\rule{\textwidth}{3pt}
-
-
 
 
 In the next few problems we will derive and implement an ADMM algorithm for logistic regression with a fused lasso penalty.  You can refer to the ADMM write up available on the course website  \url{http://www.cs.unc.edu/~vjojic/comp790/notes/ADMMFLSA.pdf}, but note that, while there are similarities with the problems below, there are differences as well.
@@ -29,18 +27,16 @@ The optimization problem for logistic regression with a fused lasso penalty is g
 We are going to introduce new variables $\zz^0, \zz^1, \zz^2$ and reformulate the problem
 \BEAS
 \mathop{\textrm{minimize}}_{\ww,\zz_0,\zz_1,\zz^2} && \sum_i \mylog{1 + \myexp{-y_i\zz^0}} + \lambda\nrmo{\zz^1} + \mu\nrmo{\zz^2}\\
-\textrm{subject to} && \zz^0_i = \xx_i\ww, i=1,\dots n \\
+\textrm{subject to} && z^0_i = \xx_i\ww, i=1,\dots n \\
 && \zz^1 = \ww \\
 && \zz^2 = \DD\ww
 \EEAS
 
 Write out the augmented lagrangian for the above problem
 \BEAS
-\textrm{AL}(\ww,\zz^0,\zz^1,\zz^2,\uu^0,\uu^1,\uu^2) &=&  \answer \\
-&+&  \answer\\
-&+&  \answer\\
-&+&  \answer\\
-&+&  \answer
+\textrm{AL}(\ww,\zz^0,\zz^1,\zz^2,\uu^0,\uu^1,\uu^2) &=&  \sum_i \log\{1+\exp\{-y_{i}z_{i}^{0}\}\} + \lambda\nrmo{\zz^{1}} + \mu\nrmo{\zz^2} + \\
+&& \sum_{i} u_{i}^{0} (z_{i}^{0} - \xx_{i}\ww) + \uu^{1} (\zz^{1} - \ww) + \uu^{2} (\zz^{2} - \DD\ww) + \\
+&& \sum_{i} \frac{\rho}{2} \nrmt{z_{i}^{0} - \xx_{i}\ww}^{2} + \frac{\rho}{2} \nrmt{\zz^{1} - \ww}^{2} + \frac{\rho}{2} \nrmt{\zz^{2} - \DD\ww}^{2} \\
 \EEAS
 
 Hint: Make sure that you have all the terms from the objective, that is logistic regression and the two norms. For each constraint you should have a term that involves the dual variables, for example $u^0_i(z^0_i - \xx_i\ww)$, and a term that augments the lagrangian, for example $\frac{\rho}{2}\nrmt{z^0_i - \xx_i\ww}$.
@@ -48,41 +44,94 @@ Hint: Make sure that you have all the terms from the objective, that is logistic
 \newproblem{1pt}
 Implement function that computes the value of augmented lagrangian
 \begin{verbatim}
-function val = computeAL(y,X,D,lambda,mu,rho,w,z0,z1,z2,u0,u1,u2)
-val = ...
+function val = computeAL(y, X, D, lambda, mu, rho, w, z0, z1, z2, u0, u1, u2)
+    term11 = 0.0;
+    for i = 1 : size(y, 2)
+        term11 = term11 + log(1 + exp(-1 .* y(i) .* z0(i)));
+    end
+    term12 = lambda * computeL1Norm(z1);
+    term13 = mu * computeL1Norm(z2);
+    
+    term21 = 0.0;
+    for i = 1 : size(z0, 2)
+        term21 = term21 + (u0(i) * (z0(i) - w * X(:,i)));
+    end
+    term22 = u1 * (z1 - w);
+    term23 = u2 * (z2 - w * D);
+    
+    term31 = 0.0;
+    for i = 1 : size(z, 2)
+        term31 = term21 + ((rho/2) * computeL2Norm(z0(i) - (w * X(:, i))).^2);        
+    end
+    term32 = (rho/2) * (computeL2Norm(z1 - w).^2);
+    term33 = (rho/2) * (computeL2Norm(z2 - w * D).^2);
+    
+    val = term11 + term12 + term13 + ...
+          term21 + term22 + term23 + ...
+          term31 + term32 + term33;
+end
+
+function value = computeL1Norm(z)
+    value = 0;
+    for i = 1 : size(z, 2)
+        value = value + abs(z(i));
+    end
+end
+
+function value = computeL2Norm(z)
+    value = 0;
+    for i = 1 : size(z, 2)
+        value = value + abs(z(i)).^2;
+    end
+    value = sqrt(value);
+end
 \end{verbatim}
 
 
 \newproblem{1pt}
 We will use superscript $k$ to indicate the iteration, so for example $\ww^k$ denotes the state of variable $\ww$ in the $k^\tth$ iteration. Collect the terms in the augmented lagrangian that involve $\ww$, complete the square and plug in the resulting expression below
 \BEAS
-\ww^k &=& \argmin_\ww \answer  \\
+\ww^k &=& \argmin_\ww \sum_{i} u_{i}^{0,k-1} (z_{i}^{0,k-1} - \xx_{i}\ww) + \uu^{1,k-1} (\zz^{1,k-1} - \ww) + \uu^{2} (\zz^{2,k-1} - \DD\ww) + \\
+&& \sum_{i} \frac{\rho}{2} \nrmt{z_{i}^{0,k-1} - \xx_{i}\ww}^{2} + \frac{\rho}{2} \nrmt{\zz^{1,k-1} - \ww}^{2} + \frac{\rho}{2} \nrmt{\zz^{2,k-1} - \DD\ww}^{2} 
 \EEAS
+
+\BEAS
+\ww^k &=& \argmin_\ww \sum_{i} \frac{\rho}{2} \nrmt{z_{i}^{0,k-1} - \xx_{i}\ww + \frac{1}{\rho}u_{i}^{0,k-1}}^{2} + \\
+&& \frac{\rho}{2} \nrmt{z^{1,k-1} - \ww + \frac{1}{\rho}\uu^{1,k-1}}^{2} + \\
+&& \frac{\rho}{2} \nrmt{z^{2,k-1} - \DD\ww + \frac{1}{\rho}\uu^{2,k-1}}^{2} 
+\EEAS
+
+\BEAS
+\ww^k &=& \argmin_\ww \frac{\rho}{2} \nrmt{\begin{bmatrix} \xx \\ \II \\ \DD \end{bmatrix}\ww - \begin{bmatrix} \zz^{0,k-1} + \frac{1}{\rho} \uu^{0, k-1} \\ \zz^{1,k-1} + \frac{1}{\rho} \uu^{1, k-1} \\ \zz^{2,k-1} + \frac{1}{\rho} \uu^{2, k-1} \end{bmatrix} }^{2} 
+\EEAS
+
 When completing squares here do it so that $\ww,\uu_0,\zz_0$ occur under one, $\ww,\uu_1,\zz_1$ occur under another, and $\ww,\uu_1,\zz_2$ occur under yet another norm term.
 
 Same thing for $z^0_i$, note that here we are considering just a single $z^0_i$ not the full vector. You can convince yourself that if you write out the objective for the full vector it is separable into objectives across $z^0_i$.
 \BEAS
-z_i^{0,k} &=& \argmin_{z_i^0}   \answer \\
+z_i^{0,k} &=& \argmin_{z_i^0}   \log{\{1+exp\{-y_{i}z_{i}^{0}\}\}} + \frac{\rho}{2}\nrmt{z_{i}^{0}-\xx_{i}\ww^{k}+\frac{1}{\rho}u_{i}^{0,k-1}}^{2} 
 \EEAS
 And once more for $z^1_i$, using the fact that $\nrmo{\zz^1} = \sum_i |z^1_i|$
 \BEAS
-z_i^{1,k} &=& \argmin_{z_i^1}   \answer \\
+z_i^{1,k} &=& \argmin_{z_i^1}   \frac{\lambda}{\rho}\nrmo{z_{i}^{1}} + \frac{1}{2} \nrmt{z_{i}^{1} - \ww^{k} + \frac{1}{\rho}u_{i}^{1,k-1}}^{2} 
 \EEAS
 Finally, do the same for $z^2_i$
 \BEAS
-z_i^{2,k} &=& \argmin_{z_i^2}   \answer \\
+z_i^{2,k} &=& \argmin_{z_i^2}   \frac{\mu}{\rho} \nrmo{z_{i}^{2}} + \frac{1}{2} \nrmt{z_{i}^{2} - \DD\ww^{k} + \frac{1}{\rho}u_{i}^{2,k-1}}^{2} 
 \EEAS
 
 
 \newproblem{1pt} Copy over the update for $\ww$ from above
 \BEAS
-\ww^k &=& \argmin_\ww  \answer.
+\ww^k &=& \argmin_\ww  \frac{\rho}{2} \nrmt{\begin{bmatrix} \xx \\ \II \\ \DD \end{bmatrix}\ww - \begin{bmatrix} \zz^{0,k-1} + \frac{1}{\rho} \uu^{0, k-1} \\ \zz^{1,k-1} + \frac{1}{\rho} \uu^{1, k-1} \\ \zz^{2,k-1} + \frac{1}{\rho} \uu^{2, k-1} \end{bmatrix} }^{2}
 \EEAS
 Note that $\ww = \II\ww$ and refer to the appendix of the Lecture 4 notes on how to stack these two linear systems, as well as code to do it. Of course, the ADMM writeup also has some of this. Implement a function that gives update for $\ww$
 \begin{verbatim}
-function w = updatew(X,b,z0,z1,u0,u1,rho)
-w = ...
+function  w  =  updatew(X, n, D, z0, z1, z2, u0, u1, u2, rho)
+    w  =  [X; eye(n); D] \ [z0+((1/rho)*u0); z1+((1/rho)*u1); z2+((1/rho)*u2)];
+end
 \end{verbatim}
+
 \newproblem{1pt}
 To update $z^0_i$ we will be solving an optimization problem
 \[
@@ -128,15 +177,20 @@ for it=1:MAX_ITER
     z = z + step*dz;
 end
 \end{verbatim}
-Save this file as \texttt{newtonWolfeBacktrack.m}. In the code above, the while loop is terminated when the Wolfe condition is satisfied. Read the code and explain what the Wolfe condition is trying to accomplish. The Wolfe condition is \answer.
+Save this file as \texttt{newtonWolfeBacktrack.m}. In the code above, the while loop is terminated when the Wolfe condition is satisfied. Read the code and explain what the Wolfe condition is trying to accomplish. 
+
+\textbf{Ans.} The Wolfe condition is trying to reduce the \textbf{step}(step length) by BETA = 0.5 at each iteration such that the objective(z + step*z) is less than (objective(z) + ALPHA * step * dz * d).
+
+This is nothing but the sufficient decrease condition for minimizing the objective function and we break out of the while loop when the above condition is satisfied.
 
 Now we will write a function that computes the objective and its derivatives.
 \begin{verbatim}
-function [val,d,dd] = logRegGaussPrior(z,y,a,gamma)
-val = log(1 + exp(-y*z)) + gamma*(z-a)^2;
-if nargout > 1 % caller asked for derivatives
-    d = ... % first derivative
-    dd = .... % second derivative
+function  [val,d,dd]  =  logRegGaussPrior(z,y,a,gamma)
+    val  =  log(1  +  exp(-y*z))  +  gamma*(z-a)^2;
+    if  nargout  >  1  %  caller  asked  for  derivatives
+        d = (-y ./ (1 + exp(y*z))) + (2 * gamma * (z - a));
+        dd = ((y.^2 * exp(y*z)) ./ ((1 + exp(y*z)).^2)) + (2 * gamma);  
+    end
 end
 \end{verbatim}
 
@@ -150,90 +204,136 @@ Of course you will be plugging in different values of \texttt{y,a,gamma}. Note t
 
 Use the \texttt{newtonWolfeBacktrack} and \texttt{logRegGaussianPrior} to implement
 \begin{verbatim}
-function z0i = updatez0i( ... )
-...
+function z0i = updatez0i(yi, xi, w, u0i, rho)
+    y = yi;    
+    a = (xi*w) - ((1/rho) * u0i);
+    gamma = rho/2;
+    f = @(z) logRegGaussPrior(z,y,a,gamma);
+    z0i = newtonWolfeBacktrack(f,0);    
+end
 \end{verbatim}
 
 \newproblem{1pt} Copy over update for $z^1$ from above
 \[
-z_i^{1,k} = \argmin_{z_I^1}   \answer.
+z_i^{1,k} = \argmin_{z_I^1}   \frac{\lambda}{\rho}\nrmo{z_{i}^{1}} + \frac{1}{2} \nrmt{z_{i}^{1} - \ww^{k} + \frac{1}{\rho}u_{i}^{1,k-1}}^{2}
 \]
 
-Refer to ADMM writeup on how to solve this in a closed form the problem of this shape and write it out here
+Refer to ADMM writeup on how to solve this in a closed form the problem of this shape and write it out here.
+
+The optimization is simply Lasso regression and can be solved in a closed form update as below (where S is shrinkThreshold function and is implemented as below):-
 \[
-z_i^{1,k} = \answer.
+z_i^{1,k} = S(\ww^{k} - \frac{1}{\rho}u_{i}^{1,k-1}, \frac{\lambda}{\rho}) 
 \]
 write code to implement this update
 \begin{verbatim}
-function z1i = updatez1i( ... )
-z1i = ...
+function z1i = updatez1i(w, u1i, lambda, rho)
+    z1i = shrinkThreshold(w - 1/rho*u1i, lambda/rho);        
+end
+
+function  x  =  shrinkThreshold(x,lambda)
+    x  =  sign(x).*max(abs(x)  -  lambda,0);
+end
 \end{verbatim}
+
 
 \newproblem{1pt} Copy over update for $z_i^2$ from above
 \[
-z_i^{2,k} = \argmin_{z_i^2}   \answer.
+z_i^{2,k} = \argmin_{z_i^2}   \frac{\mu}{\rho} \nrmo{z_{i}^{2}} + \frac{1}{2} \nrmt{z_{i}^{2} - \DD\ww^{k} + \frac{1}{\rho}u_{i}^{2,k-1}}^{2} 
 \]
 
-Refer to ADMM writeup on how to solve this in a closed form the problem of this shape and write it out here
+Refer to ADMM writeup on how to solve this in a closed form the problem of this shape and write it out here.
+
+The optimization is simply Lasso regression and can be solved in a closed form update as below (where S is shrinkThreshold function and is implemented as below):-
 \[
-z_i^{2,k} = \answer.
+z_i^{2,k} = S(\DD\ww^{k} - \frac{1}{\rho}u_{i}^{2, k-1}, \frac{\mu}{\rho}) 
 \]
 write code to implement this update
 \begin{verbatim}
-function z1i = updatez2i( ... )
-z2i = ...
+% Dwi = Dw(i), Dw = D*w
+function z2i = updatez2i(Dwi, u2i, mu, rho)    
+    z2i = shrinkThreshold(Dwi - 1/rho*u2i, mu/rho);
+end
+
+function  x  =  shrinkThreshold(x,lambda)
+    x  =  sign(x).*max(abs(x)  -  lambda,0);
+end
 \end{verbatim}
+
 \newproblem{2pt} Putting all of this together
 \begin{verbatim}
-function w = solveLogRegFusedLasso(y,X,D)
-rho = 1;
-N = length(y); assert(N == size(X,1));
-p = size(X,2); assert(p == size(D,2));
-e = size(D,1);
-w = zeros(p,1);
-z0 = zeros(N,1); u0 = zeros(N,1);
-z1 = zeros(p,1); u1 = zeros(p,1);
-z2 = zeros(e,1); u2 = zeros(e,1);
-MAXIT = 100;
-
-for it=1:MAXIT
-    before = computeAL(y,X,D,lambda,mu,rho,w,z0,z1,z2,u0,u1,u2);
-    w = updatew( ... );
-    after = computeAL(y,X,D,lambda,mu,rho,w,z0,z1,z2,u0,u1,u2);
-    assert(after < before + 1e-6);
-
-    before = after;
-    for i=1:length(y)
-        z0(i) = updatez0i( ... );
-    end
-    after = computeAL(y,X,D,lambda,mu,rho,w,z0,z1,z2,u0,u1,u2);
-    assert(after < before + 1e-6);
-
-    before = after;
-    for i=1:length(y)
-        z1(i) = updatez1i( ... );
-    end
-    after = computeAL(y,X,D,lambda,mu,rho,w,z0,z1,z2,u0,u1,u2);
-    assert(after < before + 1e-6);
-
-    before = after;
-    for i=1:size(D,1)
-        z2(i) = updatez2i( ... );
-    end
-    after = computeAL(y,X,D,lambda,mu,rho,w,z0,z1,z2,u0,u1,u2);
-    assert(after < before + 1e-6);
-
-    u0 = ...
-    u1 = ...
-    u2 = ...
+function  w  =  solveLogRegFusedLasso(y,X,D, lambda, mu)
+    rho  =  1;
+    N  =  length(y);  assert(N  ==  size(X,1));
+    p  =  size(X,2);  assert(p  ==  size(D,2));
+    e  =  size(D,1);
+    w  =  zeros(p,1);
+    z0  =  zeros(N,1);  u0  =  zeros(N,1);
+    z1  =  zeros(p,1);  u1  =  zeros(p,1);
+    z2  =  zeros(e,1);  u2  =  zeros(e,1);
+    MAXIT  =  100;
+    n = size(X, 2);
+    
+    for  it=1:MAXIT
+        before  =  computeAL(y,X,D,lambda,mu,rho,w,z0,z1,z2,u0,u1,u2);        
+        w = updatew(X, n, D, z0, z1, z2, u0, u1, u2, rho);
+        after  =  computeAL(y,X,D,lambda,mu,rho,w,z0,z1,z2,u0,u1,u2);
+        assert(after  <  before  +  1e-6);
+        
+        before  =  after;
+        for  i=1:length(y)
+            z0(i)  =  updatez0i(y(i), X(i,:), w, u0(i), rho);
+        end
+        after  =  computeAL(y,X,D,lambda,mu,rho,w,z0,z1,z2,u0,u1,u2);
+        assert(after  <  before  +  1e-6);
+        
+        before  =  after;
+        for  i=1:length(w)            
+            z1(i) = updatez1i(w(i), u1(i), lambda, rho);
+        end
+        after  =  computeAL(y,X,D,lambda,mu,rho,w,z0,z1,z2,u0,u1,u2);
+        assert(after  <  before  +  1e-6);
+        
+        before  =  after;
+        Dw = D*w;
+        for  i=1:size(D,1)            
+            %z2(i) = updatez2i(w, D, u2(i), mu, rho);
+            z2(i) = updatez2i(Dw(i), u2(i), mu, rho);
+        end
+        after  =  computeAL(y,X,D,lambda,mu,rho,w,z0,z1,z2,u0,u1,u2);
+        assert(after  <  before  +  1e-6);
+        
+        u0  =  u0 + rho * (z0 - X*w);
+        u1  =  u1 + rho * (z1 - w);
+        u2  =  u2 + rho * (z2 - D*w);
+    end        
 end
 \end{verbatim}
 If any of the asserts fail, it is most likely that you have a bug in your update. Remember the updates are derived so as to minimize the augmented lagrangian. If your update does not reduce the augmented lagrangian, this is what the asserts check, then there is a bug.
 
 Load \texttt{hw2.mat} and run your code on \texttt{y,X,lambda,mu} in that environment. Report \texttt{w}
 \begin{verbatim}
-w = ...
+w = 0.4591
+    0.4877
+    0.1417
+    0.0923
+    0.1594
+    0.0000
+   -0.0000
+    0.0000
+    0.0000
+    0.0000
+    0.4591
+    0.4877
+    0.1417
+    0.0923
+    0.1594
+    0.0000
+   -0.0000
+    0.0000
+   -0.0000
+    0.0000 
 \end{verbatim}
+
 \newproblem{1pt} Poisson distribution is used to model count data.
 \[
 p(x = k | \lambda) = \frac{\lambda^k\exp{-\lambda}}{k!}.
@@ -245,18 +345,18 @@ p(x = k | \eta) = \answer.
 \]
 Write out base measure, sufficient statistic, natural parameter $\eta$ in terms of $\lambda$, log-normalizing function
 \BEAS
-h(x) &=& \answer\\
-T(x) &=& \answer \\
-\eta &=& \answer \\
-A(\eta) &=& \answer
+h(x) &=& \frac{1}{x!}\\
+T(x) &=& x \\
+\eta &=& log(\lambda) \\
+A(\eta) &=& e^{\eta}
 \EEAS
 Compute derivative of the log-normalizing function
 \[
-\frac{\partial}{\partial \eta} A(\eta) = \answer
+\frac{\partial}{\partial \eta} A(\eta) = e^{\eta}
 \]
 Compute the inverse mapping of the derivative of the log-normalizing function
 \[
-\left(\frac{\partial}{\partial \eta} A\right)^{-1} = \answer
+\left(\frac{\partial}{\partial \eta} A\right)^{-1} = log(\eta)
 \]
 Let the observed counts be
 \[
@@ -264,11 +364,11 @@ Let the observed counts be
 \]
 The sample empirical mean of sufficient statistic is, plug-in value,
 \[
-\sum_{i} \frac{1}{N} T(x_i)  = \answer.
+\sum_{i} \frac{1}{N} T(x_i)  = 5.6667.
 \]
 Then the maximum likelihood estimate for $\eta$ of the Poisson distribution in exponential family form is, plug-in value,
 \[
-\left(\frac{\partial}{\partial \eta} A\right)^{-1}\left(\sum_{i} \frac{1}{N} T(x_i)\right) = \answer.
+\left(\frac{\partial}{\partial \eta} A\right)^{-1}\left(\sum_{i} \frac{1}{N} T(x_i)\right) = log(5.6667) = 1.7346.
 \]
 \newproblem{1pt}
 Now to confirm that we did this right we are going to explicitly derive a maximum likelihood solution of Poisson distribution. The log-likelihood is
@@ -277,11 +377,11 @@ Now to confirm that we did this right we are going to explicitly derive a maximu
 \]
 Plug-in $h(x_i),T(x_i),A(\eta)$ for Poisson distribution.
 \[
-\LL(\eta;\xx) = \answer.
+\LL(\eta;\xx) = \sum_{i}^n log(\frac{1}{x_{i}!}) + \eta x_{i} - e^{\eta}.
 \]
 Take a derivative of log-likelihood with respect to $\eta$ and equate it to zero. Solve the equation for $\eta$
 \[
-\eta^{\textrm{ML}} = \answer.
+\eta^{\textrm{ML}} = log\{\frac{1}{n} \sum_{i}^n x_{i}\}.
 \]
 
 \newproblem{1pt}
@@ -297,8 +397,8 @@ Replace \texttt{emptiness.pdf} with \texttt{aPoissonExample.pdf} below.
 
 \begin{figure}[H]
 \begin{center}
-\includegraphics[scale=0.5]{emptiness.pdf}
-\caption{This is emptiness, it earns no points.}
+\includegraphics[scale=0.5, angle=90]{aPoissonExample.pdf}
+\caption{Poisson Distribution Histogram}
 \end{center}
 \end{figure}
 
@@ -314,12 +414,15 @@ Replace \texttt{emptiness.pdf} with \texttt{HW2Counts.pdf} below.
 
 \begin{figure}[H]
 \begin{center}
-\includegraphics[scale=0.5]{emptiness.pdf}
-\caption{This is emptiness, it earns no points.}
+\includegraphics[scale=0.5, angle=90]{HW2Counts.pdf}
+\caption{Homework 2 Counts Histogram.}
 \end{center}
 \end{figure}
-Comment on the differences between the two histograms and a possible cause \answer.
+Comment on the differences between the two histograms and a possible cause.
 
+\textbf{Ans.} The first histogram is of a poisson distribution with mean $\lambda$ = 15. The second histogram is a combination of two distributions (poisson and normal). The first half can be explained by a Poission distribution with mean $\lambda <$ 5 and the second half of the histogram resembles a gaussian/normal distribution with a non-zero mean and variance.
+
+\vspace{2mm}
 \newproblem{1pt}
 We will model a vector of counts $\xx$ as samples from a mixture of two Poisson distributions. The graphical model is simple
 \begin{center}
