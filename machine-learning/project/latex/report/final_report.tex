@@ -202,6 +202,7 @@
 
 % custom packages
 \usepackage{verbatim}
+\usepackage{multirow}
 
 % start document
 \begin{document}
@@ -276,43 +277,7 @@ and I show that our joint classifier either matches or outperforms the SVM and G
 \section{Method}
 \label{sec:method}
 In the proposed method, pairs of MHC Class II alleles of the same genetic locus are paired together and I train a joint classifier on both to predict the
-binding and non-binding peptides. The following subsections describe the dataset, features, optimization setup and the algorithm of my method.
-\subsection{Dataset}
-\label{subsec:dataset}
-I have used the MHC Class II dataset publicly made available by Wang et al \cite{wang08} at \cite{wangData08}. For the purposes of my experiments, I have considered 15-mers of HLA-DRB1* MHC Class-II type and filtered out the rest. The detailed split of the dataset is shown in Table \ref{tab:dataset}. For each MHC Class-II type, I have used 70\% of the data for training and 30\% for testing. Within each training and testing set, 75\% of the peptides are binding and 25\% are non-binding peptides.
-
-\begin{table}[!t]
-\caption{MHC Class II dataset}
-\label{tab:dataset}
-\centering
-\begin{tabular}{|c||c||c||c|}
-\hline
-MHC Class II type & Total no. of peptides & Binding Peptides & Non-binding Peptides\\
-\hline
-HLA-DRB1*0301 & 502 & 368 & 134\\
-\hline
-HLA-DRB1*0401 & 512 & 389 & 123\\
-\hline
-HLA-DRB1*0404 & 449 & 370 & 79\\
-\hline
-HLA-DRB1*0405 & 457 & 375 & 82\\
-\hline
-HLA-DRB1*0701 & 505 & 402 & 103\\
-\hline
-HLA-DRB1*0901 & 412 & 304 & 108\\
-\hline
-HLA-DRB1*1101 & 520 & 400 & 120\\
-\hline
-HLA-DRB1*1302 & 289 & 202 & 87\\
-\hline
-HLA-DRB1*1501 & 520 & 388 & 132\\
-\hline
-\end{tabular}
-\end{table}
-
-\subsection{Features}
-\label{subsec:features}
-I use sparse encoding \cite{qian88} for encoding the amino acid sequence. Each amino acid of the peptide sequence is mapped in a sparse orthonormal vector space by a 20-bit vector with 19 bits set to zero and one bit set to one. Therefore a peptide, which is a sequence of M consecutive amino acid letters can be represented by the concatenation of M x 20 features. In my experimental setup, I use 15-mers of HLA-DRB1* MHC Class-II type, hence each peptide can be represented by 15 x 20 = 300 feature length vector of 0s and 1s. These features alone were not sufficient to achieve a comparitive performance, hence, in addition to these I use interaction features dependent on pairs of positions. In a 15-mer, there are 210 pairs (15 x 14) of positions (x, y) where $1 \le x \le 15, 1 \le y \le 15$ and $x \ne y$. Each pair of positions can be occupied by any pair of 20 amino acids, thus, the total number of interaction features will be 84000 (15 x 14 x 20 x 20), in which one bit is set for a particular pair presence and 0 for absence. Hence, we have a total of 84300 (300 + 84000) features per peptide represented by a series of 0s and 1s.
+binding and non-binding peptides. The following subsections describes the optimization setup and the algorithm of my method.
 
 \subsection{Optimization Setup}
 \label{subsec:optimization}
@@ -446,7 +411,7 @@ The updates for the dual variables $\uu^{0,k}$ and $\uu^{1,k}$ are already liste
 
 \subsection{Algorithm}
 Putting all of the updates listed in Section \ref{subsec:optimization} together, we can compute '$\ww$' using the steps listed in algorithm \ref{algo:fusedADMM}. In this
-algorithm, due to the vast feature space, we will iterate only for a maximum of 100 iterations instead of convergence.
+algorithm, due to the vast feature space, we will iterate only for a maximum of 100 iterations instead until convergence.
 
 \begin{algorithm}                      
 \caption{Fused ADMM Optimization Solver}
@@ -495,8 +460,66 @@ algorithm, due to the vast feature space, we will iterate only for a maximum of 
 \end{algorithm}
 
 \section{Experimental Results}
-\label{sec:results}
-Section text here.
+\label{sec:expResults}
+The following subsections explain the dataset, features and the results of my method.
+\subsection{Dataset}
+\label{subsec:dataset}
+I have used the MHC Class II dataset publicly made available by Wang et al \cite{wang08} at \cite{wangData08}. For the purposes of my experiments, I have considered 15-mers of HLA-DRB1* MHC Class-II type and filtered out the rest. The detailed split of the dataset is shown in Table \ref{tab:dataset}. For each MHC Class-II type, I have used 70\% of the data for training and 30\% for testing. Within each training and testing set, 75\% of the peptides are binding and 25\% are non-binding peptides.
+
+\begin{table}[!t]
+\caption{MHC Class II dataset}
+\label{tab:dataset}
+\centering
+\begin{tabular}{|c||c||c||c|}
+\hline
+MHC Class II type & Total no. of peptides & Binding Peptides & Non-binding Peptides\\
+\hline
+HLA-DRB1*0301 & 502 & 368 & 134\\
+\hline
+HLA-DRB1*0401 & 512 & 389 & 123\\
+\hline
+HLA-DRB1*0404 & 449 & 370 & 79\\
+\hline
+HLA-DRB1*0405 & 457 & 375 & 82\\
+\hline
+HLA-DRB1*0701 & 505 & 402 & 103\\
+\hline
+HLA-DRB1*0901 & 412 & 304 & 108\\
+\hline
+HLA-DRB1*1101 & 520 & 400 & 120\\
+\hline
+HLA-DRB1*1302 & 289 & 202 & 87\\
+\hline
+HLA-DRB1*1501 & 520 & 388 & 132\\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Features}
+\label{subsec:features}
+I use sparse encoding \cite{qian88} for encoding the amino acid sequence. Each amino acid of the peptide sequence is mapped in a sparse orthonormal vector space by a 20-bit vector with 19 bits set to zero and one bit set to one. Therefore a peptide, which is a sequence of M consecutive amino acid letters can be represented by the concatenation of M x 20 features. In my experimental setup, I use 15-mers of HLA-DRB1* MHC Class-II type, hence each peptide can be represented by 15 x 20 = 300 feature length vector of 0s and 1s. These features alone were not sufficient to achieve a comparitive performance, hence, in addition to these I use interaction features dependent on pairs of positions. In a 15-mer, there are 210 pairs (15 x 14) of positions (x, y) where $1 \le x \le 15, 1 \le y \le 15$ and $x \ne y$. Each pair of positions can be occupied by any pair of 20 amino acids, thus, the total number of interaction features will be 84000 (15 x 14 x 20 x 20), in which one bit is set for a particular pair presence and 0 for absence. Hence, we have a total of 84300 (300 + 84000) features per peptide represented by a series of 0s and 1s.
+
+\subsection{Results}
+\label{subsec:results}
+Table \ref{tab:resultTable} specifies the precision, recall, f1-score and accuracy for the pairs of HLA-DRB1* MHC Class-II type alleles computed with my method (Fused ADMM method), SVM and GLMNET. My method learns the weights of features on the pair of alleles while SVM and GLMNET work independently on each of the pairs.
+
+\begin{table}[!t]
+\caption{MHC Class II dataset}
+\label{tab:resultTable}
+\centering
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+\hline
+\multirow{2}{*}{MHC Class-II} & \multirow{2}{*}{MHC Class-II} & \multicolumn{4}{c|}{Fused ADMM} & \multicolumn{4}{c|}{SVM} & \multicolumn{4}{c|}{GLMNET}\\
+\cline{3-14}
+Allele Pair& Type & Prec & Recall & F1 & Acc & Prec & Recall & F1 & Acc & Prec & Recall & F1 & Acc\\
+\hline
+\multirow{2}{*}{DRB1-0301 and DRB1-0401} & \multirow{1}{*}{DRB1-0301} & Prec & Recall & F1 & Acc & Prec & Recall & F1 & Acc & Prec & Recall & F1 & Acc\\
+\cline{2-14}
+& DRB1-0401 & Prec & Recall & F1 & Acc & Prec & Recall & F1 & Acc & Prec & Recall & F1 & Acc\\
+\hline
+\end{tabular}
+\end{table}
+
 
 \section{Conclusion}
 \label{sec:conclusion}

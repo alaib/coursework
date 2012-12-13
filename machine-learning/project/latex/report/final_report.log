@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012) (format=pdflatex 2012.9.12)  13 DEC 2012 16:32
+This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012) (format=pdflatex 2012.9.12)  13 DEC 2012 18:02
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -308,32 +308,35 @@ Package: verbatim 2003/08/22 v1.5q LaTeX2e package for verbatim enhancements
 \verbatim@line=\toks28
 \verbatim@in@stream=\read1
 )
+(/usr/local/texlive/2012/texmf-dist/tex/latex/multirow/multirow.sty
+\bigstrutjot=\dimen141
+)
 (./final_report.aux)
 \openout1 = `final_report.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 207.
-LaTeX Font Info:    ... okay on input line 207.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 207.
-LaTeX Font Info:    ... okay on input line 207.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 207.
-LaTeX Font Info:    ... okay on input line 207.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 207.
-LaTeX Font Info:    ... okay on input line 207.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 207.
-LaTeX Font Info:    ... okay on input line 207.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 207.
-LaTeX Font Info:    ... okay on input line 207.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 208.
+LaTeX Font Info:    ... okay on input line 208.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 208.
+LaTeX Font Info:    ... okay on input line 208.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 208.
+LaTeX Font Info:    ... okay on input line 208.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 208.
+LaTeX Font Info:    ... okay on input line 208.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 208.
+LaTeX Font Info:    ... okay on input line 208.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 208.
+LaTeX Font Info:    ... okay on input line 208.
 
 (/usr/local/texlive/2012/texmf-dist/tex/context/base/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count129
-\scratchdimen=\dimen141
+\scratchdimen=\dimen142
 \scratchbox=\box32
 \nofMPsegments=\count130
 \nofMParguments=\count131
 \everyMPshowfont=\toks29
 \MPscratchCnt=\count132
-\MPscratchDim=\dimen142
+\MPscratchDim=\dimen143
 \MPnumerator=\count133
 \makeMPintoPDFobject=\count134
 \everyMPtoPDFconversion=\toks30
@@ -386,24 +389,28 @@ File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <7> on input line 244.
+(Font)              <7> on input line 245.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <5> on input line 244.
+(Font)              <5> on input line 245.
 
 [1{/usr/local/texlive/2012/texmf-var/fonts/map/pdftex/updmap/pdftex.map}
 
 
 ]
+[2] [3]
+
+LaTeX Warning: Float too large for page by 8.83977pt on input line 460.
+
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <8> on input line 288.
+(Font)              <8> on input line 473.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <6> on input line 288.
+(Font)              <6> on input line 473.
+[4] [5]
+Overfull \hbox (13.92201pt too wide) in paragraph at lines 510--521
+ [][] 
+ []
 
-[2] [3] [4]
-
-LaTeX Warning: Float too large for page by 8.83977pt on input line 495.
-
-(./final_report.bbl [5] [6]
+[6] (./final_report.bbl
 Missing character: There is no â in font ptmr7t!
 Missing character: There is no € in font ptmr7t!
 Missing character: There is no “ in font ptmr7t!
@@ -428,13 +435,13 @@ Before submitting the final camera ready copy, remember to:
 
 [7] (./final_report.aux) ) 
 Here is how much of TeX's memory you used:
- 4259 strings out of 493488
- 60453 string characters out of 3141347
- 136583 words of memory out of 3000000
- 7495 multiletter control sequences out of 15000+200000
+ 4273 strings out of 493488
+ 60783 string characters out of 3141347
+ 138823 words of memory out of 3000000
+ 7505 multiletter control sequences out of 15000+200000
  42501 words of font info for 79 fonts, out of 3000000 for 9000
  957 hyphenation exceptions out of 8191
- 38i,17n,24p,1178b,330s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 38i,17n,24p,1178b,303s stack positions out of 5000i,500n,10000p,200000b,50000s
 {/usr/local/texlive/2012/texmf-dist/fonts/enc/dvips/b
 ase/8r.enc}</usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/c
 mbx10.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cm
@@ -452,7 +459,7 @@ al/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local
 012/texmf-dist/fonts/type1/urw/times/utmbi8a.pfb></usr/local/texlive/2012/texmf
 -dist/fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2012/texmf-dist/font
 s/type1/urw/times/utmri8a.pfb>
-Output written on final_report.pdf (7 pages, 177135 bytes).
+Output written on final_report.pdf (7 pages, 178503 bytes).
 PDF statistics:
  93 PDF objects out of 1000 (max. 8388607)
  67 compressed objects within 1 object stream
