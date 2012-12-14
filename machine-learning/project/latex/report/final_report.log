@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012) (format=pdflatex 2012.9.12)  13 DEC 2012 19:19
+This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012) (format=pdflatex 2012.9.12)  13 DEC 2012 20:05
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -298,6 +298,17 @@ Package: subfigure 2002/03/15 v2.1.5 subfigure package
 \subfig@top=\skip58
 \subfig@bottom=\skip59
 )
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/fixltx2e.sty
+Package: fixltx2e 2006/09/13 v1.1m fixes to LaTeX
+LaTeX Info: Redefining \em on input line 420.
+LaTeX Info: The control sequence `\[' is already robust on input line 471.
+LaTeX Info: The control sequence `\]' is already robust on input line 472.
+)
+(/usr/local/texlive/2012/texmf-dist/tex/latex/sttools/stfloats.sty
+Package: stfloats 1999/10/22
+\@dblbotnum=\count129
+\c@dblbotnumber=\count130
+)
 (/usr/local/texlive/2012/texmf-dist/tex/latex/url/url.sty
 \Urlmuskip=\muskip11
 Package: url 2006/04/12  ver 3.3  Verb mode for urls, etc.
@@ -317,31 +328,31 @@ Package: hhline 1994/05/23 v2.03 Table rule package (DPC)
 (./final_report.aux)
 \openout1 = `final_report.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 209.
-LaTeX Font Info:    ... okay on input line 209.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 209.
-LaTeX Font Info:    ... okay on input line 209.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 209.
-LaTeX Font Info:    ... okay on input line 209.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 209.
-LaTeX Font Info:    ... okay on input line 209.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 209.
-LaTeX Font Info:    ... okay on input line 209.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 209.
-LaTeX Font Info:    ... okay on input line 209.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 208.
+LaTeX Font Info:    ... okay on input line 208.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 208.
+LaTeX Font Info:    ... okay on input line 208.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 208.
+LaTeX Font Info:    ... okay on input line 208.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 208.
+LaTeX Font Info:    ... okay on input line 208.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 208.
+LaTeX Font Info:    ... okay on input line 208.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 208.
+LaTeX Font Info:    ... okay on input line 208.
 
 (/usr/local/texlive/2012/texmf-dist/tex/context/base/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count129
+\scratchcounter=\count131
 \scratchdimen=\dimen142
 \scratchbox=\box32
-\nofMPsegments=\count130
-\nofMParguments=\count131
+\nofMPsegments=\count132
+\nofMParguments=\count133
 \everyMPshowfont=\toks29
-\MPscratchCnt=\count132
+\MPscratchCnt=\count134
 \MPscratchDim=\dimen143
-\MPnumerator=\count133
-\makeMPintoPDFobject=\count134
+\MPnumerator=\count135
+\makeMPintoPDFobject=\count136
 \everyMPtoPDFconversion=\toks30
 ) (/usr/local/texlive/2012/texmf-dist/tex/generic/oberdiek/pdftexcmds.sty
 Package: pdftexcmds 2011/11/29 v0.20 Utility functions of pdfTeX for LuaTeX (HO
@@ -392,9 +403,9 @@ File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <7> on input line 246.
+(Font)              <7> on input line 245.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <5> on input line 246.
+(Font)              <5> on input line 245.
 
 [1{/usr/local/texlive/2012/texmf-var/fonts/map/pdftex/updmap/pdftex.map}
 
@@ -402,20 +413,33 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 ]
 [2] [3]
 
-LaTeX Warning: Float too large for page by 8.83977pt on input line 461.
+LaTeX Warning: Float too large for page by 8.83977pt on input line 460.
 
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <8> on input line 474.
+(Font)              <8> on input line 473.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <6> on input line 474.
-[4] [5] (./final_report.bbl [6]
+(Font)              <6> on input line 473.
+[4] [5] <images/HLA-DRB1-0401.png, id=33, 578.16pt x 433.62pt>
+File: images/HLA-DRB1-0401.png Graphic file (type png)
+
+<use images/HLA-DRB1-0401.png>
+Package pdftex.def Info: images/HLA-DRB1-0401.png used on input line 508.
+(pdftex.def)             Requested size: 230.18253pt x 172.63109pt.
+
+<images/HLA-DRB1-0901.png, id=34, 578.16pt x 433.62pt>
+File: images/HLA-DRB1-0901.png Graphic file (type png)
+
+<use images/HLA-DRB1-0901.png>
+Package pdftex.def Info: images/HLA-DRB1-0901.png used on input line 509.
+(pdftex.def)             Requested size: 230.18253pt x 172.63109pt.
+ (./final_report.bbl [6] [7 <./images/HLA-DRB1-0401.png (PNG copy)> <./images/H
+LA-DRB1-0901.png (PNG copy)>]
 Missing character: There is no â in font ptmr7t!
 Missing character: There is no € in font ptmr7t!
 Missing character: There is no “ in font ptmr7t!
 Missing character: There is no â in font ptmr7t!
 Missing character: There is no € in font ptmr7t!
 Missing character: There is no ” in font ptmr7t!
- [7]
 Missing character: There is no Ã in font ptmr7t!
 Missing character: There is no © in font ptmr7t!
 Missing character: There is no Ã in font ptmr7t!
@@ -434,10 +458,10 @@ Before submitting the final camera ready copy, remember to:
 
 [8] (./final_report.aux) ) 
 Here is how much of TeX's memory you used:
- 4288 strings out of 493488
- 61019 string characters out of 3141347
- 157274 words of memory out of 3000000
- 7516 multiletter control sequences out of 15000+200000
+ 4353 strings out of 493488
+ 62171 string characters out of 3141347
+ 159236 words of memory out of 3000000
+ 7570 multiletter control sequences out of 15000+200000
  43608 words of font info for 80 fonts, out of 3000000 for 9000
  957 hyphenation exceptions out of 8191
  38i,17n,24p,1178b,303s stack positions out of 5000i,500n,10000p,200000b,50000s
@@ -458,10 +482,10 @@ al/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local
 012/texmf-dist/fonts/type1/urw/times/utmbi8a.pfb></usr/local/texlive/2012/texmf
 -dist/fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2012/texmf-dist/font
 s/type1/urw/times/utmri8a.pfb>
-Output written on final_report.pdf (8 pages, 199750 bytes).
+Output written on final_report.pdf (8 pages, 228119 bytes).
 PDF statistics:
- 96 PDF objects out of 1000 (max. 8388607)
+ 98 PDF objects out of 1000 (max. 8388607)
  69 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 1 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 11 words of extra memory for PDF output out of 10000 (max. 10000000)
 

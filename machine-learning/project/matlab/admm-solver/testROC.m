@@ -1,6 +1,6 @@
 clc; clear;
-hla1 = 'HLA-DRB1-1101';
-hla2 = 'HLA-DRB1-1501';
+hla1 = 'HLA-DRB1-0401';
+hla2 = 'HLA-DRB1-0901';
 
 savedFileName = strcat('savedWang2/', hla1, '_', hla2, '.mat');
 %savedFileName = strcat('savedWang2/', hla1, '_', hla2, '_admm_svm.mat');
@@ -15,9 +15,11 @@ hla1_svm_score = getScores(HLA1Data.testY, predY1_svm);
 hla1_glm_score = getScores(HLA1Data.testY, predY1_glm);
 
 lineWidth = 2;
-figure(1);
+fSize = 20;
+set(0,'DefaultAxesFontSize',fSize);
+f1 = figure(1);
 hold on;
-title(hla1);
+title(hla1, 'FontSize', fSize);
 xlabel('False Positive Rate (Specificity)');
 ylabel('True Positive Rate (Sensitivity)');
 plot(fprs_hla1_admm, tprs_hla1_admm, 'LineWidth', lineWidth, 'Color', 'b');
@@ -25,7 +27,9 @@ hold on;
 plot(fprs_hla1_svm, tprs_hla1_svm, 'LineWidth', lineWidth, 'Color', 'g');
 hold on;
 plot(fprs_hla1_glm, tprs_hla1_glm, 'LineWidth', lineWidth, 'Color', 'r');
-legend('Fused ADMM', 'SVM', 'GLMNET', 'Location', 'SouthEast');
+h_legend1 = legend('Fused ADMM', 'SVM', 'GLMNET', 'Location', 'SouthEast');
+fname1 = strcat('/home/ravikirn/mlcode/latex/report/images/',hla1,'.png');
+print(f1,'-dpng','-r150',fname1)
 
 figure(2);
 X_hla1 = {'Precision' 'Recall' 'F1-Score' 'Accuracy'};
@@ -50,7 +54,7 @@ hla2_svm_score = getScores(HLA2Data.testY, predY2_svm);
 [tprs_hla2_glm, fprs_hla2_glm] = roc(HLA2Data.testY, predY2_glm);
 hla2_glm_score = getScores(HLA2Data.testY, predY2_glm);
 
-figure(3);
+f3 = figure(3);
 hold on;
 title(hla2);
 xlabel('False Positive Rate (Specificity)');
@@ -60,7 +64,9 @@ hold on;
 plot(fprs_hla2_svm, tprs_hla2_svm, 'LineWidth', lineWidth, 'Color', 'g');
 hold on;
 plot(fprs_hla2_glm, tprs_hla2_glm, 'LineWidth', lineWidth, 'Color', 'r');
-legend('Fused ADMM', 'SVM', 'GLMNET', 'Location', 'SouthEast');
+h_legend2 = legend('Fused ADMM', 'SVM', 'GLMNET', 'Location', 'SouthEast');
+fname3 = strcat('/home/ravikirn/mlcode/latex/report/images/',hla2,'.png');
+print(f3,'-dpng','-r150',fname3)
 
 figure(4);
 X_hla2 = {'Precision' 'Recall' 'F1-Score' 'Accuracy'};
