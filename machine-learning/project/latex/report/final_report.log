@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012) (format=pdflatex 2012.9.12)  13 DEC 2012 18:29
+This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012) (format=pdflatex 2012.9.12)  13 DEC 2012 19:19
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -311,21 +311,24 @@ Package: verbatim 2003/08/22 v1.5q LaTeX2e package for verbatim enhancements
 (/usr/local/texlive/2012/texmf-dist/tex/latex/multirow/multirow.sty
 \bigstrutjot=\dimen141
 )
+(/usr/local/texlive/2012/texmf-dist/tex/latex/tools/hhline.sty
+Package: hhline 1994/05/23 v2.03 Table rule package (DPC)
+)
 (./final_report.aux)
 \openout1 = `final_report.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 208.
-LaTeX Font Info:    ... okay on input line 208.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 208.
-LaTeX Font Info:    ... okay on input line 208.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 208.
-LaTeX Font Info:    ... okay on input line 208.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 208.
-LaTeX Font Info:    ... okay on input line 208.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 208.
-LaTeX Font Info:    ... okay on input line 208.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 208.
-LaTeX Font Info:    ... okay on input line 208.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 209.
+LaTeX Font Info:    ... okay on input line 209.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 209.
+LaTeX Font Info:    ... okay on input line 209.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 209.
+LaTeX Font Info:    ... okay on input line 209.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 209.
+LaTeX Font Info:    ... okay on input line 209.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 209.
+LaTeX Font Info:    ... okay on input line 209.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 209.
+LaTeX Font Info:    ... okay on input line 209.
 
 (/usr/local/texlive/2012/texmf-dist/tex/context/base/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
@@ -389,9 +392,9 @@ File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <7> on input line 245.
+(Font)              <7> on input line 246.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <5> on input line 245.
+(Font)              <5> on input line 246.
 
 [1{/usr/local/texlive/2012/texmf-var/fonts/map/pdftex/updmap/pdftex.map}
 
@@ -399,12 +402,12 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 ]
 [2] [3]
 
-LaTeX Warning: Float too large for page by 8.83977pt on input line 460.
+LaTeX Warning: Float too large for page by 8.83977pt on input line 461.
 
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <8> on input line 473.
+(Font)              <8> on input line 474.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <6> on input line 473.
+(Font)              <6> on input line 474.
 [4] [5] (./final_report.bbl [6]
 Missing character: There is no â in font ptmr7t!
 Missing character: There is no € in font ptmr7t!
@@ -431,11 +434,11 @@ Before submitting the final camera ready copy, remember to:
 
 [8] (./final_report.aux) ) 
 Here is how much of TeX's memory you used:
- 4273 strings out of 493488
- 60783 string characters out of 3141347
- 145823 words of memory out of 3000000
- 7505 multiletter control sequences out of 15000+200000
- 42501 words of font info for 79 fonts, out of 3000000 for 9000
+ 4288 strings out of 493488
+ 61019 string characters out of 3141347
+ 157274 words of memory out of 3000000
+ 7516 multiletter control sequences out of 15000+200000
+ 43608 words of font info for 80 fonts, out of 3000000 for 9000
  957 hyphenation exceptions out of 8191
  38i,17n,24p,1178b,303s stack positions out of 5000i,500n,10000p,200000b,50000s
 {/usr/local/texlive/2012/texmf-dist/fonts/enc/dvips/b
@@ -455,7 +458,7 @@ al/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local
 012/texmf-dist/fonts/type1/urw/times/utmbi8a.pfb></usr/local/texlive/2012/texmf
 -dist/fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2012/texmf-dist/font
 s/type1/urw/times/utmri8a.pfb>
-Output written on final_report.pdf (8 pages, 181037 bytes).
+Output written on final_report.pdf (8 pages, 199750 bytes).
 PDF statistics:
  96 PDF objects out of 1000 (max. 8388607)
  69 compressed objects within 1 object stream
