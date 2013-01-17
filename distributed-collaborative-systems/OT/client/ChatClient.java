@@ -13,19 +13,19 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Map;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import javax.swing.text.html.HTMLDocument.Iterator;
-
 import misc.Constants;
 import oeHelper.Circle;
-import oeHelper.VectorStringHistory;
 import otHelper.EditWithOTTimeStamp;
 import otHelper.EditWithOTTimeStampInterface;
+import otHelper.MsgWithEpoch;
 import otHelper.OTTimeStamp;
 import relayServer.RelayServerInterface;
 import tracer.MVCTracerInfo;
@@ -54,7 +54,7 @@ public class ChatClient implements PropertyListenerRegisterer {
 	String message = "";
 	AListenableString topic;
 	
-	VectorStringHistory historyBuffer = new VectorStringHistory();
+	AListenableVector<String> historyBuffer = new AListenableVector<String>();
 	AListenableVector<String> userList = new AListenableVector<String>();
 	PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
 	PropertyChangeListener pListener;
@@ -62,13 +62,13 @@ public class ChatClient implements PropertyListenerRegisterer {
 	RelayServerInterface rServerInt;
 	ClientCallbackImpl callback;
 	
-	String data[] = new String[2];
-	String result[] = new String[2];
+	String data[] = new String[3];
+	String result[] = new String[4];
 	String connUserList[];
 	
 	boolean delayed = true;
-	int minDelay = 4000;
-	int maxDelay = 5000;
+	int minDelay = 6000;
+	int maxDelay = 6000;
 	Random randomGenerator = new Random();
 	Timer timer;
     DateFormat dateFormat;
@@ -91,7 +91,13 @@ public class ChatClient implements PropertyListenerRegisterer {
 	// OT
 	List <EditWithOTTimeStampInterface> lBuffer = new ArrayList<EditWithOTTimeStampInterface>();
 	OTTimeStamp myOTTimeStamp = new OTTimeStamp();
+    Map <String, String> editLog = new HashMap<String, String>();
 	int id = -1;
+	
+	//OT for Messages
+	List <MsgWithEpoch> msgList = new ArrayList<MsgWithEpoch>();
+	long remoteEpoch = -1;
+	int epochSet = 0;
 	
 	ChatClient(String cName) {
 		Tracer.setKeywordDisplayStatus(this, true);
@@ -124,6 +130,21 @@ public class ChatClient implements PropertyListenerRegisterer {
 			this.cui.topicTextUI.setText(currTopic);
 			topic.addVectorListener(vListener);
 			
+			//Get latecomer msgs, add it to msgList and update UI
+			String []lMsgs = rServerInt.getLatecomerMsgs();
+			for(int i = 0; i < lMsgs.length; i++){
+				String msg = lMsgs[i];
+				int index = msg.indexOf("-");
+				String epStr = msg.substring(0, index-1);
+				long epoch = Long.parseLong(epStr);
+				String m = msg.substring(index+1, msg.length());
+				MsgWithEpoch me = new MsgWithEpoch(epoch, m);
+				msgList.add(me);
+				int msgPos = i;
+				this.addElemToHistBuffer(msgPos, m);
+				cui.appendTextToArchivePane(msgPos, m+"\n");
+			}
+			
 			data[0] = this.clientStatus.toString();
 			
 			//Client Join and exit should be noted to both rServer and sServer
@@ -139,6 +160,11 @@ public class ChatClient implements PropertyListenerRegisterer {
 		return this.delayed;
 	}
 	
+	public String convertToKey(EditWithOTTimeStampInterface ed) throws RemoteException{
+		String key = ed.getPos()+"-"+ed.getChar()+"-"+ed.getLocalCount()+"-"+ed.getRemoteCount();
+		return key;
+	}
+	
 	public boolean retrieveDelayFlag(){
 		return this.delayed;
 	}
@@ -151,10 +177,10 @@ public class ChatClient implements PropertyListenerRegisterer {
 		return this.maxDelay;
 	}
 	
-	public void setHistoryBuffer(VectorStringHistory buf){
+	public void setHistoryBuffer(AListenableVector<String> buf){
 		this.historyBuffer = buf;
 	}
-	public VectorStringHistory getHistoryBuffer(){
+	public AListenableVector<String> getHistoryBuffer(){
 		return this.historyBuffer;
 	}
 	
@@ -214,17 +240,18 @@ public class ChatClient implements PropertyListenerRegisterer {
 	
 	public void sendOTEvtToServer(EditWithOTTimeStampInterface edit, String newTopic, int STATUS_CODE){
 		try {
+			System.out.println(edit.printStr());
 			System.out.println(this.clientName+ " sent OT Event to Server");
-			MVCTracerInfo.newInfo(this.clientName+ " sent OT Event to Server", this);
+			MVCTracerInfo.newInfo(this.clientName+ " sent OT Event to Server, event desc = "+edit.printStr(), this);
 			this.rServerInt.handleOTEvent(this.clientName, edit, newTopic, STATUS_CODE);
-			System.out.println(this.clientName+ " send OT to Server Finished");
+			editLog.put(self.convertToKey(edit), "1");
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	
-	public void transformInsertAndExecute(String cName, EditWithOTTimeStampInterface remoteEdit, String newTopic)throws RemoteException{
+	public void transformInsertAndExecute(String cName, EditWithOTTimeStampInterface remoteEdit)throws RemoteException{
 		int i;
 		System.out.println("Received OTEvent from "+cName+" through Server at client = "+this.clientName);
 		System.out.println("Remote OTEvent -> Pos = "+remoteEdit.getPos()+", Char = "+remoteEdit.getChar()+
@@ -242,48 +269,51 @@ public class ChatClient implements PropertyListenerRegisterer {
 					it.remove();
 				}
 			}
-		
+			/*
 			//See slide 168 in Lecture Notes
 			for(i = 0; i < lBuffer.size();i++){
 				EditWithOTTimeStampInterface localEdit = lBuffer.get(i);
 				//Apply(Transform (Transform (Transform (R, L1), L2) … LN))
-				EditWithOTTimeStampInterface RT = transformSingle(remoteEdit, localEdit);
+				EditWithOTTimeStampInterface RT = transformSingle(rEdit, localEdit);
 				//Apply original remote transform to local
-				localEdit = transformSingle(localEdit, remoteEdit);
+				localEdit = transformSingle(localEdit, rEdit);
 				//Increment remote counter for the edit
 				localEdit.incrementRemote();
 				//Replace the element in the local buffer with new local edit
 				lBuffer.set(i, localEdit);
 				rEdit = RT.copy();
 			}
+			*/
 		}
 		printLBuffer(lBuffer, "LBuffer After");
 		//Execute rEdit
-		System.out.println("Executing remote Edit");
-		//MVCTracerInfo.newInfo("Executing remoteEdit = "+rEdit.printStr(), this);
-		//topic.insert(rEdit.getPos(), rEdit.getChar());
+		String preMsg = "Executing remote Edit at client = "+this.clientName;
+		String msg = preMsg + " - " + rEdit.printStr();
+		MVCTracerInfo.newInfo(msg, this);
+		System.out.println(msg);
+		
 		Character c = rEdit.getChar();
 		int pos = rEdit.getPos();
+		
+		//Very important to set otherUpdate else will send duplicate events
 		this.otherUpdate = 1;
+		System.out.println("At "+this.clientName+", before insert, char = "+c+", pos = "+pos);
 		this.topic.insertElementAt(c, pos);
-		String msg1 = "Transformed Remote Insertion, Character '" +rEdit.getChar()+"' inserted at pos = "+rEdit.getPos();
-		MVCTracerInfo.newInfo(msg1, this);
-		String msg2 = "Transformed Remote OTTimeStamp," + " lCount = "+rEdit.getLocalCount()+", rCount = "+rEdit.getRemoteCount();
-		MVCTracerInfo.newInfo(msg2, this);
-		System.out.println(msg2);
+		System.out.println("At "+this.clientName+", after insert, char = "+c+", pos = "+pos);
 		//Increment current site remote operation count
 		this.myOTTimeStamp.incrementRemoteCount();
 		MVCTracerInfo.newInfo(this.clientName+" OT = "+myOTTimeStamp.printData(), this);
 	}
 	
+			//If there is a local event in buffer which is not sent to server, transform locally
 	public EditWithOTTimeStampInterface transformSingle(EditWithOTTimeStampInterface R, EditWithOTTimeStampInterface L) throws RemoteException{
 		EditWithOTTimeStampInterface rEdit = R.copy();
 		int rPos = R.getPos();
 		int lPos = L.getPos();
-		int remoteId = R.getId();
-		int localId = L.getId();
+		int rId = R.getId();
+		int lId = L.getId();
 		//Lower Id = Greater Priority, if position is same and remoteId priority is less local priority, increment local index
-		if((rPos > lPos) || (rPos == lPos && remoteId > localId)){
+		if((rPos > lPos) || (rPos == lPos && R.isServer() == 1 && lId < rId)){
 			rEdit.setPos(rPos+1);
 		}
 		return rEdit;
@@ -351,12 +381,13 @@ public class ChatClient implements PropertyListenerRegisterer {
 						data[0] = Integer.toString(pos);
 						data[1] = Character.toString(oldVal);
 						data[2] = "";
+						int updateCUITopic = 1;
 						try {
-							//Dummy Edit
+							//Dummy Edit (pos, char, operation, isServer, OTTimeStamp)
 							EditWithOTTimeStampInterface edit = (EditWithOTTimeStampInterface)
-																new EditWithOTTimeStamp(-1, 'x', "D", -1, new OTTimeStamp());
+																new EditWithOTTimeStamp(-1, 'x', "D", 0, self.id, new OTTimeStamp());
 							//Send Chat Event to Server
-							self.cui.updateTopic(data, edit, Constants.CLIENT_TOPIC_CHANGE_DELETE, self.otherUpdate);
+							self.cui.updateTopic(data, edit, Constants.CLIENT_TOPIC_CHANGE_DELETE, self.otherUpdate, updateCUITopic);
 						} catch (RemoteException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -371,20 +402,24 @@ public class ChatClient implements PropertyListenerRegisterer {
 						data[0] = Integer.toString(pos);
 						data[1] = Character.toString(newVal);
 						data[2] = "";
+						int updateCUITopic = 1;
 						try {
 							EditWithOTTimeStampInterface edit;
 							//Send OT Event to Server (Insert's ONLY)
 							if(self.otherUpdate != 1){
 								myOTTimeStamp.incrementLocalCount();
+								System.out.println("Adding to local buffer, clientName = "+self.clientName+", id = "+self.id);
 								edit = (EditWithOTTimeStampInterface)
-																new EditWithOTTimeStamp(pos, newVal, "I", self.id, myOTTimeStamp.deepCopy());
+										new EditWithOTTimeStamp(pos, newVal, "I", 0, self.id, myOTTimeStamp.deepCopy());
+								
+								editLog.put(self.convertToKey(edit), "0");
 								lBuffer.add(edit);
 							}else{
 								//Dummy Edit
 								edit = (EditWithOTTimeStampInterface)
-																new EditWithOTTimeStamp(-1, 'x', "I", -1, new OTTimeStamp());
+										new EditWithOTTimeStamp(-1, 'x', "I", 0, self.id, new OTTimeStamp());
 							}
-							self.cui.updateTopic(data, edit, Constants.CLIENT_OT_TOPIC_CHANGE_INSERT, self.otherUpdate);
+							self.cui.updateTopic(data, edit, Constants.CLIENT_OT_TOPIC_CHANGE_INSERT, self.otherUpdate, updateCUITopic);
 							
 							//Send Chat Event to Server
 							//self.cui.updateTopic(data, edit, Constants.CLIENT_TOPIC_CHANGE_INSERT, self.otherUpdate);
@@ -403,6 +438,30 @@ public class ChatClient implements PropertyListenerRegisterer {
 				}
 			}
 		};
+	}
+	
+	public void addToLocalBuffer(EditWithOTTimeStampInterface ed){
+		lBuffer.add(ed);
+	}
+	
+	public void incrementOTCounter(String counterType){
+		if(counterType == "L"){
+			this.myOTTimeStamp.incrementLocalCount();
+		}else if(counterType == "R"){
+			this.myOTTimeStamp.incrementRemoteCount();
+		}
+	}
+	
+	public void addToEditLog(String key, String value){
+		this.editLog.put(key, value);
+	}
+	
+	public int retrieveId(){
+		return this.id;
+	}
+	
+	public OTTimeStamp retrieveMyOTTimeStamp(){
+		return this.myOTTimeStamp.deepCopy();
 	}
 	
 	public void addToUserList(String cName, uStatus cStatus) {
@@ -425,22 +484,44 @@ public class ChatClient implements PropertyListenerRegisterer {
 		String elem = "";
 		boolean userMsg = false;
 		if(!calleeMethod.equals("handleChatEventNotify") && !calleeMethod.equals("removeClientCallback") && 
-				!calleeMethod.equals("addClientCallback") && !calleeMethod.equals("issueConnEstablishMsg") ){
+				!calleeMethod.equals("addClientCallback") && !calleeMethod.equals("issueConnEstablishMsg") &&
+				!calleeMethod.equals("appendLateComerMsgs")){
 			
 			elem = "["+dateFormat.format(new Date())+"] "+ clientName + " : " + s;
 			userMsg = true;
 		}else{
 			elem = s;
 		}
-		propertyChangeSupport.firePropertyChange("message", null, message);
+		//propertyChangeSupport.firePropertyChange("message", null, message);
 		
-		historyBuffer.addElement(elem);
+		if(calleeMethod.equals("handleChatEventNotify")){
+			System.out.println("Client = "+this.clientName+", Handle chat event notify in setMessage");
+			System.out.println("handle Chat NOtify ->RemoteEpoch = "+remoteEpoch+", epochSet = "+epochSet);
+		}else{
+			System.out.println("No handle Chat NOtify -> RemoteEpoch = "+remoteEpoch+", epochSet = "+epochSet);
+		}
+		long epochTime;
+		if(this.epochSet == 1 && this.remoteEpoch != -1){
+			epochTime = this.remoteEpoch;
+			this.remoteEpoch = -1;
+			this.epochSet = 0;
+		}else{
+			epochTime = System.currentTimeMillis();
+		}
+		
+		final long epoch = epochTime;
+		int msgPos = insertToMsgList(epoch, elem);
+		System.out.println("Add to history buffer and cui, pos =  "+msgPos+", elem = "+elem);
+		this.addElemToHistBuffer(msgPos, elem);
+		//historyBuffer.addElement(elem);
 		// Send update to CUI
-		cui.archivePaneUI.append(elem + "\n");
+		cui.appendTextToArchivePane(msgPos, elem+"\n");
+		//cui.archivePaneUI.append(elem + "\n");
 		cui.typedTextUI.setText("");
 		
 		//Send update to everyone
-		if(!calleeMethod.equals("handleChatEventNotify") && !calleeMethod.equals("issueConnEstablishMsg")){ 
+		if(!calleeMethod.equals("handleChatEventNotify") && !calleeMethod.equals("issueConnEstablishMsg")
+				&& !calleeMethod.equals("appendLateComerMsgs")){ 
 			System.out.println("delay = "+this.delayed+" userMsg = "+userMsg);
             if(this.delayed == true && userMsg == true){
                 int delay = getRandomNumber(this.minDelay, this.maxDelay);
@@ -453,6 +534,7 @@ public class ChatClient implements PropertyListenerRegisterer {
                         // TODO Auto-generated method stub
                         data[0] = self.clientStatus.toString();
                         data[1] = dElem;
+                        data[2] = Long.toString(epoch);
                         try {
                             System.out.println("calleeMethod = "+dCalleeMethod);
                             MVCTracerInfo.newInfo("New Message = "+dElem, self);
@@ -465,6 +547,7 @@ public class ChatClient implements PropertyListenerRegisterer {
             }else{
                 data[0] = this.clientStatus.toString();
                 data[1] = elem;
+                data[2] = Long.toString(epoch);
                 try {
                     System.out.println("calleeMethod = "+calleeMethod);
                     MVCTracerInfo.newInfo("New Message = "+elem, this);
@@ -474,6 +557,41 @@ public class ChatClient implements PropertyListenerRegisterer {
                 }
             }
 		}
+	}
+	
+	public int insertToMsgList(Long epoch, String elem){
+		int pos = -1;
+		MsgWithEpoch newMsg = new MsgWithEpoch(epoch, elem);
+		//Empty Map
+		if(msgList.size() == 0){ 
+			pos = 0;
+			System.out.println("InsertToMsgList  -> "+", client = "+this.clientName+
+							   ", size = "+msgList.size()+", pos = "+pos+", epoch = "+epoch+", elem = "+elem);
+			msgList.add(newMsg);
+			return pos;
+		}
+		
+		//Find correct position
+		int i = 0;
+		while(i < msgList.size() && msgList.get(i).epoch < epoch) {
+			i += 1;
+		}
+		pos = i;
+		
+		System.out.println("InsertToMsgList -> size = "+msgList.size()+", pos = "+pos);
+		if(pos == msgList.size()){
+			msgList.add(newMsg);
+		}else{
+			for(i = msgList.size(); i > pos; i--){
+				if(i == msgList.size()){
+					msgList.add(msgList.get(i-1));
+				}else{
+					msgList.set(i, msgList.get(i-1));
+				}
+			}
+			msgList.set(pos, newMsg);
+		}
+		return pos;
 	}
 
 	public String getMessage() {
@@ -602,7 +720,12 @@ public class ChatClient implements PropertyListenerRegisterer {
 			}
 		}else if(STATUS_CODE == Constants.CLIENT_TOPIC_CHANGE){
 		}else if(STATUS_CODE == Constants.CLIENT_NEW_MSG){
+			System.out.println("At client = "+this.clientName+", result = "+result);
+			System.out.println(result);
 			String newMsg = result[1];
+			long epoch = Long.parseLong(result[3]);
+			this.remoteEpoch = epoch;
+			this.epochSet = 1;
 			this.setMessage(newMsg);
 			MVCTracerInfo.newInfo("New message received = "+newMsg, this);
 		}else if(STATUS_CODE == Constants.CLIENT_TOPIC_CHANGE_DELETE){
@@ -627,8 +750,13 @@ public class ChatClient implements PropertyListenerRegisterer {
 	}
 	
 	//Fix public variable functions
-	public void addElemToHistBuffer(String msg){
-		this.historyBuffer.addElement(msg);
+	public void addElemToHistBuffer(int pos, String msg){
+		this.historyBuffer.clear();
+		for(int i = 0; i < this.msgList.size(); i++){
+			MsgWithEpoch m = this.msgList.get(i);
+			System.out.println("i = "+i+", epoch = "+m.epoch+", msg = "+m.msg);
+			this.historyBuffer.add(m.msg);
+		}
 	}
 	
 	public void insertElemAtPosForTopic(Character c, int pos){

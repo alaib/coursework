@@ -33,6 +33,7 @@ fprintf('Ground truth parameter values\n');
 display(beta0);
 display(beta);
 
+y1 = bestBeta0 + x * bestBeta;
 fprintf('Predicted parameter values\n');
 display(bestBeta0);
 display(bestBeta);

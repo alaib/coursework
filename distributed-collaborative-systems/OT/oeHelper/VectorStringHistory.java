@@ -1,5 +1,8 @@
 package oeHelper;
 
+import java.util.List;
+
+import otHelper.MsgWithEpoch;
 import util.annotations.StructurePattern;
 import util.annotations.StructurePatternNames;
 import util.models.VectorChangeEvent;
@@ -15,7 +18,7 @@ import util.models.VectorListenerRegisterer;
  */
 @StructurePattern(StructurePatternNames.VECTOR_PATTERN)
 public class VectorStringHistory implements StringHistory, VectorListenerRegisterer {
-	public final int MAX_SIZE = 100;
+	public final int MAX_SIZE = 10000;
 	String[] contents = new String[MAX_SIZE];
 	VectorChangeSupport<String> vChangeSupport = new VectorChangeSupport<String>();
 	VectorListener vListener;
@@ -54,6 +57,39 @@ public class VectorStringHistory implements StringHistory, VectorListenerRegiste
 		return size == MAX_SIZE;
 	}
 
+	public void addElementAtPos(int pos, String element, List<MsgWithEpoch> msgList) {
+		if (isFull())
+			System.out.println("Cannot add item to a full history");
+		else {
+			if(size == 0){
+				System.out.println("AddElemAtPos, pos = "+pos+", size = "+size+", elem = "+element);
+				this.addElement(element);
+			}else{
+				size++;
+				System.out.println("AddElemAtPos, pos = "+pos+", size = "+size+", elem = "+element);
+				for(int i = size; i > pos; i--){
+					contents[i] = contents[i-1];
+				}
+				contents[pos] = element;
+				//Object, EventType, oldSize, null, element, newSize
+				VectorChangeEvent ve = new VectorChangeEvent(this, VectorChangeEvent.AddComponentEvent, pos, null, element, size);
+				vChangeSupport.fireUpdateVector(ve);
+			}
+				
+		}
+	}
+	
+	public void clear(){
+		for(int i = size-1; i > 0; i--){
+			String item = contents[i];
+			contents[i] = "";
+			//Object, EventType, oldSize, null, element, newSize
+			VectorChangeEvent ve = new VectorChangeEvent(this, VectorChangeEvent.DeleteComponentEvent, i, item, "", size-1);
+			vChangeSupport.fireUpdateVector(ve);
+		}
+		size = 0;
+	}
+	
 	public void addElement(String element) {
 		if (isFull())
 			System.out.println("Cannot add item to a full history");

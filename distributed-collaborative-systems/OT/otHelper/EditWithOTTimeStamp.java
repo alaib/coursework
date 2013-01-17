@@ -13,20 +13,22 @@ public class EditWithOTTimeStamp  extends UnicastRemoteObject implements EditWit
 	int pos;
 	Character c;
 	String op;
-	int id;
 	public OTTimeStamp t;
+	int isServerFlag;
+	int id;
 	
-	public EditWithOTTimeStamp(int p, Character ch, String operation, int priority, OTTimeStamp ts) throws RemoteException{
+	public EditWithOTTimeStamp(int p, Character ch, String operation, int serverFlag, int priority, OTTimeStamp ts) throws RemoteException{
 		pos = p;
 		c = ch;
 		op = operation;
+		isServerFlag = serverFlag;
 		id = priority;
 		t = ts;
 	}
 	
 	public void print() throws RemoteException{
-		System.out.format("pos = %d, char = %c, op = %s, id = %d, localCount = %d, remoteCount = %d\n",
-						   pos, c, op, id, t.localCount, t.remoteCount);
+		System.out.format("pos = %d, char = %c, op = %s, isServer = %d, id = %d, localCount = %d, remoteCount = %d\n",
+						   pos, c, op, isServerFlag, id, t.localCount, t.remoteCount);
 	}
 	
 	public int getPos() throws RemoteException{
@@ -37,12 +39,9 @@ public class EditWithOTTimeStamp  extends UnicastRemoteObject implements EditWit
 		pos = val;
 	}
 	
-	public int getId() throws RemoteException{
-		return id;
-	}
-	
 	public EditWithOTTimeStampInterface copy() throws RemoteException{
-		EditWithOTTimeStampInterface newEdit = (EditWithOTTimeStampInterface) new EditWithOTTimeStamp(this.pos, this.c, this.op, this.id, new OTTimeStamp(t.localCount, t.remoteCount));
+		EditWithOTTimeStampInterface newEdit = (EditWithOTTimeStampInterface) new 
+					EditWithOTTimeStamp(this.pos, this.c, this.op, this.isServerFlag, this.id, new OTTimeStamp(t.localCount, t.remoteCount));
 		return newEdit;
 	}
 
@@ -63,7 +62,8 @@ public class EditWithOTTimeStamp  extends UnicastRemoteObject implements EditWit
 	@Override
 	public String printStr() throws RemoteException {
 		// TODO Auto-generated method stub
-		String res = "pos = "+pos+", char = "+c+", op = "+op+", id = "+id+", localCount = "+t.localCount+", remoteCount = "+t.remoteCount+"\n";
+		String res = "pos = "+pos+", char = "+c+", op = "+op+", isServer = "+isServerFlag+", id = "+id+", localCount = "+t.localCount+
+					 ", remoteCount = "+t.remoteCount+"\n";
 		return res;
 	}
 
@@ -94,5 +94,25 @@ public class EditWithOTTimeStamp  extends UnicastRemoteObject implements EditWit
 			return 1;
 		}
 		return 0;
+	}
+
+	@Override
+	public int isServer() throws RemoteException {
+		return this.isServerFlag;
+	}
+
+	@Override
+	public void setServer(int serverFlag) throws RemoteException {
+		this.isServerFlag = serverFlag;
+	}
+
+	@Override
+	public int getId() throws RemoteException {
+		return id;
+	}
+
+	@Override
+	public void setId(int priority) throws RemoteException {
+		this.id = priority;
 	}
 }

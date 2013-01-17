@@ -28,8 +28,8 @@ public class ClientCallbackImpl extends UnicastRemoteObject implements ClientCal
 	   cm.handleChatEventNotify(data, STATUS_CODE);
    }
    
-   public void transformInsertAndExecute(String clientName, EditWithOTTimeStampInterface edit, String newTopic) throws RemoteException{
-	   cm.transformInsertAndExecute(clientName, edit, newTopic);
+   public void transformInsertAndExecute(String clientName, EditWithOTTimeStampInterface edit) throws RemoteException{
+	   cm.transformInsertAndExecute(clientName, edit);
 	   
    }
 }
