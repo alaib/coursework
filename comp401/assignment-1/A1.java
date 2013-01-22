@@ -4,7 +4,7 @@ import java.io.InputStreamReader;
 import java.util.Scanner;
 
 
-public class shapes {
+public class A1 {
 
 	/**
 	 * @param args
@@ -51,15 +51,14 @@ public class shapes {
 		double smallP = Double.MAX_VALUE, largeP = Double.MIN_VALUE;
 		double smallA = Double.MAX_VALUE, largeA = Double.MIN_VALUE;
 		int count = 0;
+		Scanner s = new Scanner(System.in);
 		while (true){
-			System.out.print("Enter the shape (type 'end' to exit): ");
-			CurLine = in.readLine();
-			if(CurLine.equals("end")){
+			System.out.print("Enter the shape details (type 'end' to exit): ");
+			String shape = s.next();
+			if(shape.equals("end")){
 				break;			
 			}
 			count += 1;
-			Scanner s = new Scanner(CurLine);
-			String shape = s.next();		
 			double area = 0.0, perimeter = 0.0;
 			if(shape.equals("triangle")){
 				int []coords = new int[6];
