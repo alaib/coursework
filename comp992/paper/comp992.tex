@@ -15,19 +15,42 @@
 \pagestyle{headings}  % switches on printing of running heads
 \mainmatter              % start of the contributions
 %
-\title{Fiber feature map based landmark initialization for deformable DTI registration}
-\author{Author 1 and Author 2}
+\title{Fiber feature map based landmark initialization for highly deformable DTI registration}
+\author{Aditya Gupta$^{1,3}$, Matthew Toews$^{2}$, Ravikiran Janardhana$^{4}$, Yogesh Rathi$^{2}$, John Gilmore$^{3}$, Maria Escolar$^{1}$, Martin Styner$^{3,4}$}
+
+
+\institute{$^{1}$ Dept Pediatrics, University of Pittsburgh, PA, USA; ${^2}$ Harvard Medical School, Boston MA; ${^3}$ Dept Psychiatry, ${^4}$ Dept Computer Science, University of North Carolina, Chapel Hill, NC}
+
 
 \maketitle              % typeset the title of the contribution
 
+% begin abstract
+
 \begin{abstract}
-The abstract should summarize the contents of the paper
-using at least 70 and at most 150 words. It will be set in 9-point
-font size and be inset 1.0 cm from the right and left margins.
-There will be two blank lines before and after the Abstract. \dots
-\keywords{computational geometry, graph theory, Hamilton cycles}
+This paper presents a novel pipeline for the registration of diffusion tensor images (DTI) with large pathological
+variations to normal controls based on the use of a novel feature map derived from white matter (WM) fiber
+tracts. The research presented aims towards an atlas based DTI analysis of subjects with considerable brain
+pathologies such as tumors or hydrocephalus. In this paper, we propose a novel feature map that is robust against
+variations in WM fiber tract integrity and use these feature maps to determine a landmark correspondence using
+a 3D point correspondence algorithm. This correspondence drives a deformation field computed using Gaussian
+radial basis functions(RBF). This field is employed as an initialization to a standard deformable registration
+method like demons. We present early preliminary results on the registration of a normal control dataset to a
+dataset with abnormally enlarged lateral ventricles affected by fatal demyelinating Krabbe disease. The results
+are analyzed based on a regional tensor matching criterion and a visual assessment of overlap of major WM fiber
+tracts. While further evaluation and improvements are necessary, the results presented in this paper highlight
+the potential of our method in handling registration of subjects with severe WM pathology.
+
+\keywords{fiber feature map, 3D point correspondence, DTI, large deformation fields}
 \end{abstract}
-%
+
+% end abstract
+
+
+% begin introduction
+% end introduction
+
+\section{Introduction}
+
 \section{Method}
 Lorem ipsum dolor sit amet, dolorem forensibus cum no, sed mucius quodsi legimus ei, malorum intellegebat ei pro. 
 Ignota forensibus ei per, velit apeirian adipiscing qui no, id everti aliquid has. Scripta delicatissimi per at, 

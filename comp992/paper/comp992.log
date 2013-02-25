@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012) (format=pdflatex 2012.9.12)  24 FEB 2013 13:34
+This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012) (format=pdflatex 2012.9.12)  25 FEB 2013 13:59
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -179,7 +179,7 @@ Package: ltxcmds 2011/11/09 v1.22 LaTeX kernel commands for general use (HO)
 \epsfxsize=\dimen126
 \epsfysize=\dimen127
 )
-No file comp992.aux.
+(./comp992.aux)
 \openout1 = `comp992.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 11.
@@ -194,6 +194,7 @@ LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 11.
 LaTeX Font Info:    ... okay on input line 11.
 LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 11.
 LaTeX Font Info:    ... okay on input line 11.
+
 (/usr/local/texlive/2012/texmf-dist/tex/context/base/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count117
@@ -256,88 +257,83 @@ File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <7> on input line 21.
+(Font)              <7> on input line 25.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <5> on input line 21.
-
-
-LaTeX Warning: Citation `malc:mic' on page 1 undefined on input line 41.
-
-
-LaTeX Warning: Citation `malc:mic' on page 1 undefined on input line 60.
+(Font)              <5> on input line 25.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <9> on input line 25.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <6> on input line 25.
 
 [1
 
 
 
 {/usr/local/texlive/2012/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
-<images/fiberorientation.png, id=11, 232.61906pt x 129.48375pt>
+<images/fiberorientation.png, id=14, 232.61906pt x 129.48375pt>
 File: images/fiberorientation.png Graphic file (type png)
 
 <use images/fiberorientation.png>
-Package pdftex.def Info: images/fiberorientation.png used on input line 87.
+Package pdftex.def Info: images/fiberorientation.png used on input line 110.
 (pdftex.def)             Requested size: 232.61848pt x 129.48341pt.
 
-<images/histo.png, id=13, 210.7875pt x 164.41425pt>
+<images/histo.png, id=16, 210.7875pt x 164.41425pt>
 File: images/histo.png Graphic file (type png)
  <use images/histo.png>
-Package pdftex.def Info: images/histo.png used on input line 102.
+Package pdftex.def Info: images/histo.png used on input line 125.
 (pdftex.def)             Requested size: 210.78699pt x 164.41383pt.
 
-[2 <./images/fiberorientation.png>] [3 <./images/histo.png>]
-<images/fs_final.png, id=27, 341.275pt x 96.36pt>
+[2] [3 <./images/fiberorientation.png> <./images/histo.png>]
+<images/fs_final.png, id=24, 341.275pt x 96.36pt>
 File: images/fs_final.png Graphic file (type png)
  <use images/fs_final.png>
-Package pdftex.def Info: images/fs_final.png used on input line 158.
+Package pdftex.def Info: images/fs_final.png used on input line 181.
 (pdftex.def)             Requested size: 341.27415pt x 96.35974pt.
 
-<images/entropy_final.png, id=28, 341.275pt x 92.345pt>
+[4] <images/entropy_final.png, id=32, 341.275pt x 92.345pt>
 File: images/entropy_final.png Graphic file (type png)
 
 <use images/entropy_final.png>
-Package pdftex.def Info: images/entropy_final.png used on input line 165.
+Package pdftex.def Info: images/entropy_final.png used on input line 188.
 (pdftex.def)             Requested size: 341.27415pt x 92.34476pt.
 
-<images/combined_final_with_landmarks.png, id=29, 341.275pt x 91.34125pt>
+<images/combined_final_with_landmarks.png, id=33, 341.275pt x 91.34125pt>
 File: images/combined_final_with_landmarks.png Graphic file (type png)
 
 <use images/combined_final_with_landmarks.png>
 Package pdftex.def Info: images/combined_final_with_landmarks.png used on input
- line 172.
+ line 195.
 (pdftex.def)             Requested size: 341.27415pt x 91.34102pt.
 Missing character: There is no Ô in font cmr9!
 Missing character: There is no ¨ in font cmr9!
 Missing character: There is no Å in font cmr9!
- [4 <./images/fs_final.png>]
-[5 <./images/entropy_final.png> <./images/combined_final_with_landmarks.png>]
-(./comp992.aux)
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
- ) 
+ [5 <./images/fs_final.png> <./images/entropy_final.png>] [6 <./images/combined
+_final_with_landmarks.png>]
+(./comp992.aux) ) 
 Here is how much of TeX's memory you used:
- 1938 strings out of 493488
- 27063 string characters out of 3141347
- 89302 words of memory out of 3000000
- 5237 multiletter control sequences out of 15000+200000
- 6111 words of font info for 22 fonts, out of 3000000 for 9000
+ 1951 strings out of 493488
+ 27192 string characters out of 3141347
+ 91305 words of memory out of 3000000
+ 5243 multiletter control sequences out of 15000+200000
+ 7635 words of font info for 27 fonts, out of 3000000 for 9000
  957 hyphenation exceptions out of 8191
- 37i,6n,23p,313b,292s stack positions out of 5000i,500n,10000p,200000b,50000s
-</usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
-></usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb>
-</usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx9.pfb></
-usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></u
-sr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></us
-r/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/
-local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/lo
-cal/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local
-/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/local/te
-xlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/tex
-live/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb>
-Output written on comp992.pdf (5 pages, 283872 bytes).
+ 37i,5n,23p,313b,205s stack positions out of 5000i,500n,10000p,200000b,50000s
+</usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfont
+s/cm/cmbx10.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts
+/cm/cmbx12.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/
+cm/cmbx9.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm
+/cmex10.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/
+cmmi10.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/c
+mmi7.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmr
+10.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.
+pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb
+></usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></
+usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></u
+sr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb>
+Output written on comp992.pdf (6 pages, 296110 bytes).
 PDF statistics:
- 72 PDF objects out of 1000 (max. 8388607)
- 46 compressed objects within 1 object stream
+ 79 PDF objects out of 1000 (max. 8388607)
+ 51 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  26 words of extra memory for PDF output out of 10000 (max. 10000000)
 
