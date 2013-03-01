@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012) (format=pdflatex 2012.9.12)  25 FEB 2013 13:59
+This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012) (format=pdflatex 2012.9.12)  1 MAR 2013 16:07
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -179,35 +179,96 @@ Package: ltxcmds 2011/11/09 v1.22 LaTeX kernel commands for general use (HO)
 \epsfxsize=\dimen126
 \epsfysize=\dimen127
 )
-(./comp992.aux)
+(/usr/local/texlive/2012/texmf-dist/tex/latex/amsmath/amsmath.sty
+Package: amsmath 2000/07/18 v2.13 AMS math features
+\@mathmargin=\skip45
+
+For additional information on amsmath, use the `?' option.
+(/usr/local/texlive/2012/texmf-dist/tex/latex/amsmath/amstext.sty
+Package: amstext 2000/06/29 v2.01
+
+(/usr/local/texlive/2012/texmf-dist/tex/latex/amsmath/amsgen.sty
+File: amsgen.sty 1999/11/30 v2.0
+\@emptytoks=\toks19
+\ex@=\dimen128
+))
+(/usr/local/texlive/2012/texmf-dist/tex/latex/amsmath/amsbsy.sty
+Package: amsbsy 1999/11/29 v1.2d
+\pmbraise@=\dimen129
+)
+(/usr/local/texlive/2012/texmf-dist/tex/latex/amsmath/amsopn.sty
+Package: amsopn 1999/12/14 v2.01 operator names
+)
+\inf@bad=\count117
+LaTeX Info: Redefining \frac on input line 211.
+\uproot@=\count118
+\leftroot@=\count119
+LaTeX Info: Redefining \overline on input line 307.
+\classnum@=\count120
+\DOTSCASE@=\count121
+LaTeX Info: Redefining \ldots on input line 379.
+LaTeX Info: Redefining \dots on input line 382.
+LaTeX Info: Redefining \cdots on input line 467.
+\Mathstrutbox@=\box54
+\strutbox@=\box55
+\big@size=\dimen130
+LaTeX Font Info:    Redeclaring font encoding OML on input line 567.
+LaTeX Font Info:    Redeclaring font encoding OMS on input line 568.
+
+
+Package amsmath Warning: Unable to redefine math accent \vec.
+
+\macc@depth=\count122
+\c@MaxMatrixCols=\count123
+\dotsspace@=\muskip10
+\c@parentequation=\count124
+\dspbrk@lvl=\count125
+\tag@help=\toks20
+\row@=\count126
+\column@=\count127
+\maxfields@=\count128
+\andhelp@=\toks21
+\eqnshift@=\dimen131
+\alignsep@=\dimen132
+\tagshift@=\dimen133
+\tagwidth@=\dimen134
+\totwidth@=\dimen135
+\lineht@=\dimen136
+\@envbody=\toks22
+\multlinegap=\skip46
+\multlinetaggap=\skip47
+\mathdisplay@stack=\toks23
+LaTeX Info: Redefining \[ on input line 2666.
+LaTeX Info: Redefining \] on input line 2667.
+) (./comp992.aux)
 \openout1 = `comp992.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 11.
-LaTeX Font Info:    ... okay on input line 11.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 11.
-LaTeX Font Info:    ... okay on input line 11.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 11.
-LaTeX Font Info:    ... okay on input line 11.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 11.
-LaTeX Font Info:    ... okay on input line 11.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 11.
-LaTeX Font Info:    ... okay on input line 11.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 11.
-LaTeX Font Info:    ... okay on input line 11.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 13.
+LaTeX Font Info:    ... okay on input line 13.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 13.
+LaTeX Font Info:    ... okay on input line 13.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 13.
+LaTeX Font Info:    ... okay on input line 13.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 13.
+LaTeX Font Info:    ... okay on input line 13.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 13.
+LaTeX Font Info:    ... okay on input line 13.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 13.
+LaTeX Font Info:    ... okay on input line 13.
 
 (/usr/local/texlive/2012/texmf-dist/tex/context/base/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count117
-\scratchdimen=\dimen128
-\scratchbox=\box54
-\nofMPsegments=\count118
-\nofMParguments=\count119
-\everyMPshowfont=\toks19
-\MPscratchCnt=\count120
-\MPscratchDim=\dimen129
-\MPnumerator=\count121
-\makeMPintoPDFobject=\count122
-\everyMPtoPDFconversion=\toks20
+\scratchcounter=\count129
+\scratchdimen=\dimen137
+\scratchbox=\box56
+\nofMPsegments=\count130
+\nofMParguments=\count131
+\everyMPshowfont=\toks24
+\MPscratchCnt=\count132
+\MPscratchDim=\dimen138
+\MPnumerator=\count133
+\makeMPintoPDFobject=\count134
+\everyMPtoPDFconversion=\toks25
 ) (/usr/local/texlive/2012/texmf-dist/tex/generic/oberdiek/pdftexcmds.sty
 Package: pdftexcmds 2011/11/29 v0.20 Utility functions of pdfTeX for LuaTeX (HO
 )
@@ -256,84 +317,67 @@ G,.JBIG2,.JB2,.eps]
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <7> on input line 25.
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <5> on input line 25.
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <9> on input line 25.
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <6> on input line 25.
-
 [1
 
 
 
 {/usr/local/texlive/2012/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
-<images/fiberorientation.png, id=14, 232.61906pt x 129.48375pt>
-File: images/fiberorientation.png Graphic file (type png)
+[2] [3]
+<images/fiber_orientation_histogram.png, id=20, 761.9667pt x 325.215pt>
+File: images/fiber_orientation_histogram.png Graphic file (type png)
 
-<use images/fiberorientation.png>
-Package pdftex.def Info: images/fiberorientation.png used on input line 110.
-(pdftex.def)             Requested size: 232.61848pt x 129.48341pt.
+<use images/fiber_orientation_histogram.png>
+Package pdftex.def Info: images/fiber_orientation_histogram.png used on input l
+ine 88.
+(pdftex.def)             Requested size: 347.12354pt x 148.15666pt.
+ [4 <./images/fiber_orientation_histogram.png>] <images/feature_map.png, id=24,
+ 868.4445pt x 400.6167pt>
+File: images/feature_map.png Graphic file (type png)
 
-<images/histo.png, id=16, 210.7875pt x 164.41425pt>
-File: images/histo.png Graphic file (type png)
- <use images/histo.png>
-Package pdftex.def Info: images/histo.png used on input line 125.
-(pdftex.def)             Requested size: 210.78699pt x 164.41383pt.
+<use images/feature_map.png>
+Package pdftex.def Info: images/feature_map.png used on input line 129.
+(pdftex.def)             Requested size: 347.12354pt x 160.12769pt.
+ [5]
+<images/correspondence.png, id=32, 863.3856pt x 297.2706pt>
+File: images/correspondence.png Graphic file (type png)
 
-[2] [3 <./images/fiberorientation.png> <./images/histo.png>]
-<images/fs_final.png, id=24, 341.275pt x 96.36pt>
-File: images/fs_final.png Graphic file (type png)
- <use images/fs_final.png>
-Package pdftex.def Info: images/fs_final.png used on input line 181.
-(pdftex.def)             Requested size: 341.27415pt x 96.35974pt.
-
-[4] <images/entropy_final.png, id=32, 341.275pt x 92.345pt>
-File: images/entropy_final.png Graphic file (type png)
-
-<use images/entropy_final.png>
-Package pdftex.def Info: images/entropy_final.png used on input line 188.
-(pdftex.def)             Requested size: 341.27415pt x 92.34476pt.
-
-<images/combined_final_with_landmarks.png, id=33, 341.275pt x 91.34125pt>
-File: images/combined_final_with_landmarks.png Graphic file (type png)
-
-<use images/combined_final_with_landmarks.png>
-Package pdftex.def Info: images/combined_final_with_landmarks.png used on input
- line 195.
-(pdftex.def)             Requested size: 341.27415pt x 91.34102pt.
+<use images/correspondence.png>
+Package pdftex.def Info: images/correspondence.png used on input line 146.
+(pdftex.def)             Requested size: 347.12354pt x 119.51848pt.
+ [6 <./images/feature_map.png>] (./comp992.bbl
+[7 <./images/correspondence.png>]
+Missing character: There is no ‚ in font cmr9!
+Missing character: There is no Ä in font cmr9!
+Missing character: There is no ì in font cmr9!
 Missing character: There is no Ô in font cmr9!
 Missing character: There is no ¨ in font cmr9!
 Missing character: There is no Å in font cmr9!
- [5 <./images/fs_final.png> <./images/entropy_final.png>] [6 <./images/combined
-_final_with_landmarks.png>]
-(./comp992.aux) ) 
+) [8] (./comp992.aux) ) 
 Here is how much of TeX's memory you used:
- 1951 strings out of 493488
- 27192 string characters out of 3141347
- 91305 words of memory out of 3000000
- 5243 multiletter control sequences out of 15000+200000
- 7635 words of font info for 27 fonts, out of 3000000 for 9000
+ 2559 strings out of 493488
+ 34004 string characters out of 3141347
+ 100741 words of memory out of 3000000
+ 5832 multiletter control sequences out of 15000+200000
+ 8541 words of font info for 31 fonts, out of 3000000 for 9000
  957 hyphenation exceptions out of 8191
- 37i,5n,23p,313b,205s stack positions out of 5000i,500n,10000p,200000b,50000s
-</usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfont
-s/cm/cmbx10.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts
-/cm/cmbx12.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/
-cm/cmbx9.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm
-/cmex10.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/
-cmmi10.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/c
-mmi7.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmr
-10.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.
-pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb
-></usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></
-usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></u
-sr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb>
-Output written on comp992.pdf (6 pages, 296110 bytes).
+ 38i,6n,23p,1345b,313s stack positions out of 5000i,500n,10000p,200000b,50000s
+</usr/local/texlive/2012/texmf-dist/fonts/type1/public/a
+msfonts/cm/cmbx10.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/public/am
+sfonts/cm/cmbx12.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/public/ams
+fonts/cm/cmbx9.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfo
+nts/cm/cmex10.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfon
+ts/cm/cmmi10.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfont
+s/cm/cmmi7.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/
+cm/cmr10.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm
+/cmr6.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cm
+r7.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.
+pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.p
+fb></usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pf
+b>
+Output written on comp992.pdf (8 pages, 1337645 bytes).
 PDF statistics:
- 79 PDF objects out of 1000 (max. 8388607)
- 51 compressed objects within 1 object stream
+ 82 PDF objects out of 1000 (max. 8388607)
+ 56 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 26 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 16 words of extra memory for PDF output out of 10000 (max. 10000000)
 
