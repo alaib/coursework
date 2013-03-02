@@ -1,0 +1,48 @@
+This is BibTeX, Version 0.99d (TeX Live 2012)
+Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
+The top-level auxiliary file: comp992.aux
+The style file: splncs.bst
+Database file #1: comp992.bib
+Warning--empty journal in Goodlett06
+You've used 10 entries,
+            2087 wiz_defined-function locations,
+            560 strings with 5930 characters,
+and the built_in function-call counts, 3538 in all, are:
+= -- 327
+> -- 166
+< -- 8
++ -- 59
+- -- 49
+* -- 265
+:= -- 480
+add.period$ -- 11
+call.type$ -- 10
+change.case$ -- 10
+chr.to.int$ -- 0
+cite$ -- 11
+duplicate$ -- 189
+empty$ -- 289
+format.name$ -- 49
+if$ -- 847
+int.to.chr$ -- 0
+int.to.str$ -- 10
+missing$ -- 10
+newline$ -- 53
+num.names$ -- 10
+pop$ -- 26
+preamble$ -- 1
+purify$ -- 0
+quote$ -- 0
+skip$ -- 147
+stack$ -- 0
+substring$ -- 231
+swap$ -- 118
+text.length$ -- 8
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 0
+warning$ -- 1
+while$ -- 26
+width$ -- 12
+write$ -- 115
+(There was 1 warning)
