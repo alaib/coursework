@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012) (format=pdflatex 2012.9.12)  1 MAR 2013 16:07
+This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012) (format=pdflatex 2012.9.12)  2 MAR 2013 15:47
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -240,34 +240,54 @@ Package amsmath Warning: Unable to redefine math accent \vec.
 \mathdisplay@stack=\toks23
 LaTeX Info: Redefining \[ on input line 2666.
 LaTeX Info: Redefining \] on input line 2667.
-) (./comp992.aux)
+) (/usr/local/texlive/2012/texmf-dist/tex/latex/subfigure/subfigure.sty
+Package: subfigure 2002/03/15 v2.1.5 subfigure package
+\subfigtopskip=\skip48
+\subfigcapskip=\skip49
+\subfigcaptopadj=\dimen137
+\subfigbottomskip=\skip50
+\subfigcapmargin=\dimen138
+\subfiglabelskip=\skip51
+\c@subfigure=\count129
+\c@lofdepth=\count130
+\c@subtable=\count131
+\c@lotdepth=\count132
+
+****************************************
+* Local config file subfigure.cfg used *
+****************************************
+(/usr/local/texlive/2012/texmf-dist/tex/latex/subfigure/subfigure.cfg)
+\subfig@top=\skip52
+\subfig@bottom=\skip53
+)
+(./comp992.aux)
 \openout1 = `comp992.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 13.
-LaTeX Font Info:    ... okay on input line 13.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 13.
-LaTeX Font Info:    ... okay on input line 13.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 13.
-LaTeX Font Info:    ... okay on input line 13.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 13.
-LaTeX Font Info:    ... okay on input line 13.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 13.
-LaTeX Font Info:    ... okay on input line 13.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 13.
-LaTeX Font Info:    ... okay on input line 13.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
 
 (/usr/local/texlive/2012/texmf-dist/tex/context/base/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count129
-\scratchdimen=\dimen137
+\scratchcounter=\count133
+\scratchdimen=\dimen139
 \scratchbox=\box56
-\nofMPsegments=\count130
-\nofMParguments=\count131
+\nofMPsegments=\count134
+\nofMParguments=\count135
 \everyMPshowfont=\toks24
-\MPscratchCnt=\count132
-\MPscratchDim=\dimen138
-\MPnumerator=\count133
-\makeMPintoPDFobject=\count134
+\MPscratchCnt=\count136
+\MPscratchDim=\dimen140
+\MPnumerator=\count137
+\makeMPintoPDFobject=\count138
 \everyMPtoPDFconversion=\toks25
 ) (/usr/local/texlive/2012/texmf-dist/tex/generic/oberdiek/pdftexcmds.sty
 Package: pdftexcmds 2011/11/29 v0.20 Utility functions of pdfTeX for LuaTeX (HO
@@ -328,56 +348,119 @@ File: images/fiber_orientation_histogram.png Graphic file (type png)
 
 <use images/fiber_orientation_histogram.png>
 Package pdftex.def Info: images/fiber_orientation_histogram.png used on input l
-ine 88.
+ine 89.
 (pdftex.def)             Requested size: 347.12354pt x 148.15666pt.
  [4 <./images/fiber_orientation_histogram.png>] <images/feature_map.png, id=24,
  868.4445pt x 400.6167pt>
 File: images/feature_map.png Graphic file (type png)
 
 <use images/feature_map.png>
-Package pdftex.def Info: images/feature_map.png used on input line 129.
+Package pdftex.def Info: images/feature_map.png used on input line 122.
 (pdftex.def)             Requested size: 347.12354pt x 160.12769pt.
  [5]
-<images/correspondence.png, id=32, 863.3856pt x 297.2706pt>
-File: images/correspondence.png Graphic file (type png)
+<images/correspondence-a.png, id=32, 380.1402pt x 291.9708pt>
+File: images/correspondence-a.png Graphic file (type png)
 
-<use images/correspondence.png>
-Package pdftex.def Info: images/correspondence.png used on input line 146.
-(pdftex.def)             Requested size: 347.12354pt x 119.51848pt.
- [6 <./images/feature_map.png>] (./comp992.bbl
-[7 <./images/correspondence.png>]
+<use images/correspondence-a.png>
+Package pdftex.def Info: images/correspondence-a.png used on input line 140.
+(pdftex.def)             Requested size: 170.09862pt x 181.21603pt.
+
+<images/correspondence-b.png, id=33, 376.5267pt x 291.9708pt>
+File: images/correspondence-b.png Graphic file (type png)
+
+<use images/correspondence-b.png>
+Package pdftex.def Info: images/correspondence-b.png used on input line 141.
+(pdftex.def)             Requested size: 170.09616pt x 181.21603pt.
+
+<images/RegResult-a.png, id=34, 222.5916pt x 246.4407pt>
+File: images/RegResult-a.png Graphic file (type png)
+
+<use images/RegResult-a.png>
+Package pdftex.def Info: images/RegResult-a.png used on input line 151.
+(pdftex.def)             Requested size: 104.13916pt x 109.82558pt.
+
+<images/RegResult-b.png, id=35, 239.9364pt x 244.2726pt>
+File: images/RegResult-b.png Graphic file (type png)
+
+<use images/RegResult-b.png>
+Package pdftex.def Info: images/RegResult-b.png used on input line 152.
+(pdftex.def)             Requested size: 104.13718pt x 109.82846pt.
+
+<images/RegResult-c.png, id=36, 231.264pt x 241.3818pt>
+File: images/RegResult-c.png Graphic file (type png)
+
+<use images/RegResult-c.png>
+Package pdftex.def Info: images/RegResult-c.png used on input line 153.
+(pdftex.def)             Requested size: 104.13841pt x 109.8252pt.
+
+<images/RegResult-d.png, id=37, 221.1462pt x 249.3315pt>
+File: images/RegResult-d.png Graphic file (type png)
+
+<use images/RegResult-d.png>
+Package pdftex.def Info: images/RegResult-d.png used on input line 154.
+(pdftex.def)             Requested size: 104.1378pt x 109.82413pt.
+
+<images/RegResult-e.png, id=38, 239.9364pt x 247.1634pt>
+File: images/RegResult-e.png Graphic file (type png)
+
+<use images/RegResult-e.png>
+Package pdftex.def Info: images/RegResult-e.png used on input line 155.
+(pdftex.def)             Requested size: 104.13718pt x 109.82707pt.
+
+<images/RegResult-f.png, id=39, 237.7683pt x 247.8861pt>
+File: images/RegResult-f.png Graphic file (type png)
+
+<use images/RegResult-f.png>
+Package pdftex.def Info: images/RegResult-f.png used on input line 156.
+(pdftex.def)             Requested size: 104.13583pt x 109.82669pt.
+ [6 <./images/feature_map.png>] [7 <./images/correspondence-a.png (PNG copy)> <
+./images/correspondence-b.png (PNG copy)> <./images/RegResult-a.png (PNG copy)>
+ <./images/RegResult-b.png (PNG copy)> <./images/RegResult-c.png (PNG copy)> <.
+/images/RegResult-d.png (PNG copy)> <./images/RegResult-e.png (PNG copy)> <./im
+ages/RegResult-f.png (PNG copy)>] [8]
+Underfull \vbox (badness 5105) has occurred while \output is active []
+
+ [9]
+<images/Table_LabelMap.png, id=53, 862.422pt x 166.7028pt>
+File: images/Table_LabelMap.png Graphic file (type png)
+
+<use images/Table_LabelMap.png>
+Package pdftex.def Info: images/Table_LabelMap.png used on input line 187.
+(pdftex.def)             Requested size: 347.12354pt x 67.09709pt.
+ (./comp992.bbl [10 <./images/Table_LabelMap.png>]
 Missing character: There is no ‚ in font cmr9!
 Missing character: There is no Ä in font cmr9!
 Missing character: There is no ì in font cmr9!
 Missing character: There is no Ô in font cmr9!
 Missing character: There is no ¨ in font cmr9!
 Missing character: There is no Å in font cmr9!
-) [8] (./comp992.aux) ) 
+) [11] (./comp992.aux) ) 
 Here is how much of TeX's memory you used:
- 2559 strings out of 493488
- 34004 string characters out of 3141347
- 100741 words of memory out of 3000000
- 5832 multiletter control sequences out of 15000+200000
+ 2779 strings out of 493488
+ 37594 string characters out of 3141347
+ 103774 words of memory out of 3000000
+ 6038 multiletter control sequences out of 15000+200000
  8541 words of font info for 31 fonts, out of 3000000 for 9000
  957 hyphenation exceptions out of 8191
- 38i,6n,23p,1345b,313s stack positions out of 5000i,500n,10000p,200000b,50000s
-</usr/local/texlive/2012/texmf-dist/fonts/type1/public/a
-msfonts/cm/cmbx10.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/public/am
-sfonts/cm/cmbx12.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/public/ams
-fonts/cm/cmbx9.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfo
-nts/cm/cmex10.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfon
-ts/cm/cmmi10.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfont
-s/cm/cmmi7.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/
-cm/cmr10.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm
-/cmr6.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cm
-r7.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.
-pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.p
-fb></usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pf
-b>
-Output written on comp992.pdf (8 pages, 1337645 bytes).
+ 38i,6n,24p,1345b,310s stack positions out of 5000i,500n,10000p,200000b,50000s
+</usr/local/texlive/2012/texmf-dist/fonts/type1/public/
+amsfonts/cm/cmbx10.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/public/a
+msfonts/cm/cmbx12.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/public/am
+sfonts/cm/cmbx9.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsf
+onts/cm/cmex10.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfo
+nts/cm/cmmi10.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfon
+ts/cm/cmmi5.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts
+/cm/cmmi7.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/c
+m/cmr10.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/
+cmr6.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmr
+7.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.p
+fb></usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pf
+b></usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb
+>
+Output written on comp992.pdf (11 pages, 2526895 bytes).
 PDF statistics:
- 82 PDF objects out of 1000 (max. 8388607)
- 56 compressed objects within 1 object stream
+ 103 PDF objects out of 1000 (max. 8388607)
+ 65 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 16 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 56 words of extra memory for PDF output out of 10000 (max. 10000000)
 

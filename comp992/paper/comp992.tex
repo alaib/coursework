@@ -9,6 +9,7 @@
 \usepackage{epsfig} % allows encoding PostScript images
 \usepackage{graphicx}
 \usepackage{amsmath}
+\usepackage{subfigure}
 %
 \begin{document}
 %
@@ -80,26 +81,18 @@ In this step, we traverse through all the fiber segments in the fiber tracts gen
 %
 \subsubsection{Entropy of Fiber Orientations}
 %
-In order to compute the entropy of fiber orientations at a particular voxel, we first need to define what is the fiber orientation at a voxel. Consider the below example in Figure \ref{fig:fiberOrientationHistogram}, where a single fiber passes through the fiber points p1, p2 and p3 at a particular voxel. The fiber orientation at a fiber point is defined as the direction of the tangent joining its neighboring fiber segment points. At the boundary fiber points, the fiber orientation is defined as the direction of the line connecting it to the previous or subsequent fiber point. The fiber orientation at a voxel can now be defined as a tuple of fiber orientations at the fiber points contained in the voxel.
+In order to compute the entropy of fiber orientations at a particular voxel, we first need to define what is the fiber orientation at a voxel. Consider the below example in Figure \ref{fig:histogram}, where a single fiber passes through the fiber points p1, p2 and p3 at a particular voxel. The fiber orientation at a fiber point is defined as the direction of the tangent joining its neighboring fiber segment points. At the boundary fiber points, the fiber orientation is defined as the direction of the line connecting it to the previous or subsequent fiber point. The fiber orientation at a voxel can now be defined as a tuple of fiber orientations at the fiber points contained in the voxel.
 
 % Figure 1
 \begin{figure}
 \centering
 \includegraphics[width=1\columnwidth]{images/fiber_orientation_histogram.png}
 \caption{Fiber orientation computed at a fiber segment point and the histogram representing the fiber orientations of a particular voxel on a unit sphere.}
-\label{fig:fiberOrientationHistogram}
+\label{fig:histogram}
 \end{figure}
 %
-The next step is to compute the histogram (see Figure \ref{fig:fiberOrientationHistogram}) of these fiber orientations at each voxel. This histogram computed is on a unit sphere which is subdivided into equal regions by fitting a platonic solid such as an icosahedron onto the surface of the sphere with a sub-division level of 6.  At the subdivision level of 6, we get 492 icosahedron vertices and given a fiber orientation, we approximate it to a particular icosahedron triangular face and add it to the icosahedron vertices using barycentric coordinate system in which the location of the fiber direction is specified as the center of mass, or barycenter, of masses placed at the vertices of a simplex i.e., a triangle in our case.
+The next step is to compute the histogram (see Figure \ref{fig:histogram}) of these fiber orientations at each voxel. This histogram computed is on a unit sphere which is subdivided into equal regions by fitting a platonic solid such as an icosahedron onto the surface of the sphere with a sub-division level of 6.  At the subdivision level of 6, we get 492 icosahedron vertices and given a fiber orientation, we approximate it to a particular icosahedron triangular face and add it to the icosahedron vertices using barycentric coordinate system in which the location of the fiber direction is specified as the center of mass, or barycenter, of masses placed at the vertices of a simplex i.e., a triangle in our case.
 
-% Figure 2
-%\begin{figure}
-%\centering
-%\includegraphics{images/histo.png}
-%\caption{The figure shows the histogram representing the fiber orientations of a particular voxel on a unit sphere which is subdivided into equal regions by fitting a icosahedron onto the surface of the sphere.}
-%\label{fig:histogram}
-%\end{figure}
-%
 This histogram is then used to generate the entropy of fiber orientations. Entropy is a measure of disorder, or more precisely unpredictability.  For example, a series of coin tosses with a fair coin has maximum entropy, since there is no way to predict what will come next. A string of coin tosses with a coin with two heads and no tails has zero entropy, since the coin will always come up heads. Similarly if there is just a single track fiber, there is less unpredictability and hence lower entropy and if there are multiple fiber tracts and multiple fiber orientations, this means that there is more unpredictability and hence higher entropy. 
  
 Using the histogram, we compute entropy of fiber orientations per voxel as below: 
@@ -141,40 +134,64 @@ Deformable intensity-based image registration methods employ local optimization 
 
 where $G(x,y,z,\sigma)$ represents the convolution with a Gaussian operator of variance $\sigma^2$ and $\kappa$ is a constant. Image regions centered on $x,y,z$ of size proportional to $\sigma$ are then cropped and spatially normalized via rescaling and reorientation to a local coordinate system~\cite{Allaire:08}, and encoded as an appearance descriptor. Image-to-image matching proceeds by computing nearest neighbors between features extracted in different images, based on the Euclidean distances of appearance descriptors. Note that due to spatial feature normalization, nearest neighbors can be computed despite arbitrary global similarity image transforms (i.e. translation, rotation and isotropic scaling). Finally, the Hough transform is applied to determine a set of correspondences that are inliers of a robust image-to-image similarity transform.
 
-% Figure 4
+% Figure 3
 \begin{figure}
-\includegraphics[width=1\columnwidth]{images/correspondence.png}
-\centering
-\caption{Example of one set of correspondence points.}
-\label{fig:corr}
+    \centering
+    \subfigure[Normal Control]{\includegraphics[height=0.33\textheight,width=0.49\columnwidth]{images/correspondence-a.png}\label{fig:corrA}}
+    \subfigure[Krabbe Case]{\includegraphics[height=0.33\textheight,width=0.49\columnwidth]{images/correspondence-b.png}\label{fig:corrB}}
+    \caption{Example of one set of correspondence points.}
+    \label{fig:corr}
 \end{figure}
 
 \subsection{Registration}
 \label{subsec:registration}
+% Figure 4
+\begin{figure}
+    \centering
+    \subfigure[Moving Image - Normal Control]{\includegraphics[height=0.20\textheight,width=0.30\textwidth]{images/RegResult-a.png}\label{fig:RegResultA}}
+    \subfigure[Result of Demons]{\includegraphics[height=0.20\textheight,width=0.30\textwidth]{images/RegResult-b.png}\label{fig:RegResultB}}
+    \subfigure[Result of DTIITK]{\includegraphics[height=0.20\textheight,width=0.30\textwidth]{images/RegResult-c.png}\label{fig:RegResultC}}
+    \subfigure[Fixed Image - Krabbe Case]{\includegraphics[height=0.20\textheight,width=0.30\textwidth]{images/RegResult-d.png}\label{fig:RegResultD}}
+    \subfigure[Result of our method]{\includegraphics[height=0.20\textheight,width=0.30\textwidth]{images/RegResult-e.png}\label{fig:RegResultE}}
+    \subfigure[Overlap of (d) and (e)]{\includegraphics[height=0.20\textheight,width=0.30\textwidth]{images/RegResult-f.png}\label{fig:RegResultF}}
+    \label{fig:regMatch}
+    \caption{The figure shows the normal control FA map, the Krabbe subject FA map with the registration result with demons, DTITK and our proposed method.}
+\end{figure}
+
 Due to the large variation between the normal control and the subject with enlarged ventricles, a large deformation field is needed to register these images. Registration failed with the standard registration algorithms, including B-spline based (fnirt in FSL package), fluid based (fWarp in FSL), Demons (BRAINSDemonWarp in BRAINS) and also full tensor registration method DTITK within the DTI-Toolkit package. All the above methods failed to provide the large deformation required to register these images, particularly in the regions around the enlarged ventricles (figure \ref{fig:corr}).
 
 To determine the large local deformation field, we first use the landmark correspondences to compute an initial deformation field. The computed landmarks are in general well distributed over the image and hence have the capability to estimate a global deformation field from these  local landmarks. We use  Gaussian radial basis functions (RBF) to determine the initial deformation field as implemented in the plastimatch registration toolkit. A Gaussian RBF decreases with growing distance from the landmark and the RBF asymptotically approaches zero. These properties along with the option of not selecting a polynomial part for RBF, give the desired advantage of decreasing global influence with higher distance from the landmarks. While we selected a straightforward landmark based deformation field generation in this work, there is lot of ongoing research in generating deformation fields from landmark points that potentially can improve the performance of our proposed registration approach. Once the deformation field is obtained, this field is used to initialize a deformable registration like diffeomorphic demons registration on intensity normalized FA images. The results of the combined fields - the point landmark deformation field and the demons deformation field on the FA images are presented in the next section.
 
-% Figure 3
-%\begin{figure}
-%\centering
-%\epsfig{file=images/fs_final.png}
-%\caption{Fiber Segments per voxel image}
-%\end{figure}
-%
-%% Figure 4
-%\begin{figure}
-%\centering
-%\epsfig{file=images/entropy_final.png}
-%\caption{Entropy of fiber orientations per voxel image}
-%\end{figure}
-%
-%% Figure 5
-%\begin{figure}
-%\centering
-%\epsfig{file=images/combined_final_with_landmarks.png}
-%\caption{This figure shows the combined feature map image. The crossing fiber landmarks which have higher intensities are also highlighted in this image}
-%\end{figure}
+\section{RESULTS}
+
+The feature maps obtained from the fiber segments per voxel image and the normalized entropy image are shown in figure \ref{fig:featureMap}. For the fiber segments per voxel,  high intensity regions are expected and observed in regions of single fiber tracts and crossing fibers. For the entropy image, the high intensities are regions of dispersed fiber tracts (e.g., close to gray matter) and crossing fiber tracts (due to greater variation in fiber orientations) and lower intensities in unidirectional single fiber tracts (or in regions with lack of fiber tracts). The combination of  these two features results in a feature map highlighting crossing fibers and with lower intensities for the unidirectional single fiber situation. In comparison, FA maps cannot successfully highlight crossing fiber locations as these have often similar intensities as WM regions close to gray with largely dispersed fibers.
+
+The deformation field obtained from the point correspondence provides the required initialization for standard registration algorithms. Since the feature maps have high intensity for the crossing fibers, this helps the point correspondence algorithm to determine good correspondences in spite of the large deformation. Figure \ref{fig:histogram} shows an example of one set of correspondence points. Particularly in pathological cases where it is extremely difficult to even manually determine the landmarks because of the large abnormal deformation, our proposed method gives a considerable advantage.
+
+To prove the potential of our method, we select a particular subject with abnormally large lateral ventricles. Figure \ref{fig:corr} shows the FA images of the Krabbe case and the normal control and shows the results of Demons, DTITK and our proposed method. Clearly Demons and DTITK fail to produce the required deformation to push the corticospinal and the internal capsule tracts towards the necessary locations in the pathological subject. Also the figure shows the overlap of the target and image registered with our method to show the performance of our method. The regions in orange indicate the WM fiber tracts that are aligned successfully. From this overlap figure, a considerable success in registration is obtained for the major tracts - the genu, splenium and the internal capsule tracts.
+
+Using the DWI volumes for the subject and the normal control, we generate the feature maps, as described in \ref{subsec:FeatureMap}. Figure \ref{fig:featureMap} show the image representing the fiber segments per voxel, the normalized entropy and the combined final map. For the image representing the fiber segments per voxel,  high intensity regions are expected and observed in regions of single fiber tracts and crossing fibers, as both capture a large proportion of fiber segments. For the entropy image, the high intensities are regions of dispersed fiber tracts (e.g., close to gray matter) and crossing fiber tracts (due to greater variation in fiber orientations) and lower intensities in unidirectional single fiber tracts (or in regions with lack of fiber tracts). The combination of  these two features results in comparatively lower intensities the unidirectional single fiber situation as compared to crossing fiber situations. Furthermore, locations close or in gray matter display very low intensities in the combined map.  In comparison, FA maps cannot successfully highlight crossing fiber locations as these have often similar intensities as WM regions close to gray with largely dispersed fibers.
+
+The combined feature map images for the subject and the normal control are then used as input to determine the point landmark correspondence. The point correspondences are used as inputs to the Gaussian RBF to determine the initial deformation field. This deformation field is used to initialize the demons algorithm applied on the subject and the normal control FA images. Figure \ref{fig:corr} shows the FA images of the subject case (which is the fixed image) and the normal control deformed with the point landmark deformation field and the demons deformation field. Also the figure shows the overlap of these two images to show the performance of the registration. The regions in orange indicate the WM fiber tracts that are aligned successfully. From this overlap figure, a considerable success in registration is obtained for the major tracts - the genu, splenium and the internal capsule tracts.
+
+The deformation field obtained from the point correspondence provides the required initialization for standard registration algorithms. Since the feature maps have high intensity for the crossing fibers, this helps the point correspondence algorithm to determine good correspondences in spite of the large deformation. Particularly in pathological cases where it is extremely difficult to even manually determine the landmarks because of the large abnormal deformation, our proposed method gives a considerable advantage.
+
+To evaluate the registration, we use average regional matching criterion that is tailored to atlas based analysis methods. The orientation agreement between the principal eigenvectors of the source $e_{source}$ and the target $e_{target}$ weighted with the FA value of the target of each voxel of a particular region is the basis of this criterion. Regions of interest (ROI) on the Krabbe subject are defined representing major fiber tracts. For a ROI $r$, the average regional matching criterion is defined as: 
+\begin{equation}
+RegMatch_{r} = \frac{1}{N_{r}} \sum_{i=1}^{N_{r}} |e_{source}.e_{target}|.FA_{target}. N_{r}
+\end{equation}
+representing number of voxels in region $r$. The RegMatch percent values for the comparison of Demons, DTITK and our proposed method for three ROIs (100\% indicates perfect registration) are shown in Figure \ref{fig:Label_Table}. Considering the three ROIs, our proposed shows an improvement of 15.4\% over DTITK and 22.8\% over Demons method. 
+
+% Figure 5
+\begin{figure}[htb]
+\includegraphics[width=1.0\columnwidth]{images/Table_LabelMap.png}
+\centering
+\caption{Labels on Krabbe case and percentage registration accuracy.}
+\label{fig:Label_Table}
+\end{figure}
+
+\section{DISCUSSIONS and CONCLUSIONS}
+In this paper, we have presented a novel, fully automatic pipeline to register images with large deformations, particularly subjects that are affected by WM demyelinating pathologies. The novel feature map computed is robust against variantions in WM fiber tract integrity and hence yields a good starting point to compute corresponding landmark points. The work presented here shows the potential of our pipeline to register highly deformed images as illustrated on a single, highly pathological case. We have applied the method to several more Krabbe cases with moderate to severely enlarged ventricles with similar success. Nevertheless, the presented registration pipeline is preliminary and several issues still need to be addressed, such as improving the stability of the landmark based deformation field computation against outliers/bad correspondences. For that purpose, we are currently working on incorporating weights for each landmark based on their correspondence quality score.
 
 %
 % ---- Bibliography ----
