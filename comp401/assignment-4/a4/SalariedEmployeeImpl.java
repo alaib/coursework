@@ -48,7 +48,7 @@ public class SalariedEmployeeImpl extends EmployeeImpl implements SalariedEmploy
 		}
 		
 		// 15% on next 50,000
-		taxesHeld += (taxableIncome <= 50000) ? 0.1 * taxableIncome : 0.1 * 50000;
+		taxesHeld += (taxableIncome <= 50000) ? 0.15 * taxableIncome : 0.15 * 50000;
 		if(taxableIncome > 50000){
 			taxableIncome -= 50000;
 		}else{

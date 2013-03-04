@@ -10,7 +10,7 @@ public abstract class EmployeeImpl implements Employee {
 	
 	public EmployeeImpl(String fName, String lName, String jTitle, int ID, double hourlyRate, double hoursPerWeek){
 		firstName = new String(fName);
-		lName = new String(lastName);
+		lastName = new String(lastName);
 		jobTitle = new String(jTitle);
 		id = ID;
 		this.hourlyRate = hourlyRate;
@@ -22,7 +22,7 @@ public abstract class EmployeeImpl implements Employee {
 	
 	public EmployeeImpl(String fName, String lName, String jTitle, int ID, double monthlySalary){
 		firstName = new String(fName);
-		lName = new String(lastName);
+		lastName = new String(lName);
 		jobTitle = new String(jTitle);
 		id = ID;
 		this.monthlySalary = monthlySalary;

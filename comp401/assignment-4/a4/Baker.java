@@ -2,8 +2,7 @@ package a4;
 
 public class Baker extends HourlyEmployeeImpl {
 
-	public Baker(String first_name, String last_name, String job_title, int id,
-			double hourly_rate, double hours_per_week) {
+	public Baker(String first_name, String last_name, int id, double hourly_rate, double hours_per_week) {
 		super(first_name, last_name, "Baker", id, hourly_rate, hours_per_week);
 	}
 	
