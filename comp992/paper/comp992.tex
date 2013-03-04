@@ -66,7 +66,7 @@ The first part of this section describes the steps involved in generating the no
 \subsection{Feature Map Generation}
 \label{subsec:FeatureMap}
 %
-In this section, we present the steps involved in generating the feature map from the raw diffusion weighted image (DWI) and the image mask. First, we perform a 2-tensor unscented kalman filter based tractography \cite{malc10} inorder to obtain the fiber tracts image. Once the fiber tracts have been generated, we compute two main features namely, number of fiber segments per voxel and entropy of fiber orientations per voxel.  We normalize and combine these two features inorder to develop the feature image. The following sections describe each step of the feature map generation in detail.
+In this section, we present the steps involved in generating the feature map from the raw diffusion weighted image (DWI) and the image mask. First, we perform a 2-tensor unscented kalman filter based tractography \cite{malc10} in order to obtain the fiber tracts image. Once the fiber tracts have been generated, we compute two main features namely, number of fiber segments per voxel and entropy of fiber orientations per voxel.  We normalize and combine these two features in order to develop the feature image. The following sections describe each step of the feature map generation in detail.
 
 %
 \subsubsection{Fiber Tracts Generation}
@@ -115,15 +115,25 @@ In order to obtain the feature map, we first normalize the two features namely f
 
 where \textit{F$_i$(X)}, \textit{H$_i$(X)} and \textit{fs$_i$(X)} are the feature map value, entropy of fiber orientations and the number of fiber segments at voxel \textit{i} respectively, \textit{$H_{max}(X)$} and \textit{$fs_{max}(X)$} are the maximum values of entropy of fiber orientations and number of fiber segments over the entire image. 
 
-This feature map is certain to highlight the crossing fiber landmarks which can further be used for DTI registration.  If one examines the fiber segments per voxel image, it is bound to have higher intensities in those regions where there are large number of single fiber tracts and multiple fiber tracts and lower intensities in regions of fewer or no fiber tracts.  The entropy of fiber orientations image has higher intensities in regions of dispersed single fiber tracts and crossing fiber tracts (due to greater variation in fiber orientations) and lower intensities in uni-directional single fiber tracts or no fiber tracts regions. Hence, by combining these two, we can negate out the uni-directional single fiber tracts and no fiber tracts regions, thus highlighting the crossing fiber regions or landmarks.
+This feature map (see Figure \ref{fig:featureMap}) is certain to highlight the crossing fiber landmarks which can further be used for DTI registration.  If one examines the fiber segments per voxel image, it is bound to have higher intensities in those regions where there are large number of single fiber tracts and multiple fiber tracts and lower intensities in regions of fewer or no fiber tracts.  The entropy of fiber orientations image has higher intensities in regions of dispersed single fiber tracts and crossing fiber tracts (due to greater variation in fiber orientations) and lower intensities in uni-directional single fiber tracts or no fiber tracts regions. Hence, by combining these two, we can negate out the uni-directional single fiber tracts and no fiber tracts regions, thus highlighting the crossing fiber regions or landmarks.
 
 % Figure 3
+%\begin{figure}
+%\includegraphics[width=1\columnwidth]{images/feature_map.png}
+%\centering
+%\caption{Feature maps in normal control subject. Left: Fiber Segments per voxel image; Center:Entropy of fiber orientations per voxel image; Right: the combined feature map image. The regions with crossing fibers are marked with arrows and display a high intensity in the final feature map.}
+%\label{fig:featureMap}
+%\end{figure}
+
 \begin{figure}
-\includegraphics[width=1\columnwidth]{images/feature_map.png}
-\centering
-\caption{Feature maps in normal control subject. Left: Fiber Segments per voxel image; Center:Entropy of fiber orientations per voxel image; Right: the combined feature map image. The regions with crossing fibers are marked with arrows and display a high intensity in the final feature map.}
-\label{fig:featureMap}
+    \centering
+    \subfigure[]{\includegraphics[height=0.30\textheight,width=0.30\columnwidth]{images/feature_map-a.png}\label{fig:featA}}
+    \subfigure[]{\includegraphics[height=0.30\textheight,width=0.30\columnwidth]{images/feature_map-b.png}\label{fig:featB}}
+    \subfigure[]{\includegraphics[height=0.30\textheight,width=0.30\columnwidth]{images/feature_map-c.png}\label{fig:featC}}
+    \caption{Feature maps in normal control subject. (a) Fiber Segments per voxel image; (b) Entropy of fiber orientations per voxel image; (c) Combined feature map image. The regions with crossing fibers are marked with arrows and display a high intensity in the final feature map.}
+    \label{fig:featureMap}
 \end{figure}
+
 
 \subsection{Landmarks with correspondence on feature maps}
 \label{subsec:Correspondence}
@@ -134,7 +144,7 @@ Deformable intensity-based image registration methods employ local optimization 
 
 where $G(x,y,z,\sigma)$ represents the convolution with a Gaussian operator of variance $\sigma^2$ and $\kappa$ is a constant. Image regions centered on $x,y,z$ of size proportional to $\sigma$ are then cropped and spatially normalized via rescaling and reorientation to a local coordinate system~\cite{Allaire:08}, and encoded as an appearance descriptor. Image-to-image matching proceeds by computing nearest neighbors between features extracted in different images, based on the Euclidean distances of appearance descriptors. Note that due to spatial feature normalization, nearest neighbors can be computed despite arbitrary global similarity image transforms (i.e. translation, rotation and isotropic scaling). Finally, the Hough transform is applied to determine a set of correspondences that are inliers of a robust image-to-image similarity transform.
 
-% Figure 3
+% Figure 4
 \begin{figure}
     \centering
     \subfigure[Normal Control]{\includegraphics[height=0.33\textheight,width=0.49\columnwidth]{images/correspondence-a.png}\label{fig:corrA}}
@@ -150,8 +160,8 @@ where $G(x,y,z,\sigma)$ represents the convolution with a Gaussian operator of v
     \centering
     \subfigure[Moving Image - Normal Control]{\includegraphics[height=0.20\textheight,width=0.30\textwidth]{images/RegResult-a.png}\label{fig:RegResultA}}
     \subfigure[Result of Demons]{\includegraphics[height=0.20\textheight,width=0.30\textwidth]{images/RegResult-b.png}\label{fig:RegResultB}}
-    \subfigure[Result of DTIITK]{\includegraphics[height=0.20\textheight,width=0.30\textwidth]{images/RegResult-c.png}\label{fig:RegResultC}}
-    \subfigure[Fixed Image - Krabbe Case]{\includegraphics[height=0.20\textheight,width=0.30\textwidth]{images/RegResult-d.png}\label{fig:RegResultD}}
+    \subfigure[Result of DTITK]{\includegraphics[height=0.20\textheight,width=0.30\textwidth]{images/RegResult-c.png}\label{fig:RegResultC}}
+    \subfigure[Fixed Image - Krabbe]{\includegraphics[height=0.20\textheight,width=0.30\textwidth]{images/RegResult-d.png}\label{fig:RegResultD}}
     \subfigure[Result of our method]{\includegraphics[height=0.20\textheight,width=0.30\textwidth]{images/RegResult-e.png}\label{fig:RegResultE}}
     \subfigure[Overlap of (d) and (e)]{\includegraphics[height=0.20\textheight,width=0.30\textwidth]{images/RegResult-f.png}\label{fig:RegResultF}}
     \label{fig:regMatch}
