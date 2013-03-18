@@ -1,0 +1,5 @@
+seedFA		0.18	0.20	0.30
+minFA		0.12	0.20	0.25
+seedsPerVoxel	8.00	4.00	1.00
+
+Primary Fibers	37778	15502	1056

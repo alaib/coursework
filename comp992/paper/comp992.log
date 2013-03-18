@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012) (format=pdflatex 2012.9.12)  4 MAR 2013 12:26
+This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012) (format=pdflatex 2012.9.12)  17 MAR 2013 20:36
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -342,123 +342,142 @@ e
 
 
 {/usr/local/texlive/2012/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
-[2] [3]
-<images/fiber_orientation_histogram.png, id=20, 761.9667pt x 325.215pt>
+[2] [3] <images/ukf-a.png, id=20, 510.90875pt x 572.1375pt>
+File: images/ukf-a.png Graphic file (type png)
+
+<use images/ukf-a.png>
+Package pdftex.def Info: images/ukf-a.png used on input line 79.
+(pdftex.def)             Requested size: 104.13669pt x 109.8247pt.
+ <images/ukf-b.png, id=21, 515.9275pt x 517.935pt>
+File: images/ukf-b.png Graphic file (type png)
+
+<use images/ukf-b.png>
+Package pdftex.def Info: images/ukf-b.png used on input line 80.
+(pdftex.def)             Requested size: 104.13623pt x 109.82065pt.
+ <images/ukf-c.png, id=22, 507.8975pt x 507.8975pt>
+File: images/ukf-c.png Graphic file (type png)
+
+<use images/ukf-c.png>
+Package pdftex.def Info: images/ukf-c.png used on input line 81.
+(pdftex.def)             Requested size: 104.13516pt x 109.82358pt.
+
+<images/fiber_orientation_histogram.png, id=23, 761.9667pt x 325.215pt>
 File: images/fiber_orientation_histogram.png Graphic file (type png)
 
 <use images/fiber_orientation_histogram.png>
 Package pdftex.def Info: images/fiber_orientation_histogram.png used on input l
-ine 89.
+ine 98.
 (pdftex.def)             Requested size: 347.12354pt x 148.15666pt.
- [4 <./images/fiber_orientation_histogram.png>] <images/feature_map-a.png, id=2
-4, 295.5843pt x 399.1713pt>
+ [4 <./images/ukf-a.png (PNG copy)> <./images/ukf-b.png (PNG copy)> <./images/u
+kf-c.png (PNG copy)>] [5 <./images/fiber_orientation_histogram.png>]
+<images/feature_map-a.png, id=34, 295.5843pt x 399.1713pt>
 File: images/feature_map-a.png Graphic file (type png)
 
 <use images/feature_map-a.png>
-Package pdftex.def Info: images/feature_map-a.png used on input line 130.
+Package pdftex.def Info: images/feature_map-a.png used on input line 131.
 (pdftex.def)             Requested size: 104.1371pt x 164.74545pt.
 
-<images/feature_map-b.png, id=25, 268.8444pt x 398.4486pt>
+<images/feature_map-b.png, id=35, 268.8444pt x 398.4486pt>
 File: images/feature_map-b.png Graphic file (type png)
 
 <use images/feature_map-b.png>
-Package pdftex.def Info: images/feature_map-b.png used on input line 131.
+Package pdftex.def Info: images/feature_map-b.png used on input line 132.
 (pdftex.def)             Requested size: 104.1351pt x 164.7451pt.
 
-<images/feature_map-c.png, id=26, 291.9708pt x 399.1713pt>
+<images/feature_map-c.png, id=36, 291.9708pt x 399.1713pt>
 File: images/feature_map-c.png Graphic file (type png)
 
 <use images/feature_map-c.png>
-Package pdftex.def Info: images/feature_map-c.png used on input line 132.
+Package pdftex.def Info: images/feature_map-c.png used on input line 133.
 (pdftex.def)             Requested size: 104.13818pt x 164.74545pt.
- [5]
-<images/correspondence-a.png, id=34, 380.1402pt x 291.9708pt>
+ [6 <./images/feature_map-a.png (PNG copy)> <./images/feature_map-b.png (PNG co
+py)> <./images/feature_map-c.png (PNG copy)>]
+<images/correspondence-a.png, id=40, 380.1402pt x 291.9708pt>
 File: images/correspondence-a.png Graphic file (type png)
 
 <use images/correspondence-a.png>
-Package pdftex.def Info: images/correspondence-a.png used on input line 150.
+Package pdftex.def Info: images/correspondence-a.png used on input line 154.
 (pdftex.def)             Requested size: 170.09862pt x 181.21603pt.
 
-<images/correspondence-b.png, id=35, 376.5267pt x 291.9708pt>
+<images/correspondence-b.png, id=41, 376.5267pt x 291.9708pt>
 File: images/correspondence-b.png Graphic file (type png)
 
 <use images/correspondence-b.png>
-Package pdftex.def Info: images/correspondence-b.png used on input line 151.
+Package pdftex.def Info: images/correspondence-b.png used on input line 155.
 (pdftex.def)             Requested size: 170.09616pt x 181.21603pt.
 
-<images/RegResult-a.png, id=36, 222.5916pt x 246.4407pt>
+<images/RegResult-a.png, id=42, 222.5916pt x 246.4407pt>
 File: images/RegResult-a.png Graphic file (type png)
 
 <use images/RegResult-a.png>
-Package pdftex.def Info: images/RegResult-a.png used on input line 161.
+Package pdftex.def Info: images/RegResult-a.png used on input line 165.
 (pdftex.def)             Requested size: 104.13916pt x 109.82558pt.
 
-<images/RegResult-b.png, id=37, 239.9364pt x 244.2726pt>
+<images/RegResult-b.png, id=43, 239.9364pt x 244.2726pt>
 File: images/RegResult-b.png Graphic file (type png)
 
 <use images/RegResult-b.png>
-Package pdftex.def Info: images/RegResult-b.png used on input line 162.
+Package pdftex.def Info: images/RegResult-b.png used on input line 166.
 (pdftex.def)             Requested size: 104.13718pt x 109.82846pt.
 
-<images/RegResult-c.png, id=38, 231.264pt x 241.3818pt>
+<images/RegResult-c.png, id=44, 231.264pt x 241.3818pt>
 File: images/RegResult-c.png Graphic file (type png)
 
 <use images/RegResult-c.png>
-Package pdftex.def Info: images/RegResult-c.png used on input line 163.
+Package pdftex.def Info: images/RegResult-c.png used on input line 167.
 (pdftex.def)             Requested size: 104.13841pt x 109.8252pt.
 
-<images/RegResult-d.png, id=39, 221.1462pt x 249.3315pt>
+<images/RegResult-d.png, id=45, 221.1462pt x 249.3315pt>
 File: images/RegResult-d.png Graphic file (type png)
 
 <use images/RegResult-d.png>
-Package pdftex.def Info: images/RegResult-d.png used on input line 164.
+Package pdftex.def Info: images/RegResult-d.png used on input line 168.
 (pdftex.def)             Requested size: 104.1378pt x 109.82413pt.
 
-<images/RegResult-e.png, id=40, 239.9364pt x 247.1634pt>
+<images/RegResult-e.png, id=46, 239.9364pt x 247.1634pt>
 File: images/RegResult-e.png Graphic file (type png)
 
 <use images/RegResult-e.png>
-Package pdftex.def Info: images/RegResult-e.png used on input line 165.
+Package pdftex.def Info: images/RegResult-e.png used on input line 169.
 (pdftex.def)             Requested size: 104.13718pt x 109.82707pt.
 
-<images/RegResult-f.png, id=41, 237.7683pt x 247.8861pt>
+<images/RegResult-f.png, id=47, 237.7683pt x 247.8861pt>
 File: images/RegResult-f.png Graphic file (type png)
 
 <use images/RegResult-f.png>
-Package pdftex.def Info: images/RegResult-f.png used on input line 166.
+Package pdftex.def Info: images/RegResult-f.png used on input line 170.
 (pdftex.def)             Requested size: 104.13583pt x 109.82669pt.
- [6 <./images/feature_map-a.png (PNG copy)> <./images/feature_map-b.png (PNG co
-py)> <./images/feature_map-c.png (PNG copy)>]
-[7 <./images/correspondence-a.png (PNG copy)> <./images/correspondence-b.png (P
-NG copy)> <./images/RegResult-a.png (PNG copy)> <./images/RegResult-b.png (PNG 
-copy)> <./images/RegResult-c.png (PNG copy)> <./images/RegResult-d.png (PNG cop
-y)> <./images/RegResult-e.png (PNG copy)> <./images/RegResult-f.png (PNG copy)>
-] [8]
-Underfull \vbox (badness 5105) has occurred while \output is active []
+ [7] [8 <./images/correspondence-a.png (PNG copy)> <./images/correspondence-b.p
+ng (PNG copy)> <./images/RegResult-a.png (PNG copy)> <./images/RegResult-b.png 
+(PNG copy)> <./images/RegResult-c.png (PNG copy)> <./images/RegResult-d.png (PN
+G copy)> <./images/RegResult-e.png (PNG copy)> <./images/RegResult-f.png (PNG c
+opy)>] [9]
+Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [9]
-<images/Table_LabelMap.png, id=55, 862.422pt x 166.7028pt>
+ [10]
+<images/Table_LabelMap.png, id=62, 862.422pt x 166.7028pt>
 File: images/Table_LabelMap.png Graphic file (type png)
 
 <use images/Table_LabelMap.png>
-Package pdftex.def Info: images/Table_LabelMap.png used on input line 197.
+Package pdftex.def Info: images/Table_LabelMap.png used on input line 200.
 (pdftex.def)             Requested size: 347.12354pt x 67.09709pt.
- (./comp992.bbl [10 <./images/Table_LabelMap.png>]
+ (./comp992.bbl
 Missing character: There is no ‚ in font cmr9!
 Missing character: There is no Ä in font cmr9!
 Missing character: There is no ì in font cmr9!
+ [11 <./images/Table_LabelMap.png>]
 Missing character: There is no Ô in font cmr9!
 Missing character: There is no ¨ in font cmr9!
 Missing character: There is no Å in font cmr9!
-) [11] (./comp992.aux) ) 
+) [12] (./comp992.aux) ) 
 Here is how much of TeX's memory you used:
- 2795 strings out of 493488
- 37946 string characters out of 3141347
- 103837 words of memory out of 3000000
- 6052 multiletter control sequences out of 15000+200000
+ 2817 strings out of 493488
+ 38315 string characters out of 3141347
+ 105908 words of memory out of 3000000
+ 6071 multiletter control sequences out of 15000+200000
  8541 words of font info for 31 fonts, out of 3000000 for 9000
  957 hyphenation exceptions out of 8191
- 38i,6n,24p,1345b,310s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 38i,6n,24p,1345b,311s stack positions out of 5000i,500n,10000p,200000b,50000s
 </usr/local/texlive/2012/texmf-dist/fonts/type1/public/
 amsfonts/cm/cmbx10.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/public/a
 msfonts/cm/cmbx12.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/public/am
@@ -473,10 +492,10 @@ cmr6.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmr
 fb></usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pf
 b></usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb
 >
-Output written on comp992.pdf (11 pages, 2436034 bytes).
+Output written on comp992.pdf (12 pages, 2482561 bytes).
 PDF statistics:
- 105 PDF objects out of 1000 (max. 8388607)
- 65 compressed objects within 1 object stream
+ 111 PDF objects out of 1000 (max. 8388607)
+ 67 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 66 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 81 words of extra memory for PDF output out of 10000 (max. 10000000)
 
