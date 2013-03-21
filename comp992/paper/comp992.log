@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012) (format=pdflatex 2012.9.12)  17 MAR 2013 20:36
+This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012) (format=pdflatex 2012.9.12)  20 MAR 2013 21:28
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -452,32 +452,34 @@ ng (PNG copy)> <./images/RegResult-a.png (PNG copy)> <./images/RegResult-b.png
 (PNG copy)> <./images/RegResult-c.png (PNG copy)> <./images/RegResult-d.png (PN
 G copy)> <./images/RegResult-e.png (PNG copy)> <./images/RegResult-f.png (PNG c
 opy)>] [9]
-Underfull \vbox (badness 10000) has occurred while \output is active []
+Underfull \vbox (badness 2158) has occurred while \output is active []
 
  [10]
-<images/Table_LabelMap.png, id=62, 862.422pt x 166.7028pt>
+<images/Table_LabelMap.png, id=61, 862.422pt x 166.7028pt>
 File: images/Table_LabelMap.png Graphic file (type png)
 
 <use images/Table_LabelMap.png>
 Package pdftex.def Info: images/Table_LabelMap.png used on input line 200.
 (pdftex.def)             Requested size: 347.12354pt x 67.09709pt.
- (./comp992.bbl
+ (./comp992.bbl [11 <./images/Table_LabelMap.png>]
 Missing character: There is no ‚ in font cmr9!
 Missing character: There is no Ä in font cmr9!
 Missing character: There is no ì in font cmr9!
- [11 <./images/Table_LabelMap.png>]
 Missing character: There is no Ô in font cmr9!
 Missing character: There is no ¨ in font cmr9!
 Missing character: There is no Å in font cmr9!
+Missing character: There is no ‚ in font cmr9!
+Missing character: There is no Ä in font cmr9!
+Missing character: There is no ô in font cmr9!
 ) [12] (./comp992.aux) ) 
 Here is how much of TeX's memory you used:
- 2817 strings out of 493488
- 38315 string characters out of 3141347
- 105908 words of memory out of 3000000
- 6071 multiletter control sequences out of 15000+200000
+ 2818 strings out of 493488
+ 38324 string characters out of 3141347
+ 106912 words of memory out of 3000000
+ 6072 multiletter control sequences out of 15000+200000
  8541 words of font info for 31 fonts, out of 3000000 for 9000
  957 hyphenation exceptions out of 8191
- 38i,6n,24p,1345b,311s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 38i,6n,24p,1809b,309s stack positions out of 5000i,500n,10000p,200000b,50000s
 </usr/local/texlive/2012/texmf-dist/fonts/type1/public/
 amsfonts/cm/cmbx10.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/public/a
 msfonts/cm/cmbx12.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/public/am
@@ -492,7 +494,7 @@ cmr6.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmr
 fb></usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pf
 b></usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb
 >
-Output written on comp992.pdf (12 pages, 2482561 bytes).
+Output written on comp992.pdf (12 pages, 2483581 bytes).
 PDF statistics:
  111 PDF objects out of 1000 (max. 8388607)
  67 compressed objects within 1 object stream

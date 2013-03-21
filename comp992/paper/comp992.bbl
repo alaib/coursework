@@ -62,4 +62,12 @@ Allaire, S., Kim, J., Breen, S., Jaffray, D., Pekar, V.:
   sift with application to medical image analysis.
 \newblock In: MMBIA. (2008)
 
+\bibitem{Sharp10}
+Sharp, G., Li, R., Wolfgang, J., Chen, G., Peroni, M., Spadea, M., Mori, S.,
+  Zhang, J., Shackleford, J., Kandasamy, N.:
+\newblock Plastimatch-an open source software suite for radiotherapy image
+  processing.
+\newblock Proceedings of the XVI’th International Conference on the use of
+  Computers in Radiotherapy (ICCR), Amsterdam, Netherlands (2010)
+
 \end{thebibliography}
