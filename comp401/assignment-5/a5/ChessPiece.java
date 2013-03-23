@@ -219,6 +219,160 @@ class Bishop extends ChessPiece {
 			mark = 'B';
 		}
 	}
+	
+	public void moveTo(ChessPosition destination) throws IllegalMove{
+		ChessPosition pos = this.getPosition();
+		
+		int posX = pos.getX();
+		int posY = pos.getY();
+		int destX = destination.getX();
+		int destY = destination.getY();
+		
+		int xDiff = Math.abs(posX - destX);
+		int yDiff = Math.abs(posY - destY);
+		//for bishop, the destination should be on same diagonal, for that to happen, row diff should be equal to column diff
+		if(xDiff != yDiff){
+			throw new IllegalMove(this, pos, destination);
+		}
+	
+		//Call moveDiagonal
+		boolean status = moveDiagonal(destination);
+		
+		//everything failed, throw Illegal move
+		if(!status){
+			throw new IllegalMove(this, pos, destination);
+		}
+	}
+	
+	public boolean moveDiagonal(ChessPosition destination) throws IllegalMove{
+		ChessPosition pos = this.getPosition();
+		ChessGame game = this.getGame();
+		ChessBoard board = game.getBoard();
+		
+		int posX = pos.getX();
+		int posY = pos.getY();
+		int currX, currY;
+		int dir = -1, maxY = 0, minY = 7, maxX = 7, minX = 0;
+		if(this.getOwner() == this.getGame().getPlayer1()){
+			dir = 1;
+			maxY = 7;
+			minY = 0;
+		}
+		
+		//Shoot rays in four directions (upLeft, upRight, dLeft, dRight) until you find an occupied square or destination
+		//Up Left (Up)
+		currX = posX - 1; currY = posY + dir;
+		while(true){
+			/* flip bounds checking based on player 1 or 2 */
+			if(dir == -1){
+				if(currY < maxY || currX < minX){
+					break;
+				}
+			}else{
+				if(currY > maxY || currX < minX){
+					break;
+				}
+			}
+			
+			ChessPosition p = new ChessPosition(currX, currY);
+			//if p is destination, call parent moveTo
+			if(p.equals(destination)){
+				super.moveTo(destination);
+				return true;
+			}
+			//there is a piece blocking the path
+			if(board.getPieceAt(p) != null){
+				break;
+			}
+			currY += dir;
+			currX -= 1;
+		}
+		
+		//Up Right (Up)
+		currX = posX + 1; currY = posY + dir;
+		while(true){
+			/* flip bounds checking based on player 1 or 2 */
+			if(dir == -1){
+				if(currY < maxY || currX > maxX){
+					break;
+				}
+			}else{
+				if(currY > maxY || currX > maxX){
+					break;
+				}
+			}
+			
+			ChessPosition p = new ChessPosition(currX, currY);
+			//if p is destination, call parent moveTo
+			if(p.equals(destination)){
+				super.moveTo(destination);
+				return true;
+			}
+			//there is a piece blocking the path
+			if(board.getPieceAt(p) != null){
+				break;
+			}
+			currY += dir;
+			currX += 1;
+		}
+		
+		//Down Left (down)
+		currX = posX - 1; currY = posY - dir;
+		while(true){
+			/* flip bounds checking based on player 1 or 2 */
+			if(dir == -1){
+				if(currY > minY || currX < minX){
+					break;
+				}
+			}else{
+				if(currY < minY || currX < minX){
+					break;
+				}
+			}
+			ChessPosition p = new ChessPosition(currX, currY);
+			//if p is destination, call parent moveTo
+			if(p.equals(destination)){
+				super.moveTo(destination);
+				return true;
+			}
+			//there is a piece blocking the path
+			if(board.getPieceAt(p) != null){
+				break;
+			}
+			currY -= dir;
+			currX -= 1;
+		}
+		
+		//Down Right (down)
+		currX = posX + 1; currY = posY - dir;
+		while(true){
+			/* flip bounds checking based on player 1 or 2 */
+			if(dir == -1){
+				if(currY > minY || currX > maxX){
+					break;
+				}
+			}else{
+				if(currY < minY || currX > maxX){
+					break;
+				}
+			}
+			ChessPosition p = new ChessPosition(currX, currY);
+			//if p is destination, call parent moveTo
+			if(p.equals(destination)){
+				super.moveTo(destination);
+				return true;
+			}
+			//there is a piece blocking the path
+			if(board.getPieceAt(p) != null){
+				break;
+			}
+			currY -= dir;
+			currX += 1;
+		}
+		
+		//if control reaches here, then unable to reach destination due to blockade
+		return false;
+	}
 }
 
 class Knight extends ChessPiece {
@@ -262,6 +416,253 @@ class Queen extends ChessPiece {
 			mark = 'Q';
 		}
 	}	
+	
+	public void moveTo(ChessPosition destination) throws IllegalMove{
+		ChessPosition pos = this.getPosition();
+	
+		//Try moving Horizontal / Diagonal, if both fail, throw IllegalMove
+		boolean status1 = moveHorizontal(destination);
+		if(!status1){
+			boolean status2 = moveDiagonal(destination);
+			if(!status2){
+				throw new IllegalMove(this, pos, destination);
+			}
+		}
+	}
+	
+	public boolean moveHorizontal(ChessPosition destination) throws IllegalMove{
+		ChessPosition pos = this.getPosition();
+		ChessGame game = this.getGame();
+		ChessBoard board = game.getBoard();
+		
+		int posX = pos.getX();
+		int posY = pos.getY();
+		int currX, currY;
+		int dir = -1, maxY = 0, minY = 7, maxX = 7, minX = 0;
+		if(this.getOwner() == this.getGame().getPlayer1()){
+			dir = 1;
+			maxY = 7;
+			minY = 0;
+		}
+		
+		//Shoot rays in four directions (up, down, left, right) until you find an occupied square or destination
+		//Up
+		currX = posX; currY = posY + dir;
+		while(true){
+			/* flip bounds checking based on player 1 or 2 */
+			if(dir == -1){
+				if(currY < maxY){
+					break;
+				}
+			}else{
+				if(currY > maxY){
+					break;
+				}
+			}
+			
+			ChessPosition p = new ChessPosition(currX, currY);
+			//if p is destination, call parent moveTo
+			if(p.equals(destination)){
+				super.moveTo(destination);
+				return true;
+			}
+			//there is a piece blocking the path
+			if(board.getPieceAt(p) != null){
+				break;
+			}
+			currY += dir;
+		}
+		
+		//Down
+		currX = posX; currY = posY - dir;
+		while(true){
+			/* flip bounds checking based on player 1 or 2 */
+			if(dir == -1){
+				if(currY > minY){
+					break;
+				}
+			}else{
+				if(currY < minY){
+					break;
+				}
+			}
+			ChessPosition p = new ChessPosition(currX, currY);
+			//if p is destination, call parent moveTo
+			if(p.equals(destination)){
+				super.moveTo(destination);
+				return true;
+			}
+			//there is a piece blocking the path
+			if(board.getPieceAt(p) != null){
+				break;
+			}
+			currY -= dir;
+		}
+		
+		//Left
+		currX = posX - 1; currY = posY;
+		while(currX >= minX){
+			ChessPosition p = new ChessPosition(currX, currY);
+			//if p is destination, call parent moveTo
+			if(p.equals(destination)){
+				super.moveTo(destination);
+				return true;
+			}
+			//there is a piece blocking the path
+			if(board.getPieceAt(p) != null){
+				break;
+			}
+			currY -= 1;
+		}
+		
+		//Right
+		currX = posX + 1; currY = posY;
+		while(currX <= maxX){
+			ChessPosition p = new ChessPosition(currX, currY);
+			//if p is destination, call parent moveTo
+			if(p.equals(destination)){
+				super.moveTo(destination);
+				return true;
+			}
+			//there is a piece blocking the path
+			if(board.getPieceAt(p) != null){
+				break;
+			}
+			currY -= 1;
+		}
+		//if control reaches here, then unable to reach destination due to blockade
+		return false;
+	}
+	
+	public boolean moveDiagonal(ChessPosition destination) throws IllegalMove{
+		ChessPosition pos = this.getPosition();
+		ChessGame game = this.getGame();
+		ChessBoard board = game.getBoard();
+		
+		int posX = pos.getX();
+		int posY = pos.getY();
+		int currX, currY;
+		int dir = -1, maxY = 0, minY = 7, maxX = 7, minX = 0;
+		if(this.getOwner() == this.getGame().getPlayer1()){
+			dir = 1;
+			maxY = 7;
+			minY = 0;
+		}
+		
+		//Shoot rays in four directions (upLeft, upRight, dLeft, dRight) until you find an occupied square or destination
+		//Up Left (Up)
+		currX = posX - 1; currY = posY + dir;
+		while(true){
+			/* flip bounds checking based on player 1 or 2 */
+			if(dir == -1){
+				if(currY < maxY || currX < minX){
+					break;
+				}
+			}else{
+				if(currY > maxY || currX < minX){
+					break;
+				}
+			}
+			
+			ChessPosition p = new ChessPosition(currX, currY);
+			//if p is destination, call parent moveTo
+			if(p.equals(destination)){
+				super.moveTo(destination);
+				return true;
+			}
+			//there is a piece blocking the path
+			if(board.getPieceAt(p) != null){
+				break;
+			}
+			currY += dir;
+			currX -= 1;
+		}
+		
+		//Up Right (Up)
+		currX = posX + 1; currY = posY + dir;
+		while(true){
+			/* flip bounds checking based on player 1 or 2 */
+			if(dir == -1){
+				if(currY < maxY || currX > maxX){
+					break;
+				}
+			}else{
+				if(currY > maxY || currX > maxX){
+					break;
+				}
+			}
+			
+			ChessPosition p = new ChessPosition(currX, currY);
+			//if p is destination, call parent moveTo
+			if(p.equals(destination)){
+				super.moveTo(destination);
+				return true;
+			}
+			//there is a piece blocking the path
+			if(board.getPieceAt(p) != null){
+				break;
+			}
+			currY += dir;
+			currX += 1;
+		}
+		
+		//Down Left (down)
+		currX = posX - 1; currY = posY - dir;
+		while(true){
+			/* flip bounds checking based on player 1 or 2 */
+			if(dir == -1){
+				if(currY > minY || currX < minX){
+					break;
+				}
+			}else{
+				if(currY < minY || currX < minX){
+					break;
+				}
+			}
+			ChessPosition p = new ChessPosition(currX, currY);
+			//if p is destination, call parent moveTo
+			if(p.equals(destination)){
+				super.moveTo(destination);
+				return true;
+			}
+			//there is a piece blocking the path
+			if(board.getPieceAt(p) != null){
+				break;
+			}
+			currY -= dir;
+			currX -= 1;
+		}
+		
+		//Down Right (down)
+		currX = posX + 1; currY = posY - dir;
+		while(true){
+			/* flip bounds checking based on player 1 or 2 */
+			if(dir == -1){
+				if(currY > minY || currX > maxX){
+					break;
+				}
+			}else{
+				if(currY < minY || currX > maxX){
+					break;
+				}
+			}
+			ChessPosition p = new ChessPosition(currX, currY);
+			//if p is destination, call parent moveTo
+			if(p.equals(destination)){
+				super.moveTo(destination);
+				return true;
+			}
+			//there is a piece blocking the path
+			if(board.getPieceAt(p) != null){
+				break;
+			}
+			currY -= dir;
+			currX += 1;
+		}
+		
+		//if control reaches here, then unable to reach destination due to blockade
+		return false;
+	}
 }
 
 class King extends ChessPiece {
