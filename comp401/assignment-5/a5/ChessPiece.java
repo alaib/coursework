@@ -104,6 +104,27 @@ class Knight extends ChessPiece {
 			mark = 'N';
 		}
 	}
+	
+	public void moveTo(ChessPosition destination) throws IllegalMove{
+		ChessPosition pos = this.getPosition();
+		//Generate 8 possible moves and check if destination happens to be one such move
+		int []dx = {1, 2, 2, 1,-1,-2,-2,-1};
+		int []dy = {2, 1,-1,-2, 2, 1,-1,-2};
+		List<ChessPosition> validMoves = new ArrayList<ChessPosition>();
+		for(int i = 0; i < dx.length; i++){
+			try{
+				ChessPosition p = new ChessPosition(pos.getX()+dx[i], pos.getY()+dy[i]);
+				validMoves.add(p);
+			}catch(IllegalArgumentException e){
+				//Don't do anything, out of bounds
+			}
+		}
+		if(validMoves.contains(destination)){
+			super.moveTo(destination);
+		}else{
+			throw new IllegalMove(this, pos, destination);
+		}
+	}
 }
 
 class Queen extends ChessPiece {
