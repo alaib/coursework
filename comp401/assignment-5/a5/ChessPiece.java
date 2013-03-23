@@ -36,6 +36,11 @@ public abstract class ChessPiece {
 	}
 	
 	public void moveTo(ChessPosition destination) throws IllegalMove{
+		//If destination is same as position, throw exception
+		if(destination.equals(position)){
+			throw new IllegalMove(this, position, destination);
+		}
+	
 		//Valid move for the piece, check if there is collision or not
 		ChessBoard board = this.getGame().getBoard();
 		ChessPiece prevPiece = board.getPieceAt(destination);
@@ -119,6 +124,21 @@ class King extends ChessPiece {
 			mark = 'k';
 		} else {
 			mark = 'K';
+		}
+	}
+	
+	public void moveTo(ChessPosition destination) throws IllegalMove{
+		//The absolute difference in position and destination has to be <= 1
+		ChessPosition pos = this.getPosition();
+		int posX = pos.getX();
+		int posY = pos.getY();
+		int destX = destination.getX();
+		int destY = destination.getY();
+		
+		if(Math.abs(posX - destX) <= 1 && Math.abs(posY - destY) <= 1){
+			super.moveTo(destination);
+		}else{
+			throw new IllegalMove(this, pos, destination);
 		}
 	}
 }
