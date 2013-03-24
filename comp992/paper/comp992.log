@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012) (format=pdflatex 2012.9.12)  20 MAR 2013 21:28
+This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012) (format=pdflatex 2012.9.12)  24 MAR 2013 13:27
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -374,21 +374,21 @@ kf-c.png (PNG copy)>] [5 <./images/fiber_orientation_histogram.png>]
 File: images/feature_map-a.png Graphic file (type png)
 
 <use images/feature_map-a.png>
-Package pdftex.def Info: images/feature_map-a.png used on input line 131.
+Package pdftex.def Info: images/feature_map-a.png used on input line 130.
 (pdftex.def)             Requested size: 104.1371pt x 164.74545pt.
 
 <images/feature_map-b.png, id=35, 268.8444pt x 398.4486pt>
 File: images/feature_map-b.png Graphic file (type png)
 
 <use images/feature_map-b.png>
-Package pdftex.def Info: images/feature_map-b.png used on input line 132.
+Package pdftex.def Info: images/feature_map-b.png used on input line 131.
 (pdftex.def)             Requested size: 104.1351pt x 164.7451pt.
 
 <images/feature_map-c.png, id=36, 291.9708pt x 399.1713pt>
 File: images/feature_map-c.png Graphic file (type png)
 
 <use images/feature_map-c.png>
-Package pdftex.def Info: images/feature_map-c.png used on input line 133.
+Package pdftex.def Info: images/feature_map-c.png used on input line 132.
 (pdftex.def)             Requested size: 104.13818pt x 164.74545pt.
  [6 <./images/feature_map-a.png (PNG copy)> <./images/feature_map-b.png (PNG co
 py)> <./images/feature_map-c.png (PNG copy)>]
@@ -396,56 +396,56 @@ py)> <./images/feature_map-c.png (PNG copy)>]
 File: images/correspondence-a.png Graphic file (type png)
 
 <use images/correspondence-a.png>
-Package pdftex.def Info: images/correspondence-a.png used on input line 154.
+Package pdftex.def Info: images/correspondence-a.png used on input line 153.
 (pdftex.def)             Requested size: 170.09862pt x 181.21603pt.
 
 <images/correspondence-b.png, id=41, 376.5267pt x 291.9708pt>
 File: images/correspondence-b.png Graphic file (type png)
 
 <use images/correspondence-b.png>
-Package pdftex.def Info: images/correspondence-b.png used on input line 155.
+Package pdftex.def Info: images/correspondence-b.png used on input line 154.
 (pdftex.def)             Requested size: 170.09616pt x 181.21603pt.
 
 <images/RegResult-a.png, id=42, 222.5916pt x 246.4407pt>
 File: images/RegResult-a.png Graphic file (type png)
 
 <use images/RegResult-a.png>
-Package pdftex.def Info: images/RegResult-a.png used on input line 165.
+Package pdftex.def Info: images/RegResult-a.png used on input line 164.
 (pdftex.def)             Requested size: 104.13916pt x 109.82558pt.
 
 <images/RegResult-b.png, id=43, 239.9364pt x 244.2726pt>
 File: images/RegResult-b.png Graphic file (type png)
 
 <use images/RegResult-b.png>
-Package pdftex.def Info: images/RegResult-b.png used on input line 166.
+Package pdftex.def Info: images/RegResult-b.png used on input line 165.
 (pdftex.def)             Requested size: 104.13718pt x 109.82846pt.
 
 <images/RegResult-c.png, id=44, 231.264pt x 241.3818pt>
 File: images/RegResult-c.png Graphic file (type png)
 
 <use images/RegResult-c.png>
-Package pdftex.def Info: images/RegResult-c.png used on input line 167.
+Package pdftex.def Info: images/RegResult-c.png used on input line 166.
 (pdftex.def)             Requested size: 104.13841pt x 109.8252pt.
 
 <images/RegResult-d.png, id=45, 221.1462pt x 249.3315pt>
 File: images/RegResult-d.png Graphic file (type png)
 
 <use images/RegResult-d.png>
-Package pdftex.def Info: images/RegResult-d.png used on input line 168.
+Package pdftex.def Info: images/RegResult-d.png used on input line 167.
 (pdftex.def)             Requested size: 104.1378pt x 109.82413pt.
 
 <images/RegResult-e.png, id=46, 239.9364pt x 247.1634pt>
 File: images/RegResult-e.png Graphic file (type png)
 
 <use images/RegResult-e.png>
-Package pdftex.def Info: images/RegResult-e.png used on input line 169.
+Package pdftex.def Info: images/RegResult-e.png used on input line 168.
 (pdftex.def)             Requested size: 104.13718pt x 109.82707pt.
 
 <images/RegResult-f.png, id=47, 237.7683pt x 247.8861pt>
 File: images/RegResult-f.png Graphic file (type png)
 
 <use images/RegResult-f.png>
-Package pdftex.def Info: images/RegResult-f.png used on input line 170.
+Package pdftex.def Info: images/RegResult-f.png used on input line 169.
 (pdftex.def)             Requested size: 104.13583pt x 109.82669pt.
  [7] [8 <./images/correspondence-a.png (PNG copy)> <./images/correspondence-b.p
 ng (PNG copy)> <./images/RegResult-a.png (PNG copy)> <./images/RegResult-b.png 
@@ -459,7 +459,7 @@ Underfull \vbox (badness 2158) has occurred while \output is active []
 File: images/Table_LabelMap.png Graphic file (type png)
 
 <use images/Table_LabelMap.png>
-Package pdftex.def Info: images/Table_LabelMap.png used on input line 200.
+Package pdftex.def Info: images/Table_LabelMap.png used on input line 199.
 (pdftex.def)             Requested size: 347.12354pt x 67.09709pt.
  (./comp992.bbl [11 <./images/Table_LabelMap.png>]
 Missing character: There is no â in font cmr9!
@@ -473,10 +473,10 @@ Missing character: There is no € in font cmr9!
 Missing character: There is no ™ in font cmr9!
 ) [12] (./comp992.aux) ) 
 Here is how much of TeX's memory you used:
- 2818 strings out of 493488
- 38324 string characters out of 3141347
- 106912 words of memory out of 3000000
- 6072 multiletter control sequences out of 15000+200000
+ 2819 strings out of 493488
+ 38339 string characters out of 3141347
+ 106920 words of memory out of 3000000
+ 6073 multiletter control sequences out of 15000+200000
  8541 words of font info for 31 fonts, out of 3000000 for 9000
  957 hyphenation exceptions out of 8191
  38i,6n,24p,1809b,309s stack positions out of 5000i,500n,10000p,200000b,50000s
@@ -494,7 +494,7 @@ cmr6.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmr
 fb></usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pf
 b></usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb
 >
-Output written on comp992.pdf (12 pages, 2483581 bytes).
+Output written on comp992.pdf (12 pages, 2483781 bytes).
 PDF statistics:
  111 PDF objects out of 1000 (max. 8388607)
  67 compressed objects within 1 object stream
