@@ -5,9 +5,7 @@ import static org.junit.Assert.fail;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 public class a5Tester {
 	public ChessPlayer p1, p2;
@@ -34,14 +32,15 @@ public class a5Tester {
 		/* Let's try to move all chess pieces in 1st row of player 1, everything throws an exception */
 		int startY = 0, endY = 1, i;
 		int failCount = 0;
-		for(i = 0; i < 7; i++){
+		for(i = 0; i < 8; i++){
 			ChessPosition from = new ChessPosition(i, startY);
 			ChessPosition to = new ChessPosition(i, endY);
 			ChessPiece p = b.getPieceAt(from);
 			if (p != null) {
 				try {
 					p.moveTo(to);
-					System.out.println("Player 1 - Move ("+i+", "+startY+") -> ("+i+", "+endY+") failed to generate an Illegal Move exception");
+					System.out.println("Player 1 - Trying to move 1st row pieces (there is a block)");
+					printFailedToGenException("Player 1", from, to);
 					failCount++;
 				} catch (Exception e) {
 					assert(e instanceof IllegalMove);
@@ -51,14 +50,15 @@ public class a5Tester {
 		//Change startY and endY
 		startY = 7; endY = 6;
 		/* Let's try to move all chess pieces in 1st row of player 2, everything throws an exception */
-		for(i = 0; i < 7; i++){
+		for(i = 0; i < 8; i++){
 			ChessPosition from = new ChessPosition(i, startY);
 			ChessPosition to = new ChessPosition(i, endY);
 			ChessPiece p = b.getPieceAt(from);
 			if (p != null) {
 				try {
 					p.moveTo(to);
-					System.out.println("Player 2 - Move ("+i+", "+startY+") -> ("+i+", "+endY+") failed to generate an Illegal Move exception");
+					System.out.println("Player 2 - Trying to move 1st row pieces (there is a block)");
+					printFailedToGenException("Player 2", from, to);
 					failCount++;
 				} catch (Exception e) {
 					assert(e instanceof IllegalMove);
@@ -75,19 +75,21 @@ public class a5Tester {
 		int failCount = 0;
 		
 		/* Let's test if each pawn moves two spaces on first move - player 1*/
-		int startY = 1, endY = 3, i;
-		for(i = 0; i < 7; i++){
-			ChessPosition from = new ChessPosition(i, startY);
-			ChessPosition to = new ChessPosition(i, endY);
+		int startY = 1, endY = 3, i, startX, endX;
+		for(i = 0; i < 8; i++){
+			startX = endX = i;
+			ChessPosition from = new ChessPosition(startX, startY);
+			ChessPosition to = new ChessPosition(endX, endY);
 			ChessPiece p = b.getPieceAt(from);
+			ChessPiece oldDestPiece = b.getPieceAt(to);
 			if (p != null) {
 				try {
 					p.moveTo(to);
 					//Check if pawn has actually been moved
-					failCount = checkPieceMoved(from, to, "Pawn", "Player 1", i, startY, endY, failCount);
+					failCount = checkPieceMoved(from, to, p, oldDestPiece,"Pawn", "Player 1", failCount);
 				} catch (IllegalMove e) {
 					System.out.println("Player 1 - Trying to move a pawn 2 spaces up for the first time");
-					System.out.println("Player 1 - Move ("+i+", "+startY+") -> ("+i+", "+endY+") should not generate Illegal Move exception\n");
+					printInvalidExceptionGen("Player 1", from, to);
 					failCount++;
 				}
 			}
@@ -95,18 +97,20 @@ public class a5Tester {
 		
 		/* Let's test if each pawn moves two spaces on first move - player 2*/
 		startY = 6; endY = 4;
-		for(i = 0; i < 7; i++){
-			ChessPosition from = new ChessPosition(i, startY);
-			ChessPosition to = new ChessPosition(i, endY);
+		for(i = 0; i < 8; i++){
+			startX = endX = i;
+			ChessPosition from = new ChessPosition(startX, startY);
+			ChessPosition to = new ChessPosition(endX, endY);
 			ChessPiece p = b.getPieceAt(from);
+			ChessPiece oldDestPiece = b.getPieceAt(to);
 			if (p != null) {
 				try {
 					p.moveTo(to);
 					//Check if pawn has actually been moved
-					failCount = checkPieceMoved(from, to, "Pawn", "Player 2", i, startY, endY, failCount);
+					failCount = checkPieceMoved(from, to, p, oldDestPiece,"Pawn", "Player 2", failCount);
 				} catch (IllegalMove e) {
 					System.out.println("Player 2 - Trying to move a pawn 2 spaces up for the first time");
-					System.out.println("Player 2 - Move ("+i+", "+startY+") -> ("+i+", "+endY+") should not generate Illegal Move exception\n");
+					printInvalidExceptionGen("Player 2", from, to);
 					failCount++;
 				}
 			}
@@ -121,19 +125,21 @@ public class a5Tester {
 		int failCount = 0;
 		
 		/* Let's test if each pawn moves two spaces on first move - player 1*/
-		int startY = 1, endY = 3, i;
-		for(i = 0; i < 7; i++){
-			ChessPosition from = new ChessPosition(i, startY);
-			ChessPosition to = new ChessPosition(i, endY);
+		int startY = 1, endY = 3, i, startX, endX;
+		for(i = 0; i < 8; i++){
+			startX = endX = i;
+			ChessPosition from = new ChessPosition(startX, startY);
+			ChessPosition to = new ChessPosition(endX, endY);
 			ChessPiece p = b.getPieceAt(from);
+			ChessPiece oldDestPiece = b.getPieceAt(to);
 			if (p != null) {
 				try {
 					p.moveTo(to);
 					//Check if pawn has actually been moved
-					failCount = checkPieceMoved(from, to, "Pawn", "Player 1", i, startY, endY, failCount);
+					failCount = checkPieceMoved(from, to, p, oldDestPiece,"Pawn", "Player 1", failCount);
 				} catch (IllegalMove e) {
 					System.out.println("Player 1 - Trying to move a pawn 2 spaces up for the first time");
-					System.out.println("Player 1 - Move ("+i+", "+startY+") -> ("+i+", "+endY+") should not generate Illegal Move exception\n");
+					printInvalidExceptionGen("Player 1", from, to);
 					failCount++;
 				}
 			}
@@ -141,15 +147,16 @@ public class a5Tester {
 		
 		/* Let's try to move those pawns again 2 spaces up, everything should throw an exception - player 1*/
 		startY = 3; endY = 5;
-		for(i = 0; i < 7; i++){
-			ChessPosition from = new ChessPosition(i, startY);
-			ChessPosition to = new ChessPosition(i, endY);
+		for(i = 0; i < 8; i++){
+			startX = endX = i;
+			ChessPosition from = new ChessPosition(startX, startY);
+			ChessPosition to = new ChessPosition(endX, endY);
 			ChessPiece p = b.getPieceAt(from);
 			if (p != null) {
 				try {
 					p.moveTo(to);
 					System.out.println("Player 1 - Trying to move the pawn 2 spaces up multiple times");
-					System.out.println("Player 1 - Move ("+i+", "+startY+") -> ("+i+", "+endY+") failed to generate an Illegal Move exception\n");
+					printFailedToGenException("Player 1", from, to);
 					failCount++;
 				} catch (Exception e) {
 					assert(e instanceof IllegalMove);
@@ -159,18 +166,20 @@ public class a5Tester {
 		
 		/* Let's test if each pawn moves two spaces on first move - player 2*/
 		startY = 6; endY = 4;
-		for(i = 0; i < 7; i++){
-			ChessPosition from = new ChessPosition(i, startY);
-			ChessPosition to = new ChessPosition(i, endY);
+		for(i = 0; i < 8; i++){
+			startX = endX = i;
+			ChessPosition from = new ChessPosition(startX, startY);
+			ChessPosition to = new ChessPosition(endX, endY);
 			ChessPiece p = b.getPieceAt(from);
+			ChessPiece oldDestPiece = b.getPieceAt(to);
 			if (p != null) {
 				try {
 					p.moveTo(to);
 					//Check if pawn has actually been moved
-					failCount = checkPieceMoved(from, to, "Pawn", "Player 2", i, startY, endY, failCount);
+					failCount = checkPieceMoved(from, to, p, oldDestPiece,"Pawn", "Player 2", failCount);
 				} catch (IllegalMove e) {
 					System.out.println("Player 2 - Trying to move a pawn 2 spaces up for the first time");
-					System.out.println("Player 2 - Move ("+i+", "+startY+") -> ("+i+", "+endY+") should not generate Illegal Move exception\n");
+					printInvalidExceptionGen("Player 2", from, to);
 					failCount++;
 				}
 			}
@@ -178,99 +187,16 @@ public class a5Tester {
 		
 		/* Let's try to move those pawns again 2 spaces up, everything should throw an exception - player 2*/
 		startY = 4; endY = 2;
-		for(i = 0; i < 7; i++){
-			ChessPosition from = new ChessPosition(i, startY);
-			ChessPosition to = new ChessPosition(i, endY);
+		for(i = 0; i < 8; i++){
+			startX = endX = i;
+			ChessPosition from = new ChessPosition(startX, startY);
+			ChessPosition to = new ChessPosition(endX, endY);
 			ChessPiece p = b.getPieceAt(from);
 			if (p != null) {
 				try {
 					p.moveTo(to);
 					System.out.println("Player 2 - Trying to move the pawn 2 spaces up multiple times");
-					System.out.println("Player 2 - Move ("+i+", "+startY+") -> ("+i+", "+endY+") failed to generate an Illegal Move exception\n");
-					failCount++;
-				} catch (Exception e) {
-					assert(e instanceof IllegalMove);
-				}
-			}
-		}
-		printFooter(funcName, failCount);
-	}
-	
-	@Test
-	public void testPawnTwoSpacesMoveAfterInitialMove(){
-		String funcName = new Object(){}.getClass().getEnclosingMethod().getName();
-		printHeader(funcName);
-		int failCount = 0;
-		
-		/* Let's test if each pawn moves one space on first move - player 1*/
-		int startY = 1, endY = 2, i;
-		for(i = 0; i < 7; i++){
-			ChessPosition from = new ChessPosition(i, startY);
-			ChessPosition to = new ChessPosition(i, endY);
-			ChessPiece p = b.getPieceAt(from);
-			if (p != null) {
-				try {
-					p.moveTo(to);
-					//Check if pawn has actually been moved
-					failCount = checkPieceMoved(from, to, "Pawn", "Player 1", i, startY, endY, failCount);
-				} catch (IllegalMove e) {
-					System.out.println("Player 1 - Trying to move a pawn 1 space up for the first time");
-					System.out.println("Player 1 - Move ("+i+", "+startY+") -> ("+i+", "+endY+") should not generate Illegal Move exception\n");
-					failCount++;
-				}
-			}
-		}
-		
-		/* Let's try to move each pawn 2 spaces up after it has moved from initial square - player 1*/
-		/* everything should thrown an exception */
-		startY = 2; endY = 4;
-		for(i = 0; i < 7; i++){
-			ChessPosition from = new ChessPosition(i, startY);
-			ChessPosition to = new ChessPosition(i, endY);
-			ChessPiece p = b.getPieceAt(from);
-			if (p != null) {
-				try {
-					p.moveTo(to);
-					System.out.println("Player 1 - Trying to move the pawn 2 spaces up after initial move");
-					System.out.println("Player 1 - Move ("+i+", "+startY+") -> ("+i+", "+endY+") failed to generate an Illegal Move exception\n");
-					failCount++;
-				} catch (Exception e) {
-					assert(e instanceof IllegalMove);
-				}
-			}
-		}
-		
-		/* Let's test if each pawn moves one space on first move - player 2*/
-		startY = 6; endY = 5;
-		for(i = 0; i < 7; i++){
-			ChessPosition from = new ChessPosition(i, startY);
-			ChessPosition to = new ChessPosition(i, endY);
-			ChessPiece p = b.getPieceAt(from);
-			if (p != null) {
-				try {
-					p.moveTo(to);
-					//Check if pawn has actually been moved
-					failCount = checkPieceMoved(from, to, "Pawn", "Player 2", i, startY, endY, failCount);
-				} catch (IllegalMove e) {
-					System.out.println("Player 2 - Trying to move a pawn 1 space up for the first time");
-					System.out.println("Player 2 - Move ("+i+", "+startY+") -> ("+i+", "+endY+") should not generate Illegal Move exception\n");
-					failCount++;
-				}
-			}
-		}
-		
-		/* Let's try to move each pawn 2 spaces up after it has moved from initial square - player 2*/
-		/* everything should thrown an exception */
-		startY = 5; endY = 3;
-		for(i = 0; i < 7; i++){
-			ChessPosition from = new ChessPosition(i, startY);
-			ChessPosition to = new ChessPosition(i, endY);
-			ChessPiece p = b.getPieceAt(from);
-			if (p != null) {
-				try {
-					p.moveTo(to);
-					System.out.println("Player 2 - Trying to move the pawn 2 spaces up after initial move");
-					System.out.println("Player 2 - Move ("+i+", "+startY+") -> ("+i+", "+endY+") failed to generate an Illegal Move exception\n");
+					printFailedToGenException("Player 2", from, to);
 					failCount++;
 				} catch (Exception e) {
 					assert(e instanceof IllegalMove);
@@ -287,40 +213,141 @@ public class a5Tester {
 		int failCount = 0;
 		
 		/* Let's test if each pawn moves one space on first move - player 1*/
-		int startY = 1, endY = 2, i;
-		for(i = 0; i < 7; i++){
-			ChessPosition from = new ChessPosition(i, startY);
-			ChessPosition to = new ChessPosition(i, endY);
+		int startY = 1, endY = 2, i, startX, endX;
+		for(i = 0; i < 8; i++){
+			startX = endX = i;
+			ChessPosition from = new ChessPosition(startX, startY);
+			ChessPosition to = new ChessPosition(endX, endY);
 			ChessPiece p = b.getPieceAt(from);
+			ChessPiece oldDestPiece = b.getPieceAt(to);
 			if (p != null) {
 				try {
 					p.moveTo(to);
+					//Check if pawn has actually been moved
+					failCount = checkPieceMoved(from, to, p, oldDestPiece,"Pawn", "Player 1", failCount);
 				} catch (IllegalMove e) {
 					System.out.println("Player 1 - Trying to move a pawn 1 space up for the first time");
-					System.out.println("Player 1 - Move ("+i+", "+startY+") -> ("+i+", "+endY+") should not generate Illegal Move exception\n");
+					printInvalidExceptionGen("Player 1", from, to);
 					failCount++;
 				}
 			}
 		}
 		
-		/* Let's test if each pawn moves two spaces on first move - player 2*/
+		/* Let's test if each pawn moves one space on first move - player 2*/
 		startY = 6; endY = 5;
-		for(i = 0; i < 7; i++){
-			ChessPosition from = new ChessPosition(i, startY);
-			ChessPosition to = new ChessPosition(i, endY);
+		for(i = 0; i < 8; i++){
+			startX = endX = i;
+			ChessPosition from = new ChessPosition(startX, startY);
+			ChessPosition to = new ChessPosition(endX, endY);
+			ChessPiece p = b.getPieceAt(from);
+			ChessPiece oldDestPiece = b.getPieceAt(to);
+			if (p != null) {
+				try {
+					p.moveTo(to);
+					//Check if pawn has actually been moved
+					failCount = checkPieceMoved(from, to, p, oldDestPiece,"Pawn", "Player 2", failCount);
+				} catch (IllegalMove e) {
+					System.out.println("Player 2 - Trying to move a pawn 1 space up for the first time");
+					printInvalidExceptionGen("Player 2", from, to);
+					failCount++;
+				}
+			}
+		}
+	
+		printFooter(funcName, failCount);
+	}
+	
+	@Test
+	public void testPawnTwoSpacesMoveAfterInitialMove(){
+		String funcName = new Object(){}.getClass().getEnclosingMethod().getName();
+		printHeader(funcName);
+		int failCount = 0;
+		
+		/* Let's test if each pawn moves one space on first move - player 1*/
+		int startY = 1, endY = 2, i, startX, endX;
+		for(i = 0; i < 8; i++){
+			startX = endX = i;
+			ChessPosition from = new ChessPosition(startX, startY);
+			ChessPosition to = new ChessPosition(endX, endY);
+			ChessPiece p = b.getPieceAt(from);
+			ChessPiece oldDestPiece = b.getPieceAt(to);
+			if (p != null) {
+				try {
+					p.moveTo(to);
+					//Check if pawn has actually been moved
+					failCount = checkPieceMoved(from, to, p, oldDestPiece,"Pawn", "Player 1", failCount);
+				} catch (IllegalMove e) {
+					System.out.println("Player 1 - Trying to move a pawn 1 space up for the first time");
+					printInvalidExceptionGen("Player 1", from, to);
+					failCount++;
+				}
+			}
+		}
+		
+		/* Let's try to move each pawn 2 spaces up after it has moved from initial square - player 1*/
+		/* everything should thrown an exception */
+		startY = 2; endY = 4;
+		for(i = 0; i < 8; i++){
+			startX = endX = i;
+			ChessPosition from = new ChessPosition(startX, startY);
+			ChessPosition to = new ChessPosition(endX, endY);
 			ChessPiece p = b.getPieceAt(from);
 			if (p != null) {
 				try {
 					p.moveTo(to);
+					System.out.println("Player 1 - Trying to move the pawn 2 spaces up after initial move");
+					printFailedToGenException("Player 1", from, to);
+					failCount++;
+				} catch (Exception e) {
+					assert(e instanceof IllegalMove);
+				}
+			}
+		}
+		
+		/* Let's test if each pawn moves one space on first move - player 2*/
+		startY = 6; endY = 5;
+		for(i = 0; i < 8; i++){
+			startX = endX = i;
+			ChessPosition from = new ChessPosition(startX, startY);
+			ChessPosition to = new ChessPosition(endX, endY);
+			ChessPiece p = b.getPieceAt(from);
+			ChessPiece oldDestPiece = b.getPieceAt(to);
+			if (p != null) {
+				try {
+					p.moveTo(to);
+					//Check if pawn has actually been moved
+					failCount = checkPieceMoved(from, to, p, oldDestPiece,"Pawn", "Player 2", failCount);
 				} catch (IllegalMove e) {
 					System.out.println("Player 2 - Trying to move a pawn 1 space up for the first time");
-					System.out.println("Player 2 - Move ("+i+", "+startY+") -> ("+i+", "+endY+") should not generate Illegal Move exception\n");
+					printInvalidExceptionGen("Player 2", from, to);
 					failCount++;
+				}
+			}
+		}
+		
+		/* Let's try to move each pawn 2 spaces up after it has moved from initial square - player 2*/
+		/* everything should thrown an exception */
+		startY = 5; endY = 3;
+		for(i = 0; i < 8; i++){
+			startX = endX = i;
+			ChessPosition from = new ChessPosition(startX, startY);
+			ChessPosition to = new ChessPosition(endX, endY);
+			ChessPiece p = b.getPieceAt(from);
+			if (p != null) {
+				try {
+					p.moveTo(to);
+					System.out.println("Player 2 - Trying to move the pawn 2 spaces up after initial move");
+					printFailedToGenException("Player 2", from, to);
+					failCount++;
+				} catch (Exception e) {
+					assert(e instanceof IllegalMove);
 				}
 			}
 		}
 		printFooter(funcName, failCount);
 	}
+	
+
 	
 	@Test
 	public void testPawnNoMovesPossible(){
@@ -358,16 +385,56 @@ public class a5Tester {
 		System.out.println("\n++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
 	}
 
-	public int checkPieceMoved(ChessPosition from, ChessPosition to, String piece, String player, int i, int startY, int endY, int failCount){
+	public int checkPieceMoved(ChessPosition from, ChessPosition to, ChessPiece movePiece, ChessPiece oldDestPiece,
+							   String pieceName, String player, int failCount){
 		ChessPiece p1 = b.getPieceAt(from);
 		ChessPiece p2 = b.getPieceAt(to);
-		if(p1 == null && p2 != null && p2.equals(p1)){
+		int startX = from.getX();
+		int startY = from.getY();
+		int endX = to.getX();
+		int endY = to.getY();
+		
+		//Checks
+		//1 -> "from" is empty
+		//2 -> "to" is not empty
+		//3 -> ChessPiece at "to" is the piece we wanted to move
+		//4 -> the ChessPiece that was previously at "to" (destination) is not on the board (or removed from board)
+		if(p1 == null && p2 != null && movePiece == p2 && !findPiece(oldDestPiece)){
 			//don't do anything, all checks succeeded
 		}else{
-			System.out.println(player+" - Move ("+i+", "+startY+") -> ("+i+", "+endY+")");
-			System.out.println(player+" - "+piece+" was either not removed from ("+i+", "+startY+") OR not placed at ("+i+", "+endY+")\n");
+			System.out.println(player+" - Move ("+startX+", "+startY+") -> ("+endX+", "+endY+")");
+			System.out.println(player+" - "+pieceName+" was either not removed from ("+startX+", "+startY+") OR not placed at ("+endX+", "+endY+")\n");
 			failCount++;
 		}
 		return failCount;
+	}
+	
+	public boolean findPiece(ChessPiece p1){
+		for(int i = 0; i < 8; i++){
+			for(int j = 0; j < 8; j++){
+				ChessPosition position = new ChessPosition(i, j);
+				ChessPiece p2 = b.getPieceAt(position);
+				if(p2 != null && p1 == p2){
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	public void printFailedToGenException(String player, ChessPosition from, ChessPosition to){
+		int startX = from.getX();
+		int startY = from.getY();
+		int endX = to.getX();
+		int endY = to.getY();
+		System.out.println(player+" - Move ("+startX+", "+startY+") -> ("+endX+", "+endY+") failed to generate an Illegal Move exception\n");
+	}
+	
+	public void printInvalidExceptionGen(String player, ChessPosition from, ChessPosition to){
+		int startX = from.getX();
+		int startY = from.getY();
+		int endX = to.getX();
+		int endY = to.getY();
+		System.out.println(player+" - Move ("+startX+", "+startY+") -> ("+endX+", "+endY+") should not generate an Illegal Move exception\n");
 	}
 }
