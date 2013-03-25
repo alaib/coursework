@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012) (format=pdflatex 2012.9.12)  24 MAR 2013 20:19
+This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012) (format=pdflatex 2012.9.12)  25 MAR 2013 12:21
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -461,7 +461,11 @@ File: images/Table_LabelMapMod2.png Graphic file (type png)
 <use images/Table_LabelMapMod2.png>
 Package pdftex.def Info: images/Table_LabelMapMod2.png used on input line 207.
 (pdftex.def)             Requested size: 347.12354pt x 67.08946pt.
- [10] (./comp992.bbl
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [10]
+(./comp992.bbl
 Missing character: There is no â in font cmr9!
 Missing character: There is no € in font cmr9!
 Missing character: There is no “ in font cmr9!
@@ -480,7 +484,7 @@ Here is how much of TeX's memory you used:
  6073 multiletter control sequences out of 15000+200000
  8541 words of font info for 31 fonts, out of 3000000 for 9000
  957 hyphenation exceptions out of 8191
- 38i,8n,24p,1817b,315s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 38i,8n,24p,1836b,317s stack positions out of 5000i,500n,10000p,200000b,50000s
 </usr/local/texlive/2012/texmf-dist/fonts/type1/public/
 amsfonts/cm/cmbx10.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/public/a
 msfonts/cm/cmbx12.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/public/am
@@ -495,7 +499,7 @@ cmr6.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmr
 fb></usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pf
 b></usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb
 >
-Output written on comp992.pdf (12 pages, 2494342 bytes).
+Output written on comp992.pdf (12 pages, 2494435 bytes).
 PDF statistics:
  113 PDF objects out of 1000 (max. 8388607)
  68 compressed objects within 1 object stream
