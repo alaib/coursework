@@ -5,8 +5,8 @@
 %
 \documentclass{llncs}
 %
-\usepackage{makeidx}  % allows for index generation
-\usepackage{epsfig} % allows encoding Postscript images
+\usepackage{makeidx}  % allows for indexgeneration
+\usepackage{epsfig} % allows encoding PostScript images
 \usepackage{graphicx}
 \usepackage{amsmath}
 \usepackage{subfigure}
@@ -211,7 +211,7 @@ representing number of voxels in region $r$. The RegMatch percent values for the
 \end{figure}
 
 \section{DISCUSSIONS and CONCLUSIONS}
-In this paper, we have presented a novel, fully automatic pipeline to register images with large deformations, particularly subjects that are affected by WM demyelinating pathologies. The novel feature map computed is robust against variations in WM fiber tract integrity and hence yields a good starting point to compute corresponding landmark points. The work presented here shows the potential of our pipeline to register highly deformed images as illustrated on a single, highly pathological case. We have applied the method to several more Krabbe cases with moderate to severely enlarged ventricles with similar success. Nevertheless, the presented registration pipeline is preliminary and several issues still need to be addressed, such as improving the stability of the landmark-based deformation field computation against outliers/bad correspondences. For that purpose, we are currently working on incorporating weights for each landmark-based on their correspondence quality score.
+In this paper, we have presented a novel, fully automatic pipeline to register images with large deformations, particularly subjects that are affected by WM demyelinating pathologies. The novel feature map computed is robust against variantions in WM fiber tract integrity and hence yields a good starting point to compute corresponding landmark points. The work presented here shows the potential of our pipeline to register highly deformed images as illustrated on a single, highly pathological case. We have applied the method to several more Krabbe cases with moderate to severely enlarged ventricles with similar success. Nevertheless, the presented registration pipeline is preliminary and several issues still need to be addressed, such as improving the stability of the landmark-based deformation field computation against outliers/bad correspondences. For that purpose, we are currently working on incorporating weights for each landmark-based on their correspondence quality score.
 
 %
 % ---- Bibliography ----
