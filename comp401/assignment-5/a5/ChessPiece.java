@@ -141,6 +141,9 @@ class Bishop extends ChessPiece {
 				(getPosition().getY() == destination.getY())) {
 			throw new IllegalMove(this, getPosition(), destination);
 		}
+		//Changes added by rk
+		checkLineOfSight(getPosition(), destination);
+		//end of changes
 		super.moveTo(destination);
 	}
 }
