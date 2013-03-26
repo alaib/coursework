@@ -479,6 +479,7 @@ public class A5Tester {
 		printFooter(funcName, failCount);
 	}
 
+	//King Tests
 	@Test
 	public void testKingMovedToSamePos(){
 		String funcName = new Object() {}.getClass().getEnclosingMethod().getName();
@@ -574,6 +575,7 @@ public class A5Tester {
 		printFooter(funcName, failCount);
 	}
 	
+	//Knight Tests
 	@Test
 	public void testKnightMovedToSamePos(){
 		String funcName = new Object() {}.getClass().getEnclosingMethod().getName();
@@ -706,6 +708,7 @@ public class A5Tester {
 		printFooter(funcName, failCount);
 	}
 	
+	//Rook Tests
 	@Test
 	public void testRookMovedToSamePos(){
 		String funcName = new Object() {}.getClass().getEnclosingMethod().getName();
@@ -808,6 +811,7 @@ public class A5Tester {
 		printFooter(funcName, failCount);
 	}
 	
+	//Bishop Tests
 	@Test
 	public void testBishopMovedToSamePos(){
 		String funcName = new Object() {}.getClass().getEnclosingMethod().getName();
@@ -909,6 +913,110 @@ public class A5Tester {
 		}	
 		printFooter(funcName, failCount);
 	}
+	
+	//Queen Tests
+	@Test
+	public void testQueenMovedToSamePos(){
+		String funcName = new Object() {}.getClass().getEnclosingMethod().getName();
+		printHeader(funcName);
+		int failCount = 0;
+		// Let's test moving Queen to same position -> Player 1 and Player 2
+		ChessPosition pos1 = new ChessPosition(3, 0);
+		ChessPosition pos2 = new ChessPosition(3, 7);
+		ChessPiece p1 = b.getPieceAt(pos1);
+		ChessPiece p2 = b.getPieceAt(pos2);
+		try {
+			p1.moveTo(pos1);
+			System.out.println("Player 1 - Trying to move the queen to same square");
+			printFailedToGenException("Player 1", pos1, pos1);
+			failCount++;
+		} catch (Exception e) {
+			assert (e instanceof IllegalMove);
+		}
+		
+		try {
+			p2.moveTo(pos2);
+			System.out.println("Player 2 - Trying to move the queen to same square");
+			printFailedToGenException("Player 2", pos2, pos2);
+			failCount++;
+		} catch (Exception e) {
+			assert (e instanceof IllegalMove);
+		}
+		printFooter(funcName, failCount);
+	}
+	
+	@Test
+	public void testQueenCapturingSamePlayerPiece(){
+		String funcName = new Object() {}.getClass().getEnclosingMethod().getName();
+		printHeader(funcName);
+		int failCount = 0;
+		// Let's test capturing same player piece with Queen -> Player 1 and Player 2
+		ChessPosition pos1 = new ChessPosition(3, 0);
+		ChessPosition pos2 = new ChessPosition(3, 7);
+		ChessPosition pos3 = new ChessPosition(3, 1);
+		ChessPosition pos4 = new ChessPosition(3, 6);
+		ChessPiece p1 = b.getPieceAt(pos1);
+		ChessPiece p2 = b.getPieceAt(pos2);
+		try {
+			p1.moveTo(pos3);
+			System.out.println("Player 1 - Queen tries to capture Pawn of the same player");
+			printFailedToGenException("Player 1", pos1, pos3);
+			failCount++;
+		} catch (Exception e) {
+			assert (e instanceof IllegalMove);
+		}
+		
+		try {
+			p2.moveTo(pos4);
+			System.out.println("Player 2 - Queen tries to capture Pawn of the same player");
+			printFailedToGenException("Player 2", pos2, pos4);
+			failCount++;
+		} catch (Exception e) {
+			assert (e instanceof IllegalMove);
+		}
+		printFooter(funcName, failCount);
+	}
+	
+	@Test
+	public void testQueenMoveAndCapture(){
+		String funcName = new Object() {}.getClass().getEnclosingMethod().getName();
+		printHeader(funcName);
+		int failCount = 0;
+		//Let's move the Queen around the board as per visualization and see if everything works
+		//Visualization -> http://imgur.com/wnYYepj
+		//below should be read in pairs move (x[1], y[1]) -> (x[2], y[2]) , index += 2
+		int x[] = {4, 4, 3, 4, 4, 4, 4, 2, 2, 6, 2, 2, 2, 3, 3, 4};
+		int y[] = {1, 3, 0, 1, 1, 7, 1, 3, 3, 7, 3, 6, 6, 7, 7, 7}; 
+		int valid[] = {1, 1, 0, 1, 0, 1, 1, 1};
+		int k = 0;
+		for(int i = 0; i < x.length; i += 2, k++){
+			ChessPosition from = new ChessPosition(x[i], y[i]);
+			ChessPosition to = new ChessPosition(x[i+1], y[i+1]);
+			ChessPiece p = b.getPieceAt(from);
+			ChessPiece oldDestPiece = b.getPieceAt(to);
+			if(valid[k] == 1){
+				try {
+					p.moveTo(to);
+					failCount = checkPieceMoved(from, to, p, oldDestPiece,"Queen", "Player 1", failCount);
+				} catch (IllegalMove e) {
+					System.out.println("Player 1 - Queen/Pawn tried to move to a valid position");
+					printInvalidExceptionGen("Player 1", from, to);
+					failCount++;
+				}
+			}else{
+				try {
+					p.moveTo(to);
+					System.out.println("Player 1 - Queen/Pawn tried to move to an invalid position");
+					printFailedToGenException("Player 1", from, to);
+					failCount++;
+				} catch (Exception e) {
+					assert (e instanceof IllegalMove);
+				}
+			}
+		}	
+		printFooter(funcName, failCount);
+	}
+		
 	
 	@Test
 	public void templateFunc() {
