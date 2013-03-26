@@ -771,4 +771,5 @@ class Pawn extends ChessPiece_rk {
 			throw new IllegalMove(this, pos, destination);
 		}
 	}
+	if(board.getPieceAt(new ChessPosition(x, y)) == null)
 }
