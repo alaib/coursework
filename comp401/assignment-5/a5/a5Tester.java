@@ -347,8 +347,6 @@ public class a5Tester {
 		printFooter(funcName, failCount);
 	}
 	
-
-	
 	@Test
 	public void testPawnNoMovesPossible(){
 		/* Let's test if each pawn moves two spaces on first move - player*/
@@ -374,6 +372,7 @@ public class a5Tester {
 		System.out.println(funcName+" debug log");
 		System.out.println("====================================================\n");
 	}
+	
 	public void printFooter(String funcName, int failCount){
 		if(failCount > 0){
 			System.out.println("\n++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
