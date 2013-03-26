@@ -2,6 +2,9 @@ package a5;
 
 import static org.junit.Assert.fail;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -569,6 +572,138 @@ public class A5Tester {
 		}
 		printFooter(funcName, failCount);
 	}
+	
+	@Test
+	public void testKnightMovedToSamePos(){
+		String funcName = new Object() {}.getClass().getEnclosingMethod().getName();
+		printHeader(funcName);
+		int failCount = 0;
+		// Let's test moving Knight to same position -> Player 1 and Player 2
+		ChessPosition pos1 = new ChessPosition(6, 0);
+		ChessPosition pos2 = new ChessPosition(1, 7);
+		ChessPiece p1 = b.getPieceAt(pos1);
+		ChessPiece p2 = b.getPieceAt(pos2);
+		try {
+			p1.moveTo(pos1);
+			System.out.println("Player 1 - Trying to move the knight to same square");
+			printFailedToGenException("Player 1", pos1, pos1);
+			failCount++;
+		} catch (Exception e) {
+			assert (e instanceof IllegalMove);
+		}
+		
+		try {
+			p2.moveTo(pos2);
+			System.out.println("Player 2 - Trying to move the knight to same square");
+			printFailedToGenException("Player 2", pos2, pos2);
+			failCount++;
+		} catch (Exception e) {
+			assert (e instanceof IllegalMove);
+		}
+		printFooter(funcName, failCount);
+	}
+	
+	@Test
+	public void testKnightCapturingSamePlayerPiece(){
+		String funcName = new Object() {}.getClass().getEnclosingMethod().getName();
+		printHeader(funcName);
+		int failCount = 0;
+		// Let's test moving King to same position -> Player 1 and Player 2
+		ChessPosition pos1 = new ChessPosition(6, 0);
+		ChessPosition pos2 = new ChessPosition(1, 7);
+		ChessPosition pos3 = new ChessPosition(4, 1);
+		ChessPosition pos4 = new ChessPosition(3, 6);
+		ChessPiece p1 = b.getPieceAt(pos1);
+		ChessPiece p2 = b.getPieceAt(pos2);
+		try {
+			p1.moveTo(pos3);
+			System.out.println("Player 1 - Knight tries to capture Pawn of the same player");
+			printFailedToGenException("Player 1", pos1, pos3);
+			failCount++;
+		} catch (Exception e) {
+			assert (e instanceof IllegalMove);
+		}
+		
+		try {
+			p2.moveTo(pos4);
+			System.out.println("Player 2 - Knight tries to capture Pawn of the same player");
+			printFailedToGenException("Player 2", pos2, pos4);
+			failCount++;
+		} catch (Exception e) {
+			assert (e instanceof IllegalMove);
+		}
+		printFooter(funcName, failCount);
+	}
+	
+	@Test
+	public void testKnightMoveAndCapture(){
+		String funcName = new Object() {}.getClass().getEnclosingMethod().getName();
+		printHeader(funcName);
+		int failCount = 0;
+		//Let's move the Player 1 knight in front of Player 2's pawn ahead of Player 2's King and try all board pos
+		int x[] = {6, 5, 3, 4};
+		int y[] = {0, 2, 3, 5}; 
+		for(int i = 1; i < x.length; i++){
+			ChessPosition from = new ChessPosition(x[i-1], y[i-1]);
+			ChessPosition to = new ChessPosition(x[i], y[i]);
+			ChessPiece p = b.getPieceAt(from);
+			try {
+				p.moveTo(to);
+			} catch (IllegalMove e) {
+				System.out.println("Player 1 - Trying to move Knight with valid moves but encountered exception");
+				printInvalidExceptionGen("Player 1", from, to);
+				failCount++;
+				printFooter(funcName, failCount);
+				return;
+			}
+		}	
+		
+		//Build valid move list
+		ChessPosition pos = new ChessPosition(4, 5);
+		int []dx = {1, 2, 2, 1,-1,-2,-2,-1};
+		int []dy = {2, 1,-1,-2, 2, 1,-1,-2};
+		List<ChessPosition> validMoves = new ArrayList<ChessPosition>();
+		for(int i = 0; i < dx.length; i++){
+			try{
+				ChessPosition p = new ChessPosition(pos.getX()+dx[i], pos.getY()+dy[i]);
+				validMoves.add(p);
+			}catch(IllegalArgumentException e){
+				//Don't do anything, out of bounds
+			}	
+		}
+		
+		//From this point, try all board positions, only 8 should be valid, also check opponent piece capture
+		ChessPiece p = b.getPieceAt(pos);
+		for(int i = 0; i < 8; i++){
+			for(int j = 0; j < 8; j++){
+				ChessPosition to = new ChessPosition(i, j);
+				ChessPiece oldDestPiece = b.getPieceAt(to);
+				if(validMoves.contains(to)){
+					try {
+						p.moveTo(to);
+						failCount = checkPieceMoved(pos, to, p, oldDestPiece,"Knight", "Player 1", failCount);
+						//Move it back to pos for trying next position
+						b.getPieceAt(to).moveTo(pos); //hopefully this won't be bugged
+					} catch (IllegalMove e) {
+						System.out.println("Player 1 - Knight tries to move to a valid position");
+						printInvalidExceptionGen("Player 1", pos, to);
+						failCount++;
+					}
+				}else{
+					try {
+						p.moveTo(to);
+						System.out.println("Player 1 - Knight tries to move to an invalid position");
+						printFailedToGenException("Player 1", pos, to);
+						failCount++;
+					} catch (Exception e) {
+						assert (e instanceof IllegalMove);
+					}
+				}
+			}
+		}
+		printFooter(funcName, failCount);
+	}
+	
 	@Test
 	public void templateFunc() {
 		String funcName = new Object() {}.getClass().getEnclosingMethod().getName();
