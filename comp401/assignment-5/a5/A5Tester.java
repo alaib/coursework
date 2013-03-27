@@ -4,6 +4,7 @@ import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -1015,6 +1016,62 @@ public class A5Tester {
 			}
 		}	
 		printFooter(funcName, failCount);
+	}
+	
+	@Test
+	public void testGameOfTheCentury() {
+		//Game of the Century Wiki Link -> http://en.wikipedia.org/wiki/The_Game_of_the_Century_(chess)
+		//Played between Donald Byrne and 13-year-old Bobby Fischer in 1956
+		//Youtube link -> http://www.youtube.com/watch?v=M624T3PTggU
+		
+		String funcName = new Object() {}.getClass().getEnclosingMethod().getName();
+		printHeader(funcName);
+		int failCount = 0;
+		Scanner scanner = new Scanner(getClass().getResourceAsStream("game_of_the_century.txt"));
+		String line = new String();
+		while(scanner.hasNextLine()){
+			line = scanner.nextLine();
+			if(line.contains("Castling") || line.contains("Sacrifice")){
+				continue;
+			}
+			line = line.trim();
+			if(line.isEmpty()){
+				continue;
+			}
+			String []splitStr = line.split(" ");
+			int []intArr = new int[splitStr.length];
+			if(splitStr.length != 4){
+				fail("Bad input data, please check game_of_the_century.txt file");
+			}
+			for(int i = 0; i < splitStr.length; i++){
+				intArr[i] = Integer.parseInt(splitStr[i]);
+			}
+			ChessPosition from = new ChessPosition(intArr[0], intArr[1]);
+			ChessPosition to = new ChessPosition(intArr[2], intArr[3]);
+			ChessPiece p = b.getPieceAt(from);
+			ChessPiece oldDestPiece = b.getPieceAt(to);
+			try {
+				p.moveTo(to);
+				failCount = checkPieceMoved(from, to, p, oldDestPiece,Character.toString(p.mark), p.getOwner().toString(), failCount);
+			} catch (IllegalMove e) {
+				System.out.println(p.getOwner().toString()+" - "+Character.toString(p.mark)+" tried to move to a valid position");
+				printInvalidExceptionGen(p.getOwner().toString(), from, to);
+				failCount++;
+			}
+			if(failCount > 0){
+				fail("Failed a legal move, please check the console for more details on the error");
+			}
+		}
+		// Print out the final board
+		System.out.println("===========================");
+		System.out.println("Bobby Fisher (Player 2)");
+		System.out.println("===========================");
+		System.out.print(b.toString());
+		System.out.println("===========================");
+		System.out.println("Donald Byrne (Player 1)");
+		System.out.println("===========================\n");
+		printFooter(funcName, failCount);
+
 	}
 		
 	
