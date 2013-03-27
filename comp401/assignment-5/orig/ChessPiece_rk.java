@@ -1,4 +1,4 @@
-package orig;
+package a5;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,14 +8,14 @@ import a5.ChessGame;
 import a5.ChessPlayer;
 import a5.ChessPosition;
 
-public abstract class ChessPiece_rk {
+public abstract class ChessPiece {
 
 	private ChessPlayer owner;
 	private ChessGame game;
 	private ChessPosition position;
 	protected char mark;
 	
-	protected ChessPiece_rk(ChessPlayer owner, ChessGame game, ChessPosition init_position) {
+	protected ChessPiece(ChessPlayer owner, ChessGame game, ChessPosition init_position) {
 		this.owner = owner;
 		this.game = game;
 		this.position = null;
@@ -48,7 +48,7 @@ public abstract class ChessPiece_rk {
 	
 		//Valid move for the piece, check if there is collision or not
 		ChessBoard board = this.getGame().getBoard();
-		ChessPiece_rk prevPiece = board.getPieceAt(destination);
+		ChessPiece prevPiece = board.getPieceAt(destination);
 		
 		if(prevPiece != null){
 			//position is occupied by a piece
@@ -60,14 +60,14 @@ public abstract class ChessPiece_rk {
 				board.removePieceFrom(destination);
 				
 				//remove current piece from old pos and put it in new position
-				ChessPiece_rk p = board.getPieceAt(this.position);
+				ChessPiece p = board.getPieceAt(this.position);
 				board.removePieceFrom(this.position);
 				board.placePieceAt(p, destination);
 			}
 		}else{
 			//position is free
 			//remove current piece from old pos and put it in new position
-			ChessPiece_rk p = board.getPieceAt(this.position);
+			ChessPiece p = board.getPieceAt(this.position);
 			board.removePieceFrom(this.position);
 			board.placePieceAt(p, destination);
 		}
@@ -78,7 +78,7 @@ public abstract class ChessPiece_rk {
 	}
 }
 
-class Rook extends ChessPiece_rk {
+class Rook extends ChessPiece {
 	public Rook(ChessPlayer owner, ChessGame game, ChessPosition init_position) {
 		super(owner, game, init_position);
 		if (owner == game.getPlayer1()) {
@@ -192,7 +192,7 @@ class Rook extends ChessPiece_rk {
 			if(board.getPieceAt(p) != null){
 				break;
 			}
-			currY -= 1;
+			currX -= 1;
 		}
 		
 		//Right
@@ -208,14 +208,14 @@ class Rook extends ChessPiece_rk {
 			if(board.getPieceAt(p) != null){
 				break;
 			}
-			currY -= 1;
+			currX += 1;
 		}
 		//if control reaches here, then unable to reach destination due to blockade
 		return false;
 	}
 }
 
-class Bishop extends ChessPiece_rk {
+class Bishop extends ChessPiece {
 	public Bishop(ChessPlayer owner, ChessGame game, ChessPosition init_position) {
 		super(owner, game, init_position);
 		if (owner == game.getPlayer1()) {
@@ -380,7 +380,7 @@ class Bishop extends ChessPiece_rk {
 	}
 }
 
-class Knight extends ChessPiece_rk {
+class Knight extends ChessPiece {
 	public Knight(ChessPlayer owner, ChessGame game, ChessPosition init_position) {
 		super(owner, game, init_position);
 		if (owner == game.getPlayer1()) {
@@ -412,7 +412,7 @@ class Knight extends ChessPiece_rk {
 	}
 }
 
-class Queen extends ChessPiece_rk {
+class Queen extends ChessPiece {
 	public Queen(ChessPlayer owner, ChessGame game, ChessPosition init_position) {
 		super(owner, game, init_position);
 		if (owner == game.getPlayer1()) {
@@ -517,7 +517,7 @@ class Queen extends ChessPiece_rk {
 			if(board.getPieceAt(p) != null){
 				break;
 			}
-			currY -= 1;
+			currX -= 1;
 		}
 		
 		//Right
@@ -533,7 +533,7 @@ class Queen extends ChessPiece_rk {
 			if(board.getPieceAt(p) != null){
 				break;
 			}
-			currY -= 1;
+			currX += 1;
 		}
 		//if control reaches here, then unable to reach destination due to blockade
 		return false;
@@ -670,7 +670,7 @@ class Queen extends ChessPiece_rk {
 	}
 }
 
-class King extends ChessPiece_rk {
+class King extends ChessPiece {
 	public King(ChessPlayer owner, ChessGame game, ChessPosition init_position) {
 		super(owner, game, init_position);
 		if (owner == game.getPlayer1()) {
@@ -696,7 +696,7 @@ class King extends ChessPiece_rk {
 	}
 }
 
-class Pawn extends ChessPiece_rk {
+class Pawn extends ChessPiece {
 	boolean firstMove;
 	
 	public Pawn(ChessPlayer owner, ChessGame game, ChessPosition init_position) {
@@ -719,6 +719,14 @@ class Pawn extends ChessPiece_rk {
 		int dy = -1;
 		if(owner == game.getPlayer1()){
 			dy = 1;
+		}
+		
+		if(this.getOwner() == game.getPlayer1() && pos.getY() != 1){
+			firstMove = false;
+		}
+		
+		if(this.getOwner() == game.getPlayer2() && pos.getY() != 6){
+			firstMove = false;
 		}
 		
 		//Get a list of valid positions and check if destination is one of them, else throw IllegalMove
@@ -746,7 +754,7 @@ class Pawn extends ChessPiece_rk {
 		//right diagonal capture
 		try{
 			ChessPosition p3 = new ChessPosition(pos.getX() + dx, pos.getY() + dy);
-			ChessPiece_rk p3Piece = board.getPieceAt(p3);
+			ChessPiece p3Piece = board.getPieceAt(p3);
 			if(p3Piece != null && p3Piece.getOwner() != owner){
 				validMoves.add(p3);
 			}
@@ -757,7 +765,7 @@ class Pawn extends ChessPiece_rk {
 		//left diagonal capture
 		try{
 			ChessPosition p4 = new ChessPosition(pos.getX() - dx, pos.getY() + dy);
-			ChessPiece_rk p4Piece = board.getPieceAt(p4);
+			ChessPiece p4Piece = board.getPieceAt(p4);
 			if(p4Piece != null && p4Piece.getOwner() != owner){
 				validMoves.add(p4);
 			}
@@ -771,5 +779,4 @@ class Pawn extends ChessPiece_rk {
 			throw new IllegalMove(this, pos, destination);
 		}
 	}
-	if(board.getPieceAt(new ChessPosition(x, y)) == null)
 }

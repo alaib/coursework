@@ -1054,6 +1054,13 @@ public class A5Tester {
 				p.moveTo(to);
 				failCount = checkPieceMoved(from, to, p, oldDestPiece,Character.toString(p.mark), p.getOwner().toString(), failCount);
 			} catch (IllegalMove e) {
+				System.out.println("===========================");
+				System.out.println("Bobby Fisher (Player 2)");
+				System.out.println("===========================");
+				System.out.print(b.toString());
+				System.out.println("===========================");
+				System.out.println("Donald Byrne (Player 1)");
+				System.out.println("===========================\n");
 				System.out.println(p.getOwner().toString()+" - "+Character.toString(p.mark)+" tried to move to a valid position");
 				printInvalidExceptionGen(p.getOwner().toString(), from, to);
 				failCount++;
