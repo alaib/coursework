@@ -70,6 +70,12 @@ for file in *; do
     fi
 
     echo "Total Tests = $totalTests, Success = $success, Failure = $failure, Points = $success"
+
+    echo -n "Should I open ChessPiece.java for grading style points (y | n) = "
+    read input
+    if [ "$input" == "y" ]; then
+        gedit ChessPiece.java
+    fi
     
     echo -e "============================================================================================\n";
     cd $baseDir;
