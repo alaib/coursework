@@ -1,8 +1,21 @@
 #!/bin/bash
 
+cFlag=0
+student="Cavell"
+
 baseDir="/playpen/comp401/A5/graded"
 for file in *; do
     if [ ! -d "$file" ];then
+        continue
+    fi
+
+    if [ "$file" == *$student* ]; then
+        cFlag=1
+    fi
+
+    if [ "$cFlag" == 0  ]; then
+        echo -n "Skipped student '$file', press any key to continue";
+        read input
         continue
     fi
 
