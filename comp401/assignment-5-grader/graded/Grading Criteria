@@ -1,0 +1,16 @@
+Total Number of tests = 25
+Points for every test passed = 1
+Style Points = 5 (3 -> lineOfSight method, 2 -> code readability)
+Max Points = 25 * 1 + 5 = 30 points
+
+Late submission or Resubmission
+================================
+Total Number of tests = 25
+Points for every test passed = 0.6 
+Style Points = 5 (3 -> lineOfSight method, 2 -> code readability)
+Max Points = 25 * 0.6 + 5 = 15 + 5 = 20 points
+
+Final Score = round(pointsScored/3)
+
+Late Submission = anything submitted after March 30th, 6AM
+
