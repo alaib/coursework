@@ -1,0 +1,171 @@
+Student Name,Student ID,Student PID,Test Score [25],Style Score [5],Raw Score [30],Assignment 5 [10],A5 Comments
+"Adepu, Shashank",adepu,720204523,24,4,28,9,You can simplify your checks in subclasses
+"Aguilar, Kevin",kjaguila,720161454,0,0,0,0,No Submission
+"Ahn, Kihoon",kihoon,720346164,25,0,25,8,"Your code passed all the tests, but you wrote everything in one monolithic function block in parent class. The whole point of the exercise was to move the functionality to the subclasses, hence 0 points for style."
+"Allan, Ryan",rjallan,720286499,25,4,29,10,Cache results into local variables. Can do with simple checks in line of sight method.
+"Anderson, Kevin",andersks,720331310,25,5,30,10,Elegant
+"Arledge, Curtis",carledge,709737382,25,5,30,10,Cache results into local variables.
+"Asfari, Adam",asfari,720036019,0,0,0,0,No Submission
+"Batchelder, Christopher",cqbatch,720181288,0,0,0,0,No Submission
+"Beauchamp, Devin",dbeaucha,720161547,25,5,30,10,Cache results into local variables.
+"Belai, Alai",belai,720059794,4,0,4,1,Incomplete. Resubmit.
+"Bernstein, Jacob",jakebern,720332574,0,0,0,0,No Submission
+"Bobbe, Mark",bobbe,720000529,25,1,26,9,Move common code of capture and moving chess piece to parent class. 
+"Bogerd, Jacob",jebogerd,720233002,25,5,30,10,Elegant
+"Boyle, Michael",mrboyle,714828200,25,4,29,10,Can avoid lot of repetitive code and put it in a new function block
+"Bragg, Mariah-Katherin",mhbragg,720204086,18,3,21,7,Fix failed tests (7 of them)
+"Brown, Aaron",aaronbc,720131501,25,5,30,10,Elegant
+"Bulut, Turker",bulut,720363358,0,0,0,0,No Submission
+"Burch, Ryan",rburch,720018154,0,0,0,0,No Submission
+"Butler, Ethan",etbutler,720046300,0,0,0,0,No Submission
+"Byers, Spencer",sgbyers,720364191,25,5,30,10,Elegant and nice comments
+"Cao, Danny",dxcao,720330331,25,5,30,10,Elegant and nice comments
+"Carrier, Maurice",carmaur,705756875,25,4,29,10,line of sight might simplify your checks
+"Cavell, Stephen",cavell,720207002,15,4,19,6,Make sure package names are as stated (it was a5.v4). Cache results into local variables. Late penalty :( ! Sorry !
+"Chacon Korsun, Jorge",jchacon,720359148,0,0,0,0,No Submission
+"Chai, Xuan",xchai,715052743,25,4,29,10,Can simplify checks in your parent class method
+"Chanakira, Kingsley",chanakir,720356217,25,5,30,10,Make sure package names are as stated (it was edu.unc.a5). Interesting implementation using one liners and ternary operators.
+"Chavda, Vivek",chavdav,720187336,0,0,0,0,No Submission
+"Chen, Haiwei",haiweich,720362234,25,4,29,10,Can simplify checks in your parent class method
+"Chen, Nuoxi",nuochen,720189178,13,4,17,6,"Can simplify checks in your parent class method. Cache results into local variables. Failed 12 tests, fix it !"
+"Collins, Faith",fcollins,720137833,25,4,29,10,Can simplify checks in your parent class method
+"Collis, Simon",scollis,720134998,21,4,25,8,Fix 4 failed tests and can simplify code in subclasses.
+"Corea, Michelle",corea,720053539,25,5,30,10,Nice comments
+"Cowan, Howard",hacowan,720376420,0,0,0,0,No Submission
+"Cunningham, Hannah",hccunnin,720023840,15,5,20,7,Fix 10 failed tests. Cache results into local variables.
+"Currin, Kevin",kwcurrin,720043905,0,0,0,0,No Submission
+"Daum, Maxwell",mdaum,720333082,25,4,29,10,Avoid multi-line comments in the middle of function (1 line comments are good enough)
+"Davis, Bradley",brddvs,720326365,25,5,30,10,Elegant
+"Dayal, Diana",ddayal,720327631,25,5,30,10,Elegant and nice comments
+"Dillon, Nicholas",ndillon,720193858,25,4,29,10,Can simplify checks in your parent class method. Cache results into local variables.
+"Dominguez, Robert",rcdoming,720333650,0,0,0,0,No Submission
+"Drake, Elliott",edrake,720153085,0,0,0,0,No Submission
+"Eckerd, Patrick",pjeckerd,720358465,0,0,0,0,No Submission
+"Esteban, Jose Carlo",jesteban,720333590,25,5,30,10,Elegant and nice comments. Name packages as stated (was A5 instead of a5)
+"Fang, Yinan",yinanf,720346851,25,5,30,10,Cache results into local variables.
+"Fenton, Stephanie",slfenton,720007821,0,0,0,0,No Submission
+"Ferris, Paul",paferris,720003916,25,5,30,10,Elegant and nice comments
+"Flynn, Anna",adflynn,720327242,25,5,30,10,Elegant and nice comments
+"Frankfort, Alexander",afrank11,720137824,25,5,30,10,Elegant
+"Gabr, Sarah",sjg11,720163763,25,2,27,9,"Lot of repetitive code. No need to write separate classes, put everything under ChessPiece.java as stated (to help graders :( )"
+"Gadi, Rohit",rgadi,720035134,0,0,0,0,No Submission
+"Gaegler, Jonathan",gaegler,720207673,25,4,29,10,Can simplify line of sight method
+"Green, Jeremy",jeremyga,720324330,0,0,0,0,No Submission
+"Griggs, Christopher",cgriggs,720111637,25,5,30,10,Elegant and nice comments
+"Gu, Shumeng",shumengg,720366748,25,4,29,10,Cache results into local variables.
+"Gurrey, Clement",gurrey,720183385,25,4,29,10,Cache results into local variables.
+"Hackett, Marquis",hackettm,720333451,0,0,0,0,No Submission
+"Hahn, Patrick",phahn,720142549,25,3,28,9,Can simplify line of sight method
+"Hails, Alexander",hails,714821139,25,3,28,9,"Simplify your checks, lots of repetitive code"
+"Harris, Matthew",msharr89,720233405,25,5,30,10,Elegant
+"Harrison, John",hajohn,720040623,25,5,30,10,Elegant and clean code (caching variables)
+"Hasselberg, Matthew",hasselbe,720131281,25,5,30,10,Cache results into local variables.
+"Hayter, Renee",rjhayter,720057616,25,3,28,9,Can simplify checks in subclass methods
+"Heath, Samuel",samheath,720322582,25,3,28,9,Can simplify checks in subclass methods
+"Helms, Cassidy",clhelms,720165120,12,2,14,5,Fix 13 failed tests. Can simplify a lot of code.
+"Herbolich, Aidan",aherbol1,720153742,25,5,30,10,Elegant
+"Higgins, Christopher",cjhigg,720322589,25,5,30,10,Elegant and nice comments
+"Hines, Jennifer",hinesj,720162037,25,3,28,9,Can simplify line of sight method. Cache results into local variables.
+"Hixson, Robert",rhixson,720114371,25,4,29,10,Can simplify line of sight method. Cache results into local variables.
+"Holtshouser, Christopher",chriswh,720132607,0,0,0,0,No Submission
+"Horwitz, Joshua",jhorwitz,720257806,25,4,29,10,"Cache results into local variables. (Stick to given package names, help graders :( , it was A5 instead of a5)"
+"Hu, Guanxiong",johngh,720215951,25,5,30,10,Cache results into local variables.
+"Hudgens, Daniel",dhudgens,720012423,0,0,0,0,No Submission
+"Humphrey, Christopher",jarredh4,720097637,25,3,28,9,Can simplify checks in the code. Cache results into local variables.
+"Imam, Sana",imam,720143107,0,0,0,0,No Submission
+"Jang, Kevin",kkjang,720320413,25,3,28,9,Can simplify line of sight method
+"Jarrett, Catherine",jarretc,720007456,25,5,30,10,Elegant and nice comments
+"Jastram, Savannah",sjastram,720114417,14,4,18,6,Fix 11 failed tests. Cache results into local variables
+"Jefferson, Jonathan",jwjeffer,720367790,25,5,30,10,Elegant
+"Jenkins, Whitney",wnjenkin,720116292,25,5,30,10,Elegant
+"Jiang, Fan",dcvan,720340781,25,4,29,10,Can simplify line of sight method. Cache results into local variables.
+"Jon, John",jjon,720212112,0,0,0,0,No Submission
+"Jones, Eric",ericdj,720238376,25,5,30,10,Elegant
+"Jones, Larissa",larissjm,720327286,25,3,28,9,"Simplify your checks, lots of repetitive code"
+"Kanar, Ian Christian",ikanar,720194917,0,0,0,0,No Submission
+"Kania, Cameron",kania,720248812,0,0,0,0,No Submission
+"Kegulski, Anna",kegulski,720193986,0,0,0,0,No Submission
+"Kenan, Alexander",akenan,720106771,25,4,29,10,Can simplify line of sight method. Cache results into local variables. (Help graders by using standard package names (was a5.v1 instead of a5))
+"Keung, Matthew",mkeung,720004245,0,0,0,0,No Submission
+"Khan, Muhammad",makhan5,714956453,0,0,0,0,No Submission
+"Lam, Brandon",blam627,720286396,25,5,30,10,Elegant and nice comments
+"Layher, Harry",layherh,720350333,0,0,0,0,No Submission
+"Lazina, Christine",clazina,714918093,25,4,29,10,Can simplify line of sight method. Cache results into local variables.
+"Li, An",li94,720356147,25,5,30,10,Elegant
+"Li, Forrest",fcli,720329975,25,3,28,9,Lot of repetitive code in subclass methods.
+"Liu, Xiaoyin",xiaoyinl,720377875,25,5,30,10,Elegant and clean code (caching variables)
+"Lung, Patrick",pl,720365322,25,4,29,10,Can simplify checks in subclass methods
+"Lynch, Brian",bmlynch,720345713,0,0,0,0,No Submission
+"Markham, James",markhajb,720144235,25,3,28,9,Can simplify line of sight method
+"Massey, Jacob",jtmassey,720356083,25,5,30,10,Elegant
+"Mbonu, Oluchi",mbonu,720344659,0,0,0,0,No Submission
+"McArthur, Evonne",evonnemc,720194606,25,5,30,10,Elegant
+"McClellan, Max",mcclellm,714818669,0,0,0,0,No Submission
+"McCorkle, Jonathan",jmccorkl,720188213,24,2,26,9,Lot of repetitive code in subclass methods.
+"McKinney, Thomas",tommck,720388938,0,0,0,0,No Submission
+"Menozzi, Federico",menozzi,720293701,25,5,30,10,Elegant and clean code (caching variables)
+"Meyers, Olivia",omeyers,720199657,0,0,0,0,No Submission
+"Miller, Vance",vbmiller,720331105,25,5,30,10,Elegant and nice comments
+"Miller, William",wgmiller,720331814,0,0,0,0,No Submission
+"Morris, Keith",keitham,720375930,25,4,29,10,Cache results into local variables.
+"Mosher, Colin",cjmosher,720018748,13,3,16,5,Fix 12 failed tests. Clean up your code with simpler checks.
+"Murtagh, Matthew",mmurtagh,720081414,12,4,16,5,Fix 13 failed tests. Can simplify a lot of code.
+"Nething, Constance",nething,720048848,25,3,28,9,Lot of repetitive code in subclass methods.
+"Newsome, Tyler",tcntounc,720166158,25,3,28,9,Can simplify line of sight method. Lot of repetitive code in subclass methods.
+"Nguyen, Thomas",thomasnt,720360172,0,0,0,0,No Submission
+"Noreen, Bryan",bhnoreen,720108266,0,0,0,0,No Submission
+"Nusbaum, Devin",dnusbaum,720275748,25,3,28,9,Use parent class lineOfSight method in subclass. Lot of repetitive code in subclasses.
+"Odum, Patrick",podum,720339046,0,0,0,0,No Submission
+"Osiecki, Jesse",osiecki,720360157,23,4,27,9,Fix 2 failed tests
+"Owens, Cody",caowens,720348160,21,5,26,9,Fix 4 failed tests
+"Parker, Alexander",alexjp,720140372,0,0,0,0,No Submission
+"Pearson, Brianna",bmpearso,720333347,25,5,30,10,Elegant and clean code (caching variables). You might want to format/beautify your code as per standards.
+"Pember, Leigh",pember,720004379,0,0,0,0,No Submission
+"Percy, Ian",ipercy,720023364,0,0,0,0,No Submission
+"Peterson, Nicholas",petersnm,720049324,0,0,0,0,No Submission
+"Pope, Janson",jrpope,720277706,25,3,28,9,"Lot of repetitive code, can simplify."
+"Porter, Elizabeth",eaporter,720277708,25,5,30,10,Elegant and nice comments
+"Potter, Joshua",jrpotter,720330165,25,5,30,10,"Elegant, but can cache results into local variables."
+"Price, Michael",miprice,720002165,25,5,30,10,Elegant
+"Puccio, Joseph",jpuccio,720152105,25,3,28,9,Lot of repetitive code in subclass methods.
+"Quiros, Claudia",cquiros,720050207,13,4,17,6,"Fix compilation error in Pawn class. I fixed one of it and ran the tests, please resubmit."
+"Ray, Nicholas",nmray,720155013,0,0,0,0,No Submission
+"Ritter, Joao",ritterj,715299876,25,3,28,9,"Lot of repetitive code, can simplify."
+"Roberson, Andrea",amrobers,720155036,17,4,21,7,Fix 8 failed tests.
+"Robinette, Taylor",twr,720331391,0,0,0,0,No Submission
+"Rounds, Zachary",zrounds,720333747,25,5,30,10,Elegant
+"Rust, Sarah",serust,720362785,25,5,30,10,Can simplify code and no need to add new variables to parent class
+"Schneider, Alexis",schneiam,720331482,0,0,0,0,No Submission
+"Schneider, Austin",schneida,720215517,0,0,0,0,No Submission
+"Schwartz, Jonathan",schwartj,720134135,0,0,0,0,No Submission
+"Serody, David",dserody,720331506,25,5,30,10,Cache results into local variables.
+"Shapiro, Andy",ajshapir,707978132,25,5,30,10,Elegant
+"Shen, Xinyu",xinyus,720235639,25,3,28,9,Lot of repetitive code in subclass methods.
+"Shields, Chakiera",cashield,720327401,0,0,0,0,No Submission
+"Siedlecki, Volodymyr",siedleck,720203579,25,4,29,10,Cache results into local variables.
+"Somocurcio, David",somocurc,720114362,25,5,30,10,"Elegant, but can cache results into local variables."
+"Springfield, Matthew",mspring,720322077,25,4,29,10,Can simplify line of sight method
+"Stokes, Robert",rmstokes,704785942,25,3,28,9,Can simplify code in subclass and parent class methods
+"Sutton, William",suttonw,720152402,0,0,0,0,No Submission
+"Tedeschi, Patrick",tedeschi,720001278,12,1,13,4,Incomplete. Resubmit. Failed 13 tests.
+"Texier, Jordan",texier,715033438,25,4,29,10,Cache results into local variables.
+"Thebert, Tirza",thebert,720330626,0,0,0,0,No Submission
+"Todd, Timothy",toddtnt,720145167,25,3,28,9,"Lot of repetitive code, can simplify."
+"Upadhyay, Shubham",shubhamu,720311476,25,5,30,10,Cache results into local variables. Help graders by using standard package names (was 'assignment5' instead of 'a5')
+"Waits, John",jwaits,715162965,0,0,0,0,No Submission
+"Wang, Kun",wangk1,720175362,25,3,28,9,"Lot of repetitive code, can simplify."
+"Wang, Tao",taow,720082784,25,4,29,10,Cache results into local variables.
+"Wang, Yuman",yumanw,720135182,25,5,30,10,Cache results into local variables. Help graders by using standard package names (was 'a5.v0' instead of 'a5')
+"White, Sarah",sarahw14,720327665,25,4,29,10,Can simplify line of sight method
+"Wohlfert, Jon",wohlfert,720330235,25,5,30,10,Elegant and nice comments. Cache results into local variables
+"Woltz, Jonathan",jwoltz,720184599,25,5,30,10,"Elegant, but can cache results into local variables."
+"Wooten, Halen",hpwooten,720131456,25,5,30,10,"Elegant, but can cache results into local variables."
+"Xu, Derek",dfxu,720008192,0,0,0,0,No Submission
+"Xu, Fan",vanx,715068315,0,0,0,0,No Submission
+"Yang, Wei-jen",zeny,720330921,18,4,22,7,Fix 7 failed tests.
+"Yao, Bo",byao,720000620,25,5,30,10,Elegant. Help graders by using standard package names (was A5 instead of a5)
+"Young, Taylor",tlyoung,720053934,20,5,25,8,Fix 5 failed tests.
+"Zhang, Le",lezha,720351746,25,4,29,10,Cache results into local variables.
+"Zhang, Pintian",pintianz,720131743,25,4,29,10,Can simplify parent class methods.
+"Zheng, Richard",rzheng,720131463,0,0,0,0,No Submission
+"Zimorowicz, Brian",brianz,708204335,25,5,30,10,Elegant and clean code (caching variables)

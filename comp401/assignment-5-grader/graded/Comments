@@ -1,2 +1,72 @@
+Assignment 5 grades have been released on Sakai. Please find the details of grading, resubmission and comments below:-
+
+Grading Criteria
+==================
+Timely Submission
+==================
+Total Number of tests = 25
+Points for every test passed = 1
+Style Points = 5 (3 -> code readability, 2 -> no repetitive code)
+Max Points = 25 * 1 + 5 = 30 points
+
+Final Score = round(pointsScored/3)
+Max Final Score = round(30/3) = 10
+
+Late submission or Resubmission
+================================
+Total Number of tests = 25
+Points for every test passed = 0.6 
+Style Points = 5 (3 -> code readability, 2 -> no repetitive code)
+Max Points = 25 * 0.6 + 5 = 15 + 5 = 20 points
+
+Final Score = round(pointsScored/3)
+Max Final Score = round(20/3) = 7
+
+Grading Stats
+==============
+Timely Submission (includes early morning submissions done on March 30th)
+==========================================================================
+Total = 116
+Max points = 10
+10's = 75
+9's = 26
+8's = 3
+7's = 4
+6's = 3
+5's = 3
+4's = 1
+3's = 0
+2's = 0
+1's = 1
+Mean = 9.23
+Median = 10 
+
+Late Submission
+================
+Total = 1
+Max points = 7
+Mean = 6
+
+No Submission
+==============
+Total = 53
+
+=====================
+Resubmission Comments
+=====================
+1) If you have scored less than 7, you can resubmit and score max resubmission points i.e., 7. If you still scored 10, take a look at my comments which might help you to program better. If your code is failing 1-5 tests, please fix it, as you will use much of the same code for Assignment 6.
+2) Please send me an email ( ravikirn@cs.unc.edu ) with the subject "Assignment 5 Resubmission - <Your Name>" if you resubmit on Sakai.
+
+General Comments
+=================
+1) Lot of repetitive code - Please avoid lengthy repetitive code, it's not only cumbersome but also diminishes readability
+2) Push common functionality into the parent class, than rewriting it in every subclass.
+3) Cache result of function calls into local variables. I have not considered this in grading criteria. Many of you didn't cache getPosition(), getGame(), getGame().getBoard().
+Just to give you an example of why this is important, I have created a jsperf (Javascript) test where I run a loop over an array of length 10^6 with and without caching arrayLength. Unless, it's optimized internally (e.g., Chrome), it will hamper the speed of your program. 
+JSPERF Test URL -> http://jsperf.com/comparing-loops-with-and-without-caching-array-length
+(Interpreting results: higher the better)
+
+Specific
+=========
 Ahn, Kihoon - everything done in parent class instead of subclass
 Cavell, Stephen (cavell) - Late submission (Mar 31, 2013 12:08 pm)
