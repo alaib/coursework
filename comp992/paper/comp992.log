@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012) (format=pdflatex 2012.9.12)  31 MAR 2013 13:37
+This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012) (format=pdflatex 2012.9.12)  2 APR 2013 13:48
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -473,11 +473,11 @@ Missing character: There is no € in font cmr9!
 Missing character: There is no ™ in font cmr9!
 ) [12] (./comp992.aux) ) 
 Here is how much of TeX's memory you used:
- 2819 strings out of 493488
- 38358 string characters out of 3141347
+ 2823 strings out of 493488
+ 38396 string characters out of 3141347
  105920 words of memory out of 3000000
- 6073 multiletter control sequences out of 15000+200000
- 8541 words of font info for 31 fonts, out of 3000000 for 9000
+ 6075 multiletter control sequences out of 15000+200000
+ 9160 words of font info for 33 fonts, out of 3000000 for 9000
  957 hyphenation exceptions out of 8191
  38i,8n,24p,1866b,309s stack positions out of 5000i,500n,10000p,200000b,50000s
 </usr/local/texlive/2012/texmf-dist/fonts/type1/public/
@@ -494,7 +494,7 @@ cmr6.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmr
 fb></usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pf
 b></usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb>
 </usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb>
-Output written on comp992.pdf (12 pages, 2503303 bytes).
+Output written on comp992.pdf (12 pages, 2503542 bytes).
 PDF statistics:
  117 PDF objects out of 1000 (max. 8388607)
  71 compressed objects within 1 object stream
