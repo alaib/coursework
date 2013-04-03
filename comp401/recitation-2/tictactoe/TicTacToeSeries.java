@@ -2,6 +2,7 @@ package tictactoe;
 
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -28,6 +29,7 @@ public class TicTacToeSeries {
 	JTextField p1, p2, draws;
 	int p1Wins, p2Wins, drawCount;
 	int first;
+	JLabel pStatus;
 
 	public TicTacToeSeries(){
 		currentPlayer = "P1"; //P1 - O , P2 - X
@@ -48,14 +50,14 @@ public class TicTacToeSeries {
 		f.setLayout(new FlowLayout());
 		
 		//Set frame size
-		f.setSize(650, 530);
+		f.setSize(650, 590);
 		
 		//Instantiate GridBagLayout
 		GridBagLayout bgl = new GridBagLayout();
 		GridLayout gl = new GridLayout(3, 2, 5, 5);
 		
 		lp = new JPanel();
-		lp.setPreferredSize(new Dimension(460, 460));
+		lp.setPreferredSize(new Dimension(460, 560));
 		rp = new JPanel();
 		rp.setPreferredSize(new Dimension(120, 120));
 		
@@ -111,6 +113,21 @@ public class TicTacToeSeries {
 			}
 		}
 		
+		//Add status
+		pStatus = new JLabel("Player 1 (O) turn");
+		pStatus.setHorizontalAlignment(JLabel.CENTER);
+		pStatus.setFont(new Font("SansSerif", Font.BOLD, 20));
+		c.fill = GridBagConstraints.BOTH;
+		c.ipadx = 10;
+		c.ipady = 10;
+		c.gridx = 0;
+		c.gridy = 3;
+		c.gridwidth = 3;
+		c.gridheight = 1;
+		c.weightx = 0.5;
+		c.weighty = 0.5;
+		lp.add(pStatus, c);
+		
 		//Add score tracking
 		p1 = new JTextField("0");
 		p1.setEditable(false);
@@ -125,9 +142,8 @@ public class TicTacToeSeries {
 		rp.add(new JLabel("Draw"));
 		rp.add(draws);
 		
-		
 		//Set frame title
-		f.setTitle("Tic Tac Toe [ Player 1 (O) turn ]");
+		f.setTitle("Tic Tac Toe");
 		//Make the frame visible (important)
 		f.setVisible(true);
 		//exit on closing frame
@@ -293,11 +309,11 @@ public class TicTacToeSeries {
 		//Switch first moves on alternate games
 		if(first == 1){
 			currentPlayer = "P2";
-			f.setTitle("Tic Tac Toe [ Player 2 (X) turn ]");
+			pStatus.setText("Player 2 (X) turn");
 			first = 2;
 		}else{
 			currentPlayer = "P1";
-			f.setTitle("Tic Tac Toe [ Player 1 (O) turn ]");
+			pStatus.setText("Player 1 (O) turn");
 			first = 1;
 		}
 	}
@@ -305,10 +321,10 @@ public class TicTacToeSeries {
 	public void togglePlayer(){
 		if(this.currentPlayer.equals("P1")){
 			this.currentPlayer = "P2";
-			f.setTitle("Tic Tac Toe [ Player 2 (X) turn ]");
+			pStatus.setText("Player 2 (X) turn");
 		}else{
 			this.currentPlayer = "P1";
-			f.setTitle("Tic Tac Toe [ Player 1 (O) turn ]");
+			pStatus.setText("Player 1 (O) turn");
 		}
 	}
 }

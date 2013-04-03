@@ -1,6 +1,7 @@
 package tictactoe;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
@@ -9,6 +10,7 @@ import java.awt.event.ActionListener;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
@@ -21,6 +23,7 @@ public class TicTacToe {
 	JFrame f;
 	JPanel p;
 	int first;
+	JLabel pStatus;
 
 	public TicTacToe(){
 		currentPlayer = "P1"; //P1 - O , P2 - X
@@ -37,7 +40,7 @@ public class TicTacToe {
 		f = new JFrame();
 		
 		//Set frame height and width (pixels)
-		f.setSize(460, 460);
+		f.setSize(600, 600);
 		
 		//Instantiate GridBagLayout
 		GridBagLayout bgl = new GridBagLayout();
@@ -95,8 +98,23 @@ public class TicTacToe {
 			}
 		}
 		
+		pStatus = new JLabel("Player 1 (O) turn");
+		pStatus.setHorizontalAlignment(JLabel.CENTER);
+		pStatus.setFont(new Font("SansSerif", Font.BOLD, 20));
+		//Constraints
+		c.fill = GridBagConstraints.BOTH;
+		c.ipadx = 10;
+		c.ipady = 10;
+		c.gridx = 0;
+		c.gridy = 3;
+		c.gridwidth = 3;
+		c.gridheight = 1;
+		c.weightx = 0.5;
+		c.weighty = 0.5;
+		p.add(pStatus, c);
+		
 		//Set frame title
-		f.setTitle("Tic Tac Toe [ Player 1 (O) turn ]");
+		f.setTitle("Tic Tac Toe");
 		//Make the frame visible (important)
 		f.setVisible(true);
 		//exit on closing frame
@@ -251,11 +269,11 @@ public class TicTacToe {
 		//Switch first moves on alternate games
 		if(first == 1){
 			currentPlayer = "P2";
-			f.setTitle("Tic Tac Toe [ Player 2 (X) turn ]");
+			pStatus.setText("Player 2 (X) turn");
 			first = 2;
 		}else{
 			currentPlayer = "P1";
-			f.setTitle("Tic Tac Toe [ Player 1 (O) turn ]");
+			pStatus.setText("Player 1 (O) turn");
 			first = 1;
 		}
 	}
@@ -263,10 +281,10 @@ public class TicTacToe {
 	public void togglePlayer(){
 		if(this.currentPlayer.equals("P1")){
 			this.currentPlayer = "P2";
-			f.setTitle("Tic Tac Toe [ Player 2 (X) turn ]");
+			pStatus.setText("Player 2 (X) turn");
 		}else{
 			this.currentPlayer = "P1";
-			f.setTitle("Tic Tac Toe [ Player 1 (O) turn ]");
+			pStatus.setText("Player 1 (O) turn");
 		}
 	}
 }
