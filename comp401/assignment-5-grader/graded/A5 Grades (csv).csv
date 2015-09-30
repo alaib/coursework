@@ -8,7 +8,6 @@ Student Name,Student ID,Student PID,Test Score [25],Style Score [5],Raw Score [3
 "Asfari, Adam",asfari,720036019,0,0,0,0,No Submission
 "Batchelder, Christopher",cqbatch,720181288,0,0,0,0,No Submission
 "Beauchamp, Devin",dbeaucha,720161547,25,5,30,10,Cache results into local variables.
-"Belai, Alai",belai,720059794,4,0,4,1,Incomplete. Resubmit.
 "Bernstein, Jacob",jakebern,720332574,0,0,0,0,No Submission
 "Bobbe, Mark",bobbe,720000529,25,1,26,9,Move common code of capture and moving chess piece to parent class. 
 "Bogerd, Jacob",jebogerd,720233002,25,5,30,10,Elegant
